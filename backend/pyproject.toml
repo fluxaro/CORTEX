@@ -1,0 +1,93 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "projectiq-backend"
+version = "0.1.0"
+description = "ProjectIQ Backend API"
+readme = "../README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.111.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.7.0",
+    "pydantic-settings>=2.2.0",
+    "sqlalchemy>=2.0.30",
+    "alembic>=1.13.0",
+    "asyncpg>=0.29.0",
+    "psycopg2-binary>=2.9.9",
+    "redis>=5.0.0",
+    "celery>=5.4.0",
+    "httpx>=0.27.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=5.0.0",
+    "ruff>=0.4.4",
+    "black>=24.4.2",
+    "mypy>=1.10.0",
+    "pre-commit>=3.7.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py313']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | alembic
+)/
+'''
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".venv",
+    "alembic",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+    "UP", # pyupgrade
+]
+ignore = [
+    "B008", # do not perform function calls in argument defaults (FastAPI Depends)
+]
+
+[tool.mypy]
+python_version = "3.13"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+exclude = ["alembic/"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"
