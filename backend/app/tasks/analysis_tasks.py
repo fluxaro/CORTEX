@@ -27,7 +27,7 @@ from app.workers.celery_app import celery_app
 logger = logging.getLogger(__name__)
 
 
-async def _async_run_static_analysis(analysis_run_id_str: str) -> None:
+async def _async_run_static_analysis(analysis_run_id_str: str) -> None:  # noqa: C901
     """Async execution of static code analysis."""
     run_uuid = uuid.UUID(analysis_run_id_str)
 
@@ -193,6 +193,12 @@ async def _async_run_static_analysis(analysis_run_id_str: str) -> None:
             logger.info(
                 f"Static analysis completed successfully for repository {repo.full_name}"
             )
+            from app.tasks.architecture_tasks import architecture_analysis_task
+
+            try:
+                architecture_analysis_task.delay(str(repo.id), str(run_uuid))
+            except Exception:
+                pass
 
         except Exception as exc:
             logger.exception(

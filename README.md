@@ -12,9 +12,9 @@ Developers, team leads, and architects spend hours evaluating open-source softwa
 
 ---
 
-## 🏗️ Architecture & Static Analysis Engine
+## 🏗️ Architecture & Static Engines
 
-ProjectIQ uses an asynchronous background queue pipeline to handle repository ingestion, metadata indexing, and static code analysis without blocking HTTP request execution.
+ProjectIQ uses an asynchronous background queue pipeline to handle repository ingestion, static code analysis, and architecture intelligence without blocking HTTP request execution.
 
 ```
 +------------------+       +-------------------+       +-----------------------+
@@ -23,32 +23,39 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
                                                                    |
                                                                    v
 +--------------------+     +-------------------+       +-----------+-----------+
-| Analysis COMPLETED | <-- | Static Engine     |  <--- | Celery Git Clone Task |
+| Arch Engine Done   | <-- | Static & Arch     |  <--- | Celery Git Clone Task |
 +--------------------+     +-------------------+       +-----------------------+
 ```
 
 ### Static Analysis Features
 - **Multi-Language Parsing**: Dedicated AST & pattern parsers for **Python**, **TypeScript**, **JavaScript**, **Go**, **Java**, and **Rust**.
-- **Metrics Calculation**: Cyclomatic complexity, Maintainability Index (0-100), LOC breakdown (code, blank, comment lines), comment ratios, complexity rank grading (A-F).
+- **Metrics Calculation**: Cyclomatic complexity, Maintainability Index (0-100), LOC breakdown, comment ratios, complexity rank grading (A-F).
 - **Code Smell Detector**: Long functions (>50 LOC), Large classes (>20 methods), Deep nesting (>4 levels), Too many parameters (>5 params), God objects, Long files (>500 LOC).
 - **Duplication Analysis**: Cross-file window hashing algorithm returning duplicate groups, occurrence locations, and repository duplication percentage.
+
+### Architecture Intelligence Engine Features
+- **Supported Architecture Styles**: Monolith, Layered Architecture, Clean Architecture, Hexagonal/Ports & Adapters, Onion, Feature-Based, MVC, MVVM, Microservices, Event-Driven, CQRS.
+- **Framework Detection & Conventions**: Detects FastAPI, Django, Flask, Next.js, React, Express, NestJS, Spring Boot, Gin, Echo, Fiber, Actix, Rocket, Axum and validates convention compliance.
+- **20+ Design Patterns**: Detects Repository, Factory, Singleton, Builder, Strategy, Observer, Decorator, Facade, Adapter, Proxy, DI, Command, State, Chain of Resp., Template Method, Specification, Unit of Work, DTO, Mapper, Service Locator with confidence scores.
+- **Module Dependency Graph**: Directed graph tracking internal/external dependencies, circular import detection, cross-layer violation validation, coupling score, modularity score, layer separation score, and dependency direction score.
+- **Tech Stack & API Surface**: Extracted metadata for containers, CI/CD, DBs, ORMs, and API surfaces (REST, GraphQL, gRPC, WebSocket, SSE, Background Workers, Cron Jobs).
 
 ---
 
 ## 🗄️ Database Schema
 
-### Ingestion Tables
-- `repositories`: Main repository metadata and status (`PENDING`, `CLONING`, `READY`, `FAILED`).
-- `repository_file_indices`: Directory structure stats, file count, max depth, largest files, extension distribution.
+### Ingestion & Static Analysis Tables
+- `repositories`, `repository_file_indices`, `analysis_runs`, `repository_metrics`, `file_metrics`, `function_metrics`, `class_metrics`, `duplicate_groups`, `duplicate_files`, `code_smells`.
 
-### Analysis Engine Tables
-- `analysis_runs`: Tracks analysis execution status (`PENDING`, `RUNNING`, `COMPLETED`, `FAILED`), timestamps, commit hash.
-- `repository_metrics`: Aggregated repository LOC, comment ratio, average/max cyclomatic complexity, complexity rank grade, maintainability index, duplicate percentage.
-- `file_metrics`: Per-file metrics, function count, class count, import count, complexity, maintainability index.
-- `function_metrics`: Function/method level metrics, parameters, return annotation, decorators, visibility (`public`/`private`), method type (`instance`/`static`/`class`/`abstract`), complexity, nesting depth.
-- `class_metrics`: Class level metrics, base classes, method count, field count, property count, public/private method counts.
-- `duplicate_groups` & `duplicate_files`: Identifies duplicate code hashes, line counts, instance counts, and exact file line ranges.
-- `code_smells`: Catalog of architectural & quality smells with line numbers, severity, symbol names, and descriptions.
+### Architecture Intelligence Engine Tables
+- `architecture_analyses`: Primary table for architecture style, confidence score, and raw score metrics (layer separation, dependency direction, pattern confidence, organization, coupling, modularity).
+- `architecture_layers`: Mapped file hierarchy across Presentation, Application, Domain, Infrastructure, and Utilities/Shared.
+- `architecture_violations`: Cross-layer violations, circular import loops, and dependency direction inversions.
+- `detected_patterns`: Identified design patterns with category and confidence score.
+- `dependency_graphs`, `dependency_nodes`, `dependency_edges`: Full directed module import graph.
+- `framework_detections`: Installed framework findings and convention compliance.
+- `technology_stacks`: Extracted tech stack metadata (languages, frameworks, DBs, CI/CD, containers, etc.).
+- `architecture_recommendation_placeholders`: Placeholder table for future recommendation engines.
 
 ---
 
@@ -75,38 +82,36 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
 | **GET** | `/api/v1/repositories/{id}/classes` | Paginated class-level metrics |
 | **GET** | `/api/v1/repositories/{id}/smells` | Paginated code smells & findings |
 
+### Architecture Intelligence Engine
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| **POST** | `/api/v1/repositories/{id}/architecture` | Trigger Architecture Intelligence analysis |
+| **GET** | `/api/v1/repositories/{id}/architecture` | Get latest architecture report & scores |
+| **GET** | `/api/v1/repositories/{id}/patterns` | Paginated design patterns findings |
+| **GET** | `/api/v1/repositories/{id}/layers` | Identified architectural layers & files |
+| **GET** | `/api/v1/repositories/{id}/dependency-graph` | Full module dependency graph (nodes & edges) |
+| **GET** | `/api/v1/repositories/{id}/frameworks` | Detected frameworks & convention compliance |
+| **GET** | `/api/v1/repositories/{id}/technologies` | Extracted technology stack metadata |
+
 ---
 
-## 🛠️ Developer Guide: Adding a New Language Analyzer
+## 🛠️ Developer Guide
 
-To extend ProjectIQ with support for a new language (e.g. C++ or Kotlin):
+### 1. How to Implement a New Language Analyzer
+Subclass `BaseLanguageAnalyzer` under `app/analyzers/{language}/{language}_analyzer.py` and register it with `AnalyzerRegistry.register(...)` in `app/analyzers/base/engine.py`.
 
-1. **Implement `BaseLanguageAnalyzer`**:
-   Create a new class under `app/analyzers/{language}/{language}_analyzer.py` subclassing `BaseLanguageAnalyzer`:
-   ```python
-   from app.analyzers.base.base_analyzer import BaseLanguageAnalyzer
-   from app.analyzers.shared.models import FileAnalysisResult
+### 2. How to Implement a New Architecture Detector
+Add detection rules in `ArchDetector` under `app/analyzers/architecture/detectors/arch_detector.py`:
+```python
+if "domain/" in paths_str and "infrastructure/" in paths_str:
+    return "MyCustomArchitecture", 0.90
+```
 
-   class KotlinAnalyzer(BaseLanguageAnalyzer):
-       @property
-       def language_name(self) -> str:
-           return "Kotlin"
-
-       @property
-       def supported_extensions(self) -> list[str]:
-           return [".kt", ".kts"]
-
-       def analyze_file(self, rel_path: str, content: str, file_size: int = 0) -> FileAnalysisResult:
-           loc, comment_lines, blank_lines, code_lines = self.count_lines(content)
-           # Extract functions, classes, imports, complexity...
-           return FileAnalysisResult(...)
-   ```
-
-2. **Register Analyzer**:
-   In `app/analyzers/base/engine.py`, register the new analyzer instance with `AnalyzerRegistry.register(KotlinAnalyzer())`.
-
-3. **Add Unit Tests**:
-   Add unit tests in `tests/test_kotlin_analyzer.py` validating parsing and metric calculations.
+### 3. How to Implement a New Framework Detector
+Add a new tuple definition in `FrameworkDetector.FRAMEWORK_INDICATORS` under `app/analyzers/architecture/detectors/framework_detector.py`:
+```python
+("SvelteKit", "Fullstack Framework", r"(?i)@sveltejs/kit", "TypeScript")
+```
 
 ---
 
@@ -115,17 +120,16 @@ To extend ProjectIQ with support for a new language (e.g. C++ or Kotlin):
 ```
 ProjectIQ/
 ├── backend/
-│   ├── alembic/              # Database migration scripts (001_create_repository, 002_create_analysis)
+│   ├── alembic/              # Database migration scripts (001, 002, 003_create_architecture)
 │   ├── app/
 │   │   ├── api/              # API routes & versioning (/api/v1/)
 │   │   ├── core/             # Configuration & logging system
 │   │   ├── database/         # SQLAlchemy engine & session management
-│   │   ├── models/           # Declarative ORM models (Repository, AnalysisRun, Metrics, Smells)
+│   │   ├── models/           # Declarative ORM models (Repository, Analysis, Architecture)
 │   │   ├── schemas/          # Pydantic v2 validation models
-│   │   ├── services/         # GitHubClient, GitService, FileIndexerService, AnalysisService
-│   │   ├── repositories/     # Data access abstraction layer
-│   │   ├── tasks/            # Celery tasks (clone_repository_task, static_analysis_task)
-│   │   ├── analyzers/        # Extensible Static Code Analysis Engine
+│   │   ├── services/         # RepositoryService, AnalysisService, ArchitectureService
+│   │   ├── tasks/            # Celery tasks (clone, static_analysis, architecture_analysis)
+│   │   ├── analyzers/        # Static Analysis & Architecture Intelligence Engines
 │   │   │   ├── base/         # BaseLanguageAnalyzer, AnalyzerRegistry, StaticAnalysisEngine
 │   │   │   ├── shared/       # Models, metrics math, code smells, duplication detector
 │   │   │   ├── python/       # Python AST analyzer
@@ -133,14 +137,14 @@ ProjectIQ/
 │   │   │   ├── javascript/   # JavaScript/JSX analyzer
 │   │   │   ├── go/           # Go analyzer
 │   │   │   ├── java/         # Java analyzer
-│   │   │   └── rust/         # Rust analyzer
-│   │   ├── middleware/       # Custom FastAPI middlewares
-│   │   ├── exceptions/       # Custom exceptions & global handlers
-│   │   ├── dependencies/     # FastAPI dependency injection
-│   │   └── workers/          # Celery worker initialization
-│   ├── tests/                # Pytest test suite (27 tests covering ingestion, analyzers & APIs)
+│   │   │   ├── rust/         # Rust analyzer
+│   │   │   └── architecture/ # Architecture Intelligence Engine & Detectors
+│   │   │       ├── detectors/# ArchDetector, LayerDetector, PatternDetector, FrameworkDetector, DependencyGraphBuilder, ConfigTechDetector
+│   │   │       ├── engine.py # ArchitectureIntelligenceEngine
+│   │   │       └── models.py # Data transfer objects
+│   ├── tests/                # Pytest test suite (34 tests covering ingestion, analyzers, architecture & APIs)
 │   ├── alembic.ini           # Alembic configuration
-│   └── pyproject.toml        # Dependencies & tooling config (Ruff, Black, Mypy, Pytest)
+│   └── pyproject.toml        # Tooling config (Ruff, Black, Mypy, Pytest)
 ├── storage/
 │   └── repositories/         # Cloned repository code storage ({repository_id})
 ├── frontend/                 # Vite React TypeScript Tailwind CSS placeholder
@@ -148,22 +152,6 @@ ProjectIQ/
 ├── docker-compose.yml        # Multi-container orchestration (Backend, Postgres, Redis, Worker)
 └── README.md
 ```
-
----
-
-## ⚡ Technology Stack
-
-### Backend
-- **Python 3.13 / 3.14**
-- **FastAPI**: Modern, high-performance web framework
-- **Pydantic v2**: Data validation and settings management
-- **SQLAlchemy 2.x**: Async ORM & database Toolkit
-- **Alembic**: Database migrations
-- **PostgreSQL**: Primary relational database
-- **Redis**: In-memory data store for caching and Celery broker
-- **Celery**: Distributed task queue for asynchronous repository analysis
-- **GitPython**: Git repository cloning and management
-- **Quality & Testing**: Pytest, Ruff, Black, Mypy, Pre-commit
 
 ---
 
@@ -205,18 +193,7 @@ ProjectIQ/
 6. Access endpoints:
    - **Health**: `http://localhost:8000/api/v1/health`
    - **Version**: `http://localhost:8000/api/v1/version`
-   - **Repositories**: `http://localhost:8000/api/v1/repositories`
    - **Swagger Docs**: `http://localhost:8000/docs`
-
----
-
-## 🐳 Docker Deployment
-
-To spin up the entire ecosystem (Backend, PostgreSQL, Redis, Celery worker):
-
-```bash
-docker-compose up --build
-```
 
 ---
 
@@ -225,7 +202,7 @@ docker-compose up --build
 - [x] **Phase 1**: Enterprise Foundation Architecture (FastAPI, Pydantic v2, SQLAlchemy 2.x, Alembic, Celery, Redis, Docker, Quality tooling).
 - [x] **Phase 2**: Repository Acquisition & Ingestion Pipeline (URL validation, GitHub REST Client, Git cloning, File Indexer, Celery Tasks, Paginated REST API).
 - [x] **Phase 3**: Static Code Analysis Engine (Multi-language parsing for Python, TS, JS, Go, Java, Rust, Cyclomatic Complexity, Maintainability Index, Duplication Detection, Code Smells, Database Schema, Async Celery Pipeline & REST Endpoints).
-- [ ] **Phase 4**: Security, Dependency & AI Intelligence Engine.
+- [x] **Phase 4**: Architecture Intelligence Engine (Architecture Style detection, Layer Detection, 20+ Design Patterns, Framework Conventions, Module Dependency Graph, Tech Stack Metadata, 10 DB Models, Celery Task & 7 REST Endpoints).
 - [ ] **Phase 5**: Full Frontend SaaS Dashboard Integration.
 
 ---
@@ -233,9 +210,3 @@ docker-compose up --build
 ## 📜 License
 
 This project is licensed under the [MIT License](LICENSE).
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on code of conduct and submitting pull requests.

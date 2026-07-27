@@ -10,6 +10,18 @@ from app.models.analysis import (
     FunctionMetrics,
     RepositoryMetrics,
 )
+from app.models.architecture import (
+    ArchitectureAnalysis,
+    ArchitectureLayer,
+    ArchitectureRecommendationPlaceholder,
+    ArchitectureViolation,
+    DependencyEdge,
+    DependencyGraph,
+    DependencyNode,
+    DetectedPattern,
+    FrameworkDetection,
+    TechnologyStack,
+)
 from app.models.base import Base
 from app.models.repository import Repository, RepositoryFileIndex
 
@@ -25,4 +37,14 @@ __all__ = [
     "DuplicateGroup",
     "DuplicateFile",
     "CodeSmell",
+    "ArchitectureAnalysis",
+    "ArchitectureLayer",
+    "ArchitectureViolation",
+    "DetectedPattern",
+    "DependencyGraph",
+    "DependencyNode",
+    "DependencyEdge",
+    "FrameworkDetection",
+    "TechnologyStack",
+    "ArchitectureRecommendationPlaceholder",
 ]

@@ -12,6 +12,16 @@ from app.schemas.analysis import (
     FunctionMetricsResponse,
     RepositoryMetricsResponse,
 )
+from app.schemas.architecture import (
+    ArchitectureAnalysisResponse,
+    ArchitectureLayerResponse,
+    ArchitectureViolationResponse,
+    DependencyGraphResponse,
+    DetectedPatternListResponse,
+    DetectedPatternResponse,
+    FrameworkDetectionResponse,
+    TechnologyStackResponse,
+)
 from app.schemas.health import HealthResponse
 from app.schemas.repository import (
     FileIndexResponse,
@@ -38,4 +48,12 @@ __all__ = [
     "ClassMetricsListResponse",
     "CodeSmellResponse",
     "CodeSmellListResponse",
+    "ArchitectureAnalysisResponse",
+    "ArchitectureLayerResponse",
+    "ArchitectureViolationResponse",
+    "DetectedPatternResponse",
+    "DetectedPatternListResponse",
+    "DependencyGraphResponse",
+    "FrameworkDetectionResponse",
+    "TechnologyStackResponse",
 ]
