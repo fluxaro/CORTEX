@@ -12,9 +12,9 @@ Developers, team leads, and architects spend hours evaluating open-source softwa
 
 ---
 
-## 🏗️ Architecture & Ingestion Pipeline
+## 🏗️ Architecture & Static Analysis Engine
 
-ProjectIQ uses an asynchronous background queue pipeline to handle repository ingestion and metadata indexing cleanly without blocking HTTP request execution.
+ProjectIQ uses an asynchronous background queue pipeline to handle repository ingestion, metadata indexing, and static code analysis without blocking HTTP request execution.
 
 ```
 +------------------+       +-------------------+       +-----------------------+
@@ -22,63 +22,39 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
 +------------------+       +-------------------+       +-----------+-----------+
                                                                    |
                                                                    v
-+------------------+       +-------------------+       +-----------+-----------+
-| Analysis QUEUED  |  <--- | File System Index |  <--- | Celery Git Clone Task |
-+------------------+       +-------------------+       +-----------------------+
++--------------------+     +-------------------+       +-----------+-----------+
+| Analysis COMPLETED | <-- | Static Engine     |  <--- | Celery Git Clone Task |
++--------------------+     +-------------------+       +-----------------------+
 ```
 
-### Repository Lifecycle Statuses
-
-- `PENDING`: Initial state when repository URL is submitted and validated.
-- `CLONING`: Background Celery task actively cloning code into `storage/repositories/{id}`.
-- `READY`: Repository successfully cloned and file system index created.
-- `FAILED`: Ingestion or cloning failed due to network errors or invalid credentials.
+### Static Analysis Features
+- **Multi-Language Parsing**: Dedicated AST & pattern parsers for **Python**, **TypeScript**, **JavaScript**, **Go**, **Java**, and **Rust**.
+- **Metrics Calculation**: Cyclomatic complexity, Maintainability Index (0-100), LOC breakdown (code, blank, comment lines), comment ratios, complexity rank grading (A-F).
+- **Code Smell Detector**: Long functions (>50 LOC), Large classes (>20 methods), Deep nesting (>4 levels), Too many parameters (>5 params), God objects, Long files (>500 LOC).
+- **Duplication Analysis**: Cross-file window hashing algorithm returning duplicate groups, occurrence locations, and repository duplication percentage.
 
 ---
 
 ## 🗄️ Database Schema
 
-### `repositories` Table
-- `id`: UUID (Primary Key)
-- `name`: VARCHAR(255)
-- `owner`: VARCHAR(255)
-- `full_name`: VARCHAR(512) (Unique)
-- `description`: TEXT
-- `default_branch`: VARCHAR(255)
-- `stars`: INTEGER
-- `forks`: INTEGER
-- `language`: VARCHAR(100)
-- `license`: VARCHAR(255)
-- `clone_url`: VARCHAR(1024)
-- `html_url`: VARCHAR(1024)
-- `visibility`: VARCHAR(50)
-- `size`: INTEGER (in KB)
-- `created_at`: TIMESTAMP WITH TIME ZONE
-- `updated_at`: TIMESTAMP WITH TIME ZONE
-- `last_pushed_at`: TIMESTAMP WITH TIME ZONE
-- `status`: VARCHAR(50) (`PENDING`, `CLONING`, `READY`, `FAILED`)
-- `analysis_status`: VARCHAR(50) (`PENDING`, `QUEUED`, `IN_PROGRESS`, `COMPLETED`, `FAILED`)
-- `local_path`: VARCHAR(1024)
-- `created_on`: TIMESTAMP WITH TIME ZONE
-- `updated_on`: TIMESTAMP WITH TIME ZONE
+### Ingestion Tables
+- `repositories`: Main repository metadata and status (`PENDING`, `CLONING`, `READY`, `FAILED`).
+- `repository_file_indices`: Directory structure stats, file count, max depth, largest files, extension distribution.
 
-### `repository_file_indices` Table
-- `id`: UUID (Primary Key)
-- `repository_id`: UUID (Foreign Key -> `repositories.id`)
-- `folder_count`: INTEGER
-- `file_count`: INTEGER
-- `max_depth`: INTEGER
-- `total_size_bytes`: INTEGER
-- `largest_files`: JSON
-- `file_extensions`: JSON
-- `language_distribution`: JSON
-- `created_at`: TIMESTAMP WITH TIME ZONE
-- `updated_at`: TIMESTAMP WITH TIME ZONE
+### Analysis Engine Tables
+- `analysis_runs`: Tracks analysis execution status (`PENDING`, `RUNNING`, `COMPLETED`, `FAILED`), timestamps, commit hash.
+- `repository_metrics`: Aggregated repository LOC, comment ratio, average/max cyclomatic complexity, complexity rank grade, maintainability index, duplicate percentage.
+- `file_metrics`: Per-file metrics, function count, class count, import count, complexity, maintainability index.
+- `function_metrics`: Function/method level metrics, parameters, return annotation, decorators, visibility (`public`/`private`), method type (`instance`/`static`/`class`/`abstract`), complexity, nesting depth.
+- `class_metrics`: Class level metrics, base classes, method count, field count, property count, public/private method counts.
+- `duplicate_groups` & `duplicate_files`: Identifies duplicate code hashes, line counts, instance counts, and exact file line ranges.
+- `code_smells`: Catalog of architectural & quality smells with line numbers, severity, symbol names, and descriptions.
 
 ---
 
 ## 📡 REST API Endpoints
 
+### Repository Management
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | **GET** | `/api/v1/health` | Service health status |
@@ -88,14 +64,49 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
 | **GET** | `/api/v1/repositories/{id}` | Get repository details & file system index |
 | **DELETE** | `/api/v1/repositories/{id}` | Delete repository & cleanup local clone storage |
 
-### Query Parameters for `GET /api/v1/repositories`
-- `page`: Page number (default: 1)
-- `page_size`: Number of items per page (default: 10, max: 100)
-- `status`: Filter by status (`PENDING`, `CLONING`, `READY`, `FAILED`)
-- `owner`: Filter by repository owner login
-- `language`: Filter by primary programming language
-- `sort_by`: Sort field (`created_at`, `stars`, `updated_at`)
-- `order`: Sort order (`asc`, `desc`)
+### Static Code Analysis
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| **POST** | `/api/v1/repositories/{id}/analyze` | Trigger new static code analysis run |
+| **GET** | `/api/v1/repositories/{id}/analysis` | Get status of latest analysis run |
+| **GET** | `/api/v1/repositories/{id}/metrics` | Get aggregated repository engineering metrics |
+| **GET** | `/api/v1/repositories/{id}/files` | Paginated file-level metrics |
+| **GET** | `/api/v1/repositories/{id}/functions` | Paginated function-level metrics |
+| **GET** | `/api/v1/repositories/{id}/classes` | Paginated class-level metrics |
+| **GET** | `/api/v1/repositories/{id}/smells` | Paginated code smells & findings |
+
+---
+
+## 🛠️ Developer Guide: Adding a New Language Analyzer
+
+To extend ProjectIQ with support for a new language (e.g. C++ or Kotlin):
+
+1. **Implement `BaseLanguageAnalyzer`**:
+   Create a new class under `app/analyzers/{language}/{language}_analyzer.py` subclassing `BaseLanguageAnalyzer`:
+   ```python
+   from app.analyzers.base.base_analyzer import BaseLanguageAnalyzer
+   from app.analyzers.shared.models import FileAnalysisResult
+
+   class KotlinAnalyzer(BaseLanguageAnalyzer):
+       @property
+       def language_name(self) -> str:
+           return "Kotlin"
+
+       @property
+       def supported_extensions(self) -> list[str]:
+           return [".kt", ".kts"]
+
+       def analyze_file(self, rel_path: str, content: str, file_size: int = 0) -> FileAnalysisResult:
+           loc, comment_lines, blank_lines, code_lines = self.count_lines(content)
+           # Extract functions, classes, imports, complexity...
+           return FileAnalysisResult(...)
+   ```
+
+2. **Register Analyzer**:
+   In `app/analyzers/base/engine.py`, register the new analyzer instance with `AnalyzerRegistry.register(KotlinAnalyzer())`.
+
+3. **Add Unit Tests**:
+   Add unit tests in `tests/test_kotlin_analyzer.py` validating parsing and metric calculations.
 
 ---
 
@@ -104,24 +115,30 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
 ```
 ProjectIQ/
 ├── backend/
-│   ├── alembic/              # Database migration scripts
+│   ├── alembic/              # Database migration scripts (001_create_repository, 002_create_analysis)
 │   ├── app/
 │   │   ├── api/              # API routes & versioning (/api/v1/)
 │   │   ├── core/             # Configuration & logging system
 │   │   ├── database/         # SQLAlchemy engine & session management
-│   │   ├── models/           # Declarative ORM models & mixins
+│   │   ├── models/           # Declarative ORM models (Repository, AnalysisRun, Metrics, Smells)
 │   │   ├── schemas/          # Pydantic v2 validation models
-│   │   ├── services/         # GitHubClient, GitService, FileIndexerService, RepositoryService
+│   │   ├── services/         # GitHubClient, GitService, FileIndexerService, AnalysisService
 │   │   ├── repositories/     # Data access abstraction layer
-│   │   ├── tasks/            # Celery asynchronous tasks (clone_repository_task, prepare_analysis_task)
-│   │   ├── analyzers/        # Code analysis modules
-│   │   ├── utils/            # Shared helper functions
-│   │   ├── middleware/       # Custom FastAPI middlewares (RequestIDMiddleware)
+│   │   ├── tasks/            # Celery tasks (clone_repository_task, static_analysis_task)
+│   │   ├── analyzers/        # Extensible Static Code Analysis Engine
+│   │   │   ├── base/         # BaseLanguageAnalyzer, AnalyzerRegistry, StaticAnalysisEngine
+│   │   │   ├── shared/       # Models, metrics math, code smells, duplication detector
+│   │   │   ├── python/       # Python AST analyzer
+│   │   │   ├── typescript/   # TypeScript/TSX analyzer
+│   │   │   ├── javascript/   # JavaScript/JSX analyzer
+│   │   │   ├── go/           # Go analyzer
+│   │   │   ├── java/         # Java analyzer
+│   │   │   └── rust/         # Rust analyzer
+│   │   ├── middleware/       # Custom FastAPI middlewares
 │   │   ├── exceptions/       # Custom exceptions & global handlers
 │   │   ├── dependencies/     # FastAPI dependency injection
-│   │   ├── workers/          # Celery worker initialization
-│   │   └── scripts/          # Database & maintenance scripts
-│   ├── tests/                # Pytest test suite
+│   │   └── workers/          # Celery worker initialization
+│   ├── tests/                # Pytest test suite (27 tests covering ingestion, analyzers & APIs)
 │   ├── alembic.ini           # Alembic configuration
 │   └── pyproject.toml        # Dependencies & tooling config (Ruff, Black, Mypy, Pytest)
 ├── storage/
@@ -147,11 +164,6 @@ ProjectIQ/
 - **Celery**: Distributed task queue for asynchronous repository analysis
 - **GitPython**: Git repository cloning and management
 - **Quality & Testing**: Pytest, Ruff, Black, Mypy, Pre-commit
-
-### Frontend (Placeholder)
-- **React** with **TypeScript**
-- **Vite** build tooling
-- **Tailwind CSS**
 
 ---
 
@@ -212,8 +224,8 @@ docker-compose up --build
 
 - [x] **Phase 1**: Enterprise Foundation Architecture (FastAPI, Pydantic v2, SQLAlchemy 2.x, Alembic, Celery, Redis, Docker, Quality tooling).
 - [x] **Phase 2**: Repository Acquisition & Ingestion Pipeline (URL validation, GitHub REST Client, Git cloning, File Indexer, Celery Tasks, Paginated REST API).
-- [ ] **Phase 3**: Static Code Quality & Security Analyzers.
-- [ ] **Phase 4**: AI Summary & Technical Debt Scoring.
+- [x] **Phase 3**: Static Code Analysis Engine (Multi-language parsing for Python, TS, JS, Go, Java, Rust, Cyclomatic Complexity, Maintainability Index, Duplication Detection, Code Smells, Database Schema, Async Celery Pipeline & REST Endpoints).
+- [ ] **Phase 4**: Security, Dependency & AI Intelligence Engine.
 - [ ] **Phase 5**: Full Frontend SaaS Dashboard Integration.
 
 ---

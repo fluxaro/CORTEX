@@ -1,0 +1,1 @@
+"""Go analyzer package."""

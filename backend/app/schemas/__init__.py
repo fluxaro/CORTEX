@@ -1,5 +1,17 @@
 """Pydantic schemas module."""
 
+from app.schemas.analysis import (
+    AnalysisRunResponse,
+    ClassMetricsListResponse,
+    ClassMetricsResponse,
+    CodeSmellListResponse,
+    CodeSmellResponse,
+    FileMetricsListResponse,
+    FileMetricsResponse,
+    FunctionMetricsListResponse,
+    FunctionMetricsResponse,
+    RepositoryMetricsResponse,
+)
 from app.schemas.health import HealthResponse
 from app.schemas.repository import (
     FileIndexResponse,
@@ -16,4 +28,14 @@ __all__ = [
     "RepositoryResponse",
     "RepositoryListResponse",
     "FileIndexResponse",
+    "AnalysisRunResponse",
+    "RepositoryMetricsResponse",
+    "FileMetricsResponse",
+    "FileMetricsListResponse",
+    "FunctionMetricsResponse",
+    "FunctionMetricsListResponse",
+    "ClassMetricsResponse",
+    "ClassMetricsListResponse",
+    "CodeSmellResponse",
+    "CodeSmellListResponse",
 ]

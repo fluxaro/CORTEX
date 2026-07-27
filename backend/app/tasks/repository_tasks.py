@@ -113,11 +113,26 @@ async def _async_prepare_analysis(repository_id_str: str) -> None:
             )
             return
 
+        from app.models.analysis import AnalysisRun, AnalysisRunStatus
+        from app.tasks.analysis_tasks import static_analysis_task
+
         repo.analysis_status = AnalysisStatus.QUEUED.value
-        await session.commit()
-        logger.info(
-            f"Repository {repo.full_name} analysis status set to QUEUED (Placeholder for future phases)."
+
+        analysis_run = AnalysisRun(
+            repository_id=repo.id,
+            status=AnalysisRunStatus.PENDING.value,
         )
+        session.add(analysis_run)
+        await session.commit()
+        await session.refresh(analysis_run)
+
+        logger.info(
+            f"Repository {repo.full_name} analysis status set to QUEUED (Run ID: {analysis_run.id})."
+        )
+        try:
+            static_analysis_task.delay(str(analysis_run.id))
+        except Exception:
+            pass
 
 
 @celery_app.task(name="app.tasks.repository_tasks.clone_repository_task")
