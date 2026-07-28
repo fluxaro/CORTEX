@@ -23,6 +23,18 @@ from app.schemas.architecture import (
     TechnologyStackResponse,
 )
 from app.schemas.health import HealthResponse
+from app.schemas.maintainability import (
+    CiAnalysisResponse,
+    CommitAnalysisResponse,
+    CommunityAnalysisResponse,
+    DocumentationAnalysisResponse,
+    GitHistoryAnalysisResponse,
+    MaintainabilityMetricsResponse,
+    ReadmeAnalysisResponse,
+    ReleaseAnalysisResponse,
+    RepositoryHealthResponse,
+    TestingAnalysisResponse,
+)
 from app.schemas.repository import (
     FileIndexResponse,
     RepositoryCreate,
@@ -84,4 +96,14 @@ __all__ = [
     "AuthenticationFindingListResponse",
     "AuthorizationFindingResponse",
     "AuthorizationFindingListResponse",
+    "MaintainabilityMetricsResponse",
+    "DocumentationAnalysisResponse",
+    "ReadmeAnalysisResponse",
+    "TestingAnalysisResponse",
+    "GitHistoryAnalysisResponse",
+    "CommitAnalysisResponse",
+    "ReleaseAnalysisResponse",
+    "CiAnalysisResponse",
+    "CommunityAnalysisResponse",
+    "RepositoryHealthResponse",
 ]

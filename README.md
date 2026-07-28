@@ -14,7 +14,7 @@ Developers, team leads, and architects spend hours evaluating open-source softwa
 
 ## 🏗️ Architecture & Engines
 
-ProjectIQ uses an asynchronous background queue pipeline to handle repository ingestion, static code analysis, architecture intelligence, and security intelligence without blocking HTTP request execution.
+ProjectIQ uses an asynchronous background queue pipeline to handle repository ingestion, static code analysis, architecture intelligence, security intelligence, and maintainability intelligence without blocking HTTP request execution.
 
 ```
 +------------------+       +-------------------+       +-----------------------+
@@ -23,7 +23,7 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
                                                                    |
                                                                    v
 +--------------------+     +-------------------+       +-----------+-----------+
-| Security Engine    | <-- | Static & Arch     |  <--- | Celery Git Clone Task |
+| Maintainability    | <-- | Static, Arch, Sec |  <--- | Celery Git Clone Task |
 +--------------------+     +-------------------+       +-----------------------+
 ```
 
@@ -46,7 +46,16 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
 - **Dependency Security Scanning**: Inspects `package.json`, `poetry.lock`, `requirements.txt`, `Cargo.toml`, `go.mod`, `pom.xml` for outdated/deprecated packages, known CVEs, unmaintained libraries, license conflicts, CVSS scores, severity, and reference URLs.
 - **Static Security Rules (SAST)**: Language-aware static analysis for dangerous functions (`eval`, `exec`, `pickle.loads`, `subprocess(shell=True)`, `os.system`, `Runtime.exec`), `dangerouslySetInnerHTML`, `innerHTML`, weak cryptography (MD5, SHA1), weak random, hardcoded credentials, string-concatenated SQL injection, path traversal, and unsafe YAML deserialization.
 - **Authentication & Authorization Analysis**: Analyzes authentication mechanisms, password hashing algorithms (BCrypt, Argon2, PBKDF2, MD5, SHA1, missing hashing), web security controls (CORS, HttpOnly, Secure cookie flags), and authorization/RBAC protection on admin routes.
-- **Severity Model**: Every finding is categorized into standard severity levels: `Critical`, `High`, `Medium`, `Low`, or `Informational`.
+
+### Maintainability & Repository Intelligence Engine Features (Deterministic, NO AI)
+- **README & Documentation Analysis**: Markdown section parser evaluating 19 standard engineering sections, completeness percentage, badges, screenshots, architecture docs, API reference, deployment guides, developer guides, and doc generators (MkDocs, Docusaurus, Swagger, TypeDoc, Javadoc).
+- **License & CHANGELOG Analysis**: Identifies licenses (MIT, Apache-2.0, GPL-3.0, BSD-3-Clause, MPL-2.0, AGPL-3.0, LGPL-3.0, Unlicense, custom/missing), OSI approval, CHANGELOG presence, and Semantic Versioning compliance.
+- **Testing Maturity Analysis**: Detects test runners (Pytest, Unittest, Jest, Vitest, Mocha, Ava, Go Test, JUnit, Cargo Test), counts test files/cases, unit/integration/e2e tests, mock/fixture usage, and computes testing score (0-100).
+- **CI/CD Pipeline Analysis**: Detects CI providers (GitHub Actions, GitLab CI, Azure Pipelines, CircleCI, Jenkins, Travis CI) and classifies jobs for lint, test, build, deploy, release, security scans, and coverage.
+- **Git History & Commit Quality**: Uses GitPython to extract commit count, contributor count, branch count, tag count, repository age, commit frequency (commits/week), inactive periods, Conventional Commits %, generic commits %, and commit quality score (0-100).
+- **Open Source Community Standards**: Scans `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, issue templates, PR templates, and discussions.
+- **Package Manifest Quality**: Inspects `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `pom.xml` for missing metadata fields.
+- **Raw Subsystem Scores**: Generates raw 0-100 scores for Documentation, Testing, CI/CD, Release, Repository Health, and Community (overall score deferred to Phase 7).
 
 ---
 
@@ -59,16 +68,10 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
 - `architecture_analyses`, `architecture_layers`, `architecture_violations`, `detected_patterns`, `dependency_graphs`, `dependency_nodes`, `dependency_edges`, `framework_detections`, `technology_stacks`, `architecture_recommendation_placeholders`.
 
 ### Security Intelligence Engine Tables
-- `security_analyses`: Primary run table storing finding counts by severity (`critical_count`, `high_count`, `medium_count`, `low_count`, `info_count`) and breakdown metrics.
-- `security_findings`: Detailed SAST security findings with severity, confidence, category, language, file, line, column, description, remediation placeholder, reference URL, and CVSS score.
-- `secret_findings`: Hardcoded secrets findings with entropy score and masked values.
-- `dependency_findings`: Vulnerable third-party package dependencies with CVE ID, CVSS score, severity, and reference URLs.
-- `configuration_findings`: Infrastructure misconfigurations in Dockerfiles, env files, and K8s configs.
-- `authentication_findings`: Authentication weaknesses and password hashing findings.
-- `authorization_findings`: Authorization and RBAC findings on endpoints.
-- `security_rules`: Security rule definition catalog.
-- `security_references`: Security reference links (CWE, OWASP, NVD).
-- `security_summaries`: Summary metrics and most vulnerable files.
+- `security_analyses`, `security_findings`, `secret_findings`, `dependency_findings`, `configuration_findings`, `authentication_findings`, `authorization_findings`, `security_rules`, `security_references`, `security_summaries`.
+
+### Maintainability Intelligence Engine Tables
+- `documentation_analyses`, `documentation_sections`, `readme_analyses`, `testing_analyses`, `git_history_analyses`, `commit_analyses`, `release_analyses`, `community_analyses`, `ci_analyses`, `license_analyses`, `maintainability_metrics`, `repository_healths`.
 
 ---
 
@@ -118,34 +121,37 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
 | **GET** | `/api/v1/repositories/{id}/security/authentication` | Paginated authentication findings |
 | **GET** | `/api/v1/repositories/{id}/security/authorization` | Paginated authorization findings |
 
+### Maintainability & Repository Intelligence Engine
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| **POST** | `/api/v1/repositories/{id}/maintainability` | Trigger Maintainability Intelligence analysis |
+| **GET** | `/api/v1/repositories/{id}/maintainability` | Get latest raw subsystem scores (Doc, Test, CI, Release, Health, Community) |
+| **GET** | `/api/v1/repositories/{id}/documentation` | Get documentation completeness & README section breakdown |
+| **GET** | `/api/v1/repositories/{id}/testing` | Get testing suite maturity & test file breakdown |
+| **GET** | `/api/v1/repositories/{id}/git-history` | Get Git history, contributor count & development velocity |
+| **GET** | `/api/v1/repositories/{id}/commits` | Get commit quality score & Conventional Commits percentage |
+| **GET** | `/api/v1/repositories/{id}/releases` | Get release history & SemVer compliance |
+| **GET** | `/api/v1/repositories/{id}/ci` | Get CI/CD automation providers & job breakdown |
+| **GET** | `/api/v1/repositories/{id}/community` | Get open source community standards compliance |
+| **GET** | `/api/v1/repositories/{id}/repository-health` | Get raw repository health breakdown metrics |
+
 ---
 
 ## 🛠️ Developer Guide
 
-### 1. How to Create a New Security Rule
-Add a new rule tuple to `SASTRules.SAST_RULES` in `app/analyzers/security/scanners/sast_rules.py`:
+### 1. How to Add a New Maintainability Detector
+Create a new analyzer class under `app/analyzers/maintainability/analyzers/my_analyzer.py` subclassing `BaseMaintainabilityAnalyzer`:
 ```python
-("SEC-014", "Unsafe Deserialization", "Deserialization", r"marshal\.loads\(", "HIGH", "Python", "Unsafe marshal deserialization allows arbitrary code execution.")
-```
+from app.analyzers.maintainability.base_analyzer import BaseMaintainabilityAnalyzer
 
-### 2. How to Register a New Security Scanner
-Create a scanner subclassing `BaseSecurityScanner` in `app/analyzers/security/scanners/my_scanner.py`:
-```python
-from app.analyzers.security.base_scanner import BaseSecurityScanner
-from app.analyzers.security.models import SecurityAnalysisResult
-
-class CustomSecurityScanner(BaseSecurityScanner):
+class CustomMaintainabilityAnalyzer(BaseMaintainabilityAnalyzer):
     @property
-    def scanner_name(self) -> str:
-        return "CustomSecurityScanner"
+    def analyzer_name(self) -> str:
+        return "CustomMaintainabilityAnalyzer"
 
-    def scan(self, target_path: str, file_contents: dict[str, str], extra_context=None) -> SecurityAnalysisResult:
-        # Perform custom scanning logic...
-        return SecurityAnalysisResult(...)
-```
-Then register it in `SecurityScannerRegistry`:
-```python
-SecurityScannerRegistry.register(CustomSecurityScanner())
+    def analyze(self, target_path: str, file_paths: list[str], file_contents: dict[str, str], extra_context=None) -> None:
+        # Perform custom maintainability analysis...
+        pass
 ```
 
 ---
@@ -155,26 +161,26 @@ SecurityScannerRegistry.register(CustomSecurityScanner())
 ```
 ProjectIQ/
 ├── backend/
-│   ├── alembic/              # Database migration scripts (001, 002, 003, 004_create_security_tables)
+│   ├── alembic/              # Database migration scripts (001, 002, 003, 004, 005_create_maintainability_tables)
 │   ├── app/
 │   │   ├── api/              # API routes & versioning (/api/v1/)
 │   │   ├── core/             # Configuration & logging system
 │   │   ├── database/         # SQLAlchemy engine & session management
-│   │   ├── models/           # Declarative ORM models (Repository, Analysis, Architecture, Security)
+│   │   ├── models/           # Declarative ORM models (Repository, Analysis, Architecture, Security, Maintainability)
 │   │   ├── schemas/          # Pydantic v2 validation models
-│   │   ├── services/         # RepositoryService, AnalysisService, ArchitectureService, SecurityService
-│   │   ├── tasks/            # Celery tasks (clone, static_analysis, architecture_analysis, security_analysis)
+│   │   ├── services/         # RepositoryService, AnalysisService, ArchitectureService, SecurityService, MaintainabilityService
+│   │   ├── tasks/            # Celery tasks (clone, static_analysis, architecture_analysis, security_analysis, repository_intelligence_task)
 │   │   ├── analyzers/        # Analysis Engines
 │   │   │   ├── base/         # BaseLanguageAnalyzer, AnalyzerRegistry, StaticAnalysisEngine
 │   │   │   ├── shared/       # Models, metrics math, code smells, duplication detector
 │   │   │   ├── architecture/ # Architecture Intelligence Engine & Detectors
-│   │   │   └── security/     # Security Intelligence Engine (SAST)
-│   │   │       ├── base_scanner.py # BaseSecurityScanner interface
-│   │   │       ├── registry.py     # SecurityScannerRegistry
-│   │   │       ├── engine.py       # SecurityIntelligenceEngine
-│   │   │       ├── models.py       # Data transfer objects
-│   │   │       └── scanners/       # SecretDetector, ConfigScanner, DependencyScanner, SASTRules, AuthScanner, AuthzScanner
-│   ├── tests/                # Pytest test suite (40 tests covering ingestion, static, architecture & security APIs)
+│   │   │   ├── security/     # Security Intelligence Engine (SAST)
+│   │   │   └── maintainability/ # Maintainability Engine (README, Docs, Testing, CI, Git, Commits, Releases, Community)
+│   │   │       ├── base_analyzer.py # BaseMaintainabilityAnalyzer interface
+│   │   │       ├── engine.py        # MaintainabilityEngine orchestrator
+│   │   │       ├── models.py        # Data transfer objects
+│   │   │       └── analyzers/       # ReadmeAnalyzer, DocsAnalyzer, TestingAnalyzer, CiAnalyzer, GitHistoryAnalyzer, LicenseChangelogAnalyzer, CommunityAnalyzer, PackageQualityAnalyzer
+│   ├── tests/                # Pytest test suite (46 tests covering ingestion, static, architecture, security & maintainability APIs)
 │   ├── alembic.ini           # Alembic configuration
 │   └── pyproject.toml        # Tooling config (Ruff, Black, Mypy, Pytest)
 ├── storage/
@@ -236,6 +242,7 @@ ProjectIQ/
 - [x] **Phase 3**: Static Code Analysis Engine (Multi-language parsing for Python, TS, JS, Go, Java, Rust, Cyclomatic Complexity, Maintainability Index, Duplication Detection, Code Smells, Database Schema, Async Celery Pipeline & REST Endpoints).
 - [x] **Phase 4**: Architecture Intelligence Engine (Architecture Style detection, Layer Detection, 20+ Design Patterns, Framework Conventions, Module Dependency Graph, Tech Stack Metadata, 10 DB Models, Celery Task & 7 REST Endpoints).
 - [x] **Phase 5**: Security Intelligence Engine (SAST, Secret Detection, Infrastructure Config Scanner, Dependency Vulnerabilities, Static Security Rules, Auth/Authz Scanner, 10 DB Models, Celery Task & 8 REST Endpoints).
+- [x] **Phase 6**: Maintainability & Repository Intelligence Engine (Deterministic evaluation of README completeness, Documentation structure, Testing maturity, CI/CD pipelines, Git history & Conventional Commits, Release tracking, Community standards, 12 DB Models, Celery Task & 10 REST Endpoints).
 
 ---
 

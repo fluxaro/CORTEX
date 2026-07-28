@@ -5,6 +5,7 @@ from app.services.architecture_service import ArchitectureService
 from app.services.git_service import GitService
 from app.services.github_client import GitHubClient
 from app.services.indexer_service import FileIndexerService
+from app.services.maintainability_service import MaintainabilityService
 from app.services.repository_service import RepositoryService
 from app.services.security_service import SecurityService
 
@@ -16,4 +17,5 @@ __all__ = [
     "AnalysisService",
     "ArchitectureService",
     "SecurityService",
+    "MaintainabilityService",
 ]

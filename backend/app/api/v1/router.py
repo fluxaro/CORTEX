@@ -6,6 +6,7 @@ from app.api.v1.endpoints import (
     analysis,
     architecture,
     health,
+    maintainability,
     repositories,
     security,
     version,
@@ -26,4 +27,9 @@ api_router.include_router(
 )
 api_router.include_router(
     security.router, prefix="/repositories", tags=["Security Intelligence (SAST)"]
+)
+api_router.include_router(
+    maintainability.router,
+    prefix="/repositories",
+    tags=["Maintainability Intelligence"],
 )

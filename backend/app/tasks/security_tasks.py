@@ -211,6 +211,15 @@ async def _async_run_security_analysis(  # noqa: C901
             logger.info("Persistence complete")
             logger.info(f"Analysis finished for repository {repo.full_name}")
 
+            from app.tasks.repository_intelligence_tasks import (
+                repository_intelligence_task,
+            )
+
+            try:
+                repository_intelligence_task.delay(str(repo.id), str(run_uuid))
+            except Exception:
+                pass
+
         except Exception as exc:
             logger.exception(
                 f"Security analysis failed for repository {repo.full_name}: {exc}"

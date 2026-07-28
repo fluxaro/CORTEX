@@ -24,6 +24,20 @@ from app.models.architecture import (
     TechnologyStack,
 )
 from app.models.base import Base
+from app.models.maintainability import (
+    CiAnalysis,
+    CommitAnalysis,
+    CommunityAnalysis,
+    DocumentationAnalysis,
+    DocumentationSection,
+    GitHistoryAnalysis,
+    LicenseAnalysis,
+    MaintainabilityMetrics,
+    ReadmeAnalysis,
+    ReleaseAnalysis,
+    RepositoryHealth,
+    TestingAnalysis,
+)
 from app.models.repository import (
     AnalysisStatus,
     Repository,
@@ -78,4 +92,16 @@ __all__ = [
     "SecurityRule",
     "SecurityReference",
     "SecuritySummary",
+    "DocumentationAnalysis",
+    "DocumentationSection",
+    "ReadmeAnalysis",
+    "TestingAnalysis",
+    "GitHistoryAnalysis",
+    "CommitAnalysis",
+    "ReleaseAnalysis",
+    "CommunityAnalysis",
+    "CiAnalysis",
+    "LicenseAnalysis",
+    "MaintainabilityMetrics",
+    "RepositoryHealth",
 ]
