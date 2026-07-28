@@ -1,4 +1,12 @@
-import { Plus, Search, ShieldCheck, Settings } from 'lucide-react';
+import React from 'react';
+import {
+  Bell,
+  LogOut,
+  Plus,
+  Search,
+  ShieldCheck,
+  User as UserIcon,
+} from 'lucide-react';
 import { Button } from './ui/Button';
 
 interface NavbarProps {
@@ -6,6 +14,8 @@ interface NavbarProps {
   onOpenAddRepo: () => void;
   onNavigate: (page: string) => void;
   activePage: string;
+  isAuthenticated: boolean;
+  onLogout: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -13,6 +23,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAddRepo,
   onNavigate,
   activePage,
+  isAuthenticated,
+  onLogout,
 }) => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/80 glass-panel">
@@ -25,57 +37,112 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <span className="font-bold text-lg text-white tracking-tight">ProjectIQ</span>
-              <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-primary-500/10 text-primary-400 border border-primary-500/20">
-                v1.0
+              <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                Enterprise
               </span>
             </div>
             <p className="text-[11px] text-gray-400 hidden sm:block">Know your code before you clone it.</p>
           </div>
         </div>
 
-        {/* Center Search Bar Trigger */}
-        <button
-          onClick={onOpenSearch}
-          className="hidden md:flex items-center gap-3 px-4 py-2 rounded-xl bg-surface-card border border-border/60 text-xs text-gray-400 hover:border-primary-500/40 hover:text-gray-200 transition-all w-64 shadow-inner"
-        >
-          <Search className="h-4 w-4 text-gray-400" />
-          <span>Search repositories...</span>
-          <kbd className="ml-auto px-1.5 py-0.5 text-[10px] font-mono bg-surface-hover rounded text-gray-400">Ctrl K</kbd>
-        </button>
+        {/* Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-1">
+          <button
+            onClick={() => onNavigate('repositories')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              activePage === 'repositories' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            Repos
+          </button>
+          <button
+            onClick={() => onNavigate('workspaces')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              activePage === 'workspaces' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            Workspaces
+          </button>
+          <button
+            onClick={() => onNavigate('sync')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              activePage === 'sync' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            Git Sync
+          </button>
+          <button
+            onClick={() => onNavigate('scans')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              activePage === 'scans' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            Scan History
+          </button>
+          <button
+            onClick={() => onNavigate('trends')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              activePage === 'trends' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            Trends
+          </button>
+          <button
+            onClick={() => onNavigate('compare')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              activePage === 'compare' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            Compare
+          </button>
+          <button
+            onClick={() => onNavigate('audit')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              activePage === 'audit' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            Audit Logs
+          </button>
+        </nav>
 
-        {/* Right Action Controls */}
-        <div className="flex items-center gap-3">
-          <nav className="flex items-center gap-1 mr-2">
-            <button
-              onClick={() => onNavigate('landing')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                activePage === 'landing' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              Home
-            </button>
-            <button
-              onClick={() => onNavigate('repositories')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                activePage === 'repositories' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              Repositories
-            </button>
-          </nav>
+        {/* Right Controls */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onOpenSearch}
+            className="p-2 rounded-xl border border-border/60 hover:bg-surface-hover text-gray-400 hover:text-white transition-colors"
+            title="Search (Ctrl+K)"
+          >
+            <Search className="h-4 w-4" />
+          </button>
+
+          <button
+            onClick={() => onNavigate('notifications')}
+            className="p-2 rounded-xl border border-border/60 hover:bg-surface-hover text-gray-400 hover:text-white transition-colors relative"
+            title="Notifications"
+          >
+            <Bell className="h-4 w-4" />
+            <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-rose-500" />
+          </button>
 
           <Button onClick={onOpenAddRepo} variant="primary" size="sm">
             <Plus className="h-4 w-4" />
-            <span>Add Repository</span>
+            <span>Add Repo</span>
           </Button>
 
-          <button
-            onClick={() => onNavigate('settings')}
-            className="p-2 rounded-xl border border-border/60 hover:bg-surface-hover text-gray-400 hover:text-white transition-colors"
-            title="Settings & IQ Configuration"
-          >
-            <Settings className="h-4 w-4" />
-          </button>
+          {isAuthenticated ? (
+            <button
+              onClick={onLogout}
+              className="p-2 rounded-xl border border-border/60 hover:bg-surface-hover text-rose-400 hover:text-rose-300 transition-colors"
+              title="Logout"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          ) : (
+            <Button onClick={() => onNavigate('login')} variant="outline" size="sm">
+              <UserIcon className="h-4 w-4" />
+              <span>Login</span>
+            </Button>
+          )}
         </div>
       </div>
     </header>

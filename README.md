@@ -2,7 +2,7 @@
 
 > **Tagline**: *"Know your code before you clone it."*
 
-ProjectIQ is an enterprise-grade, AI-powered Repository Intelligence Platform. The platform analyzes GitHub repositories and generates comprehensive, production-ready reports on Code Quality, Architecture, Security, Dependencies, Documentation, Git History, Testing, AI Summary, and Technical Debt.
+ProjectIQ is an enterprise-grade, AI-powered Repository Intelligence Platform. The platform analyzes GitHub, GitLab, and Bitbucket repositories and generates comprehensive, production-ready reports on Code Quality, Architecture, Security, Dependencies, Documentation, Git History, Testing, AI Summary, and Technical Debt.
 
 ---
 
@@ -14,16 +14,16 @@ Developers, team leads, and architects spend hours evaluating open-source softwa
 
 ## 🏗️ Architecture & Engines
 
-ProjectIQ uses an asynchronous background queue pipeline to handle repository ingestion, static code analysis, architecture intelligence, security intelligence, maintainability intelligence, and repository IQ calculation without blocking HTTP request execution.
+ProjectIQ uses an asynchronous background queue pipeline to handle repository ingestion, static code analysis, architecture intelligence, security intelligence, maintainability intelligence, repository IQ calculation, git platform synchronization, and enterprise webhooks without blocking HTTP request execution.
 
 ```
 +------------------+       +-------------------+       +-----------------------+
-|  POST /repos     |  ---> | GitHub API Client |  ---> | Insert DB (PENDING)   |
+|  POST /repos     |  ---> | Git Platform Client| ---> | Insert DB (PENDING)   |
 +------------------+       +-------------------+       +-----------+-----------+
                                                                    |
                                                                    v
 +--------------------+     +-------------------+       +-----------+-----------+
-| Repository IQ Engine| <-- | Static, Arch, Sec |  <--- | Celery Git Clone Task |
+| Enterprise & IQ    | <-- | Static, Arch, Sec |  <--- | Celery Git Clone Task |
 +--------------------+     +-------------------+       +-----------------------+
 ```
 
@@ -64,115 +64,64 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
 - **Prompt Engine**: Versioned prompt templates for Executive Summary, Technical Summary, Architecture Summary, Security Summary, Maintainability Summary, Improvement Roadmap, Technical Debt, Recruiter Summary, and Engineering Manager Summary.
 - **Deterministic AI Generation**: The AI layer strictly consumes structured database metrics from previous phases without ever inspecting raw source code directly.
 
-### Professional Frontend Dashboard Features
-- **Modern SaaS UI Aesthetic**: Linear/Vercel/GitHub dark mode aesthetic with glassmorphic panels, glowing badges, tailored HSL color palettes, and micro-animations.
-- **Complete Page Suite**: Landing Page, Repository List, Repository Overview, Static Analysis, Architecture with interactive React Flow dependency graph, Security SAST Findings, Documentation, Repository IQ & AI Insights, Settings, and 404.
-- **Global Search Modal (Ctrl+K)**: Command palette keyboard shortcut search across repositories, security findings, and recommendations.
-- **Interactive Recharts**: Radar charts, score gauges, technical debt breakdown bar charts, and industry benchmark percentile scores.
-- **Responsive & Mobile Ready**: Full layout adaptation for Desktop, Tablet, and Mobile devices.
+### Enterprise Collaboration & Git Integration Features (Phase 9)
+- **Multi-Tenant Workspaces & Organizations**: Supports Personal Workspaces, Enterprise Organization Workspaces, member seats, and workspace settings.
+- **Role-Based Access Control (RBAC)**: Enforces permission hierarchy across `OWNER`, `ADMIN`, `MAINTAINER`, `DEVELOPER`, and `VIEWER` roles.
+- **Authentication & OAuth**: PBKDF2 password hashing, JWT Access & Refresh token management, and OAuth authorization flows for GitHub, GitLab, and Bitbucket.
+- **Git Platform Integrations**: Repository import, metadata synchronization, default branch selection, and webhook registration across GitHub, GitLab, and Bitbucket.
+- **Webhooks Infrastructure**: Handles incoming `push`, `pull_request`, `release`, `tag`, and `branch` events with background Celery task dispatching.
+- **Scheduled Scans & History**: Automated daily, weekly, and monthly scan schedules, execution history logs, cancellation, and retries.
+- **Time-Series Trend Analysis**: Computes and stores historical snapshots of Repository IQ, Security, Architecture, Complexity, and Technical Debt over time with interactive Recharts line charts.
+- **Repository Comparison Engine**: Side-by-side comparative matrix comparing multiple repositories or scan versions across engineering metrics.
+- **In-App Notifications**: Real-time notification infrastructure for security findings, scan completions, and invitations.
+- **Immutable Audit Logging**: Compliance audit trail logging authentication, repository imports, permission updates, and setting modifications.
 
 ---
 
 ## 🗄️ Database Schema
 
-### Ingestion & Static Analysis Tables
-- `repositories`, `repository_file_indices`, `analysis_runs`, `repository_metrics`, `file_metrics`, `function_metrics`, `class_metrics`, `duplicate_groups`, `duplicate_files`, `code_smells`.
+### Enterprise Tables (Phase 9)
+- `users`, `user_preferences`, `organizations`, `workspaces`, `memberships`, `invitations`, `api_tokens`, `repository_syncs`, `webhooks`, `notifications`, `audit_logs`, `scan_histories`, `trend_metrics`, `repository_comparisons`.
 
-### Architecture Intelligence Engine Tables
-- `architecture_analyses`, `architecture_layers`, `architecture_violations`, `detected_patterns`, `dependency_graphs`, `dependency_nodes`, `dependency_edges`, `framework_detections`, `technology_stacks`, `architecture_recommendation_placeholders`.
-
-### Security Intelligence Engine Tables
-- `security_analyses`, `security_findings`, `secret_findings`, `dependency_findings`, `configuration_findings`, `authentication_findings`, `authorization_findings`, `security_rules`, `security_references`, `security_summaries`.
-
-### Maintainability Intelligence Engine Tables
-- `documentation_analyses`, `documentation_sections`, `readme_analyses`, `testing_analyses`, `git_history_analyses`, `commit_analyses`, `release_analyses`, `community_analyses`, `ci_analyses`, `license_analyses`, `maintainability_metrics`, `repository_healths`.
-
-### Repository IQ & AI Intelligence Tables
-- `repository_iqs`, `repository_summaries`, `engineering_insights`, `technical_debts`, `improvement_recommendations`, `executive_summaries`, `technical_summaries`, `benchmark_results`, `ai_generations`, `prompt_templates`.
+### Core Repository IQ & Intelligence Tables
+- `repositories`, `repository_file_indices`, `analysis_runs`, `repository_metrics`, `file_metrics`, `function_metrics`, `class_metrics`, `duplicate_groups`, `duplicate_files`, `code_smells`, `architecture_analyses`, `security_analyses`, `maintainability_metrics`, `repository_iqs`, `repository_summaries`, `engineering_insights`, `technical_debts`, `improvement_recommendations`, `benchmark_results`, `ai_generations`.
 
 ---
 
 ## 📡 REST API Endpoints
 
-### Repository Management
+### Enterprise & Authentication
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| **GET** | `/api/v1/health` | Service health status |
-| **GET** | `/api/v1/version` | Service name and version |
-| **POST** | `/api/v1/repositories` | Ingest new public GitHub repository |
-| **GET** | `/api/v1/repositories` | List repositories (with pagination, filtering & sorting) |
-| **GET** | `/api/v1/repositories/{id}` | Get repository details & file system index |
-| **DELETE** | `/api/v1/repositories/{id}` | Delete repository & cleanup local clone storage |
-
-### Static Code Analysis
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| **POST** | `/api/v1/repositories/{id}/analyze` | Trigger new static code analysis run |
-| **GET** | `/api/v1/repositories/{id}/analysis` | Get status of latest analysis run |
-| **GET** | `/api/v1/repositories/{id}/metrics` | Get aggregated repository engineering metrics |
-| **GET** | `/api/v1/repositories/{id}/files` | Paginated file-level metrics |
-| **GET** | `/api/v1/repositories/{id}/functions` | Paginated function-level metrics |
-| **GET** | `/api/v1/repositories/{id}/classes` | Paginated class-level metrics |
-| **GET** | `/api/v1/repositories/{id}/smells` | Paginated code smells & findings |
-
-### Architecture Intelligence Engine
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| **POST** | `/api/v1/repositories/{id}/architecture` | Trigger Architecture Intelligence analysis |
-| **GET** | `/api/v1/repositories/{id}/architecture` | Get latest architecture report & scores |
-| **GET** | `/api/v1/repositories/{id}/patterns` | Paginated design patterns findings |
-| **GET** | `/api/v1/repositories/{id}/layers` | Identified architectural layers & files |
-| **GET** | `/api/v1/repositories/{id}/dependency-graph` | Full module dependency graph (nodes & edges) |
-| **GET** | `/api/v1/repositories/{id}/frameworks` | Detected frameworks & convention compliance |
-| **GET** | `/api/v1/repositories/{id}/technologies` | Extracted technology stack metadata |
-
-### Security Intelligence Engine (SAST)
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| **POST** | `/api/v1/repositories/{id}/security` | Trigger Security Intelligence analysis |
-| **GET** | `/api/v1/repositories/{id}/security` | Get latest security report & raw dashboard metrics |
-| **GET** | `/api/v1/repositories/{id}/security/findings` | Paginated SAST findings (filterable by severity, language, category) |
-| **GET** | `/api/v1/repositories/{id}/security/secrets` | Paginated committed secret findings |
-| **GET** | `/api/v1/repositories/{id}/security/dependencies` | Paginated dependency vulnerability findings |
-| **GET** | `/api/v1/repositories/{id}/security/configuration` | Paginated configuration findings |
-| **GET** | `/api/v1/repositories/{id}/security/authentication` | Paginated authentication findings |
-| **GET** | `/api/v1/repositories/{id}/security/authorization` | Paginated authorization findings |
-
-### Maintainability & Repository Intelligence Engine
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| **POST** | `/api/v1/repositories/{id}/maintainability` | Trigger Maintainability Intelligence analysis |
-| **GET** | `/api/v1/repositories/{id}/maintainability` | Get latest raw subsystem scores (Doc, Test, CI, Release, Health, Community) |
-| **GET** | `/api/v1/repositories/{id}/documentation` | Get documentation completeness & README section breakdown |
-| **GET** | `/api/v1/repositories/{id}/testing` | Get testing suite maturity & test file breakdown |
-| **GET** | `/api/v1/repositories/{id}/git-history` | Get Git history, contributor count & development velocity |
-| **GET** | `/api/v1/repositories/{id}/commits` | Get commit quality score & Conventional Commits percentage |
-| **GET** | `/api/v1/repositories/{id}/releases` | Get release history & SemVer compliance |
-| **GET** | `/api/v1/repositories/{id}/ci` | Get CI/CD automation providers & job breakdown |
-| **GET** | `/api/v1/repositories/{id}/community` | Get open source community standards compliance |
-| **GET** | `/api/v1/repositories/{id}/repository-health` | Get raw repository health breakdown metrics |
-
-### Repository IQ Engine & AI Intelligence
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| **POST** | `/api/v1/repositories/{id}/iq` | Trigger Repository IQ Engine calculation |
-| **GET** | `/api/v1/repositories/{id}/iq` | Get overall Repository IQ report, score (0-100), and maturity classification |
-| **GET** | `/api/v1/repositories/{id}/executive-summary` | Get Executive Summary report for executive leadership |
-| **GET** | `/api/v1/repositories/{id}/technical-summary` | Get Technical Summary report for engineering managers |
-| **GET** | `/api/v1/repositories/{id}/strengths` | Get identified repository architectural and code quality strengths |
-| **GET** | `/api/v1/repositories/{id}/weaknesses` | Get identified repository architectural, security, and testing weaknesses |
-| **GET** | `/api/v1/repositories/{id}/technical-debt` | Get technical debt hours, days, and category breakdown |
-| **GET** | `/api/v1/repositories/{id}/recommendations` | Get paginated improvement recommendations categorized by timeframe and priority |
-| **GET** | `/api/v1/repositories/{id}/benchmark` | Get industry benchmarking percentile scores against best practice baselines |
+| **POST** | `/api/v1/auth/register` | Register new user account |
+| **POST** | `/api/v1/auth/login` | Authenticate user with email & password |
+| **POST** | `/api/v1/auth/refresh` | Refresh JWT access token |
+| **GET** | `/api/v1/auth/oauth/{provider}` | Get OAuth authorization URL |
+| **GET** | `/api/v1/workspaces` | List user workspaces |
+| **POST** | `/api/v1/workspaces` | Create personal or org workspace |
+| **GET** | `/api/v1/workspaces/{id}/members` | List workspace active members |
+| **POST** | `/api/v1/workspaces/{id}/invitations` | Invite team member with RBAC role |
+| **POST** | `/api/v1/organizations` | Create enterprise organization |
+| **POST** | `/api/v1/git-platforms/{provider}/import` | Import remote repo from GitHub, GitLab, Bitbucket |
+| **POST** | `/api/v1/webhooks/{provider}` | Webhook receiver endpoint |
+| **GET** | `/api/v1/repositories/{id}/trends` | Get time-series trend metrics |
+| **POST** | `/api/v1/comparison/compare` | Compare multiple repositories |
+| **GET** | `/api/v1/notifications` | List user in-app notifications |
+| **GET** | `/api/v1/audit-logs` | Fetch immutable audit trail |
 
 ---
 
 ## 🛠️ Developer Guide
 
-### 1. How to Run Frontend Locally
+### 1. How to Run Backend Tests & Linting
 ```bash
-cd frontend
-npm run dev
+# Pytest Test Suite (61 passing tests)
+$env:PYTHONPATH="backend"; .venv\Scripts\pytest.exe backend/tests
+
+# Code Quality Audits
+.venv\Scripts\ruff.exe check backend
+.venv\Scripts\black.exe --check backend
+$env:PYTHONPATH="backend"; .venv\Scripts\mypy.exe --config-file backend/pyproject.toml backend/app
 ```
 
 ### 2. How to Build Frontend Production Bundle
@@ -183,69 +132,17 @@ npm run build
 
 ---
 
-## 📁 Folder Structure
-
-```
-ProjectIQ/
-├── backend/
-│   ├── alembic/              # Database migration scripts (001 - 006)
-│   ├── app/                  # FastAPI backend application
-│   └── tests/                # Pytest test suite (52 tests)
-├── frontend/
-│   ├── src/
-│   │   ├── components/       # Navbar, AddRepoModal, UI Components (Button, Card, Badge, ProgressBar, Modal, SearchModal)
-│   │   │   └── charts/       # RadarScoreChart, TechnicalDebtChart, ScoreGauge, DependencyGraphVisualizer
-│   │   ├── pages/            # LandingPage, RepoListPage, RepoOverviewPage, StaticAnalysisPage, ArchitecturePage, SecurityPage, DocumentationPage, RepositoryIQPage, SettingsPage, NotFoundPage
-│   │   ├── services/         # apiClient, types, mockData, repositoryService
-│   │   ├── App.tsx           # Primary routing & app container
-│   │   ├── index.css         # Tailwind & glassmorphic styling
-│   │   └── main.tsx          # React 18 DOM mount
-│   ├── package.json
-│   ├── tailwind.config.js
-│   └── vite.config.ts
-├── Dockerfile                # Production multi-stage Dockerfile
-├── docker-compose.yml        # Multi-container orchestration
-└── README.md
-```
-
----
-
-## 🚀 Installation & Local Setup
-
-### Prerequisites
-- Python 3.13+
-- Node.js 20+
-- PostgreSQL & Redis (or Docker)
-
-### Running the Application
-
-1. **Backend**:
-   ```bash
-   uvicorn app.main:app --reload --app-dir backend
-   ```
-
-2. **Frontend**:
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-
-3. **Access Application**:
-   - **Frontend App**: `http://localhost:5173`
-   - **Swagger Docs**: `http://localhost:8000/docs`
-
----
-
 ## 🗺️ Roadmap
 
-- [x] **Phase 1**: Enterprise Foundation Architecture (FastAPI, Pydantic v2, SQLAlchemy 2.x, Alembic, Celery, Redis, Docker, Quality tooling).
-- [x] **Phase 2**: Repository Acquisition & Ingestion Pipeline (URL validation, GitHub REST Client, Git cloning, File Indexer, Celery Tasks, Paginated REST API).
-- [x] **Phase 3**: Static Code Analysis Engine (Multi-language parsing for Python, TS, JS, Go, Java, Rust, Cyclomatic Complexity, Maintainability Index, Duplication Detection, Code Smells, Database Schema, Async Celery Pipeline & REST Endpoints).
-- [x] **Phase 4**: Architecture Intelligence Engine (Architecture Style detection, Layer Detection, 20+ Design Patterns, Framework Conventions, Module Dependency Graph, Tech Stack Metadata, 10 DB Models, Celery Task & 7 REST Endpoints).
-- [x] **Phase 5**: Security Intelligence Engine (SAST, Secret Detection, Infrastructure Config Scanner, Dependency Vulnerabilities, Static Security Rules, Auth/Authz Scanner, 10 DB Models, Celery Task & 8 REST Endpoints).
-- [x] **Phase 6**: Maintainability & Repository Intelligence Engine (Deterministic evaluation of README completeness, Documentation structure, Testing maturity, CI/CD pipelines, Git history & Conventional Commits, Release tracking, Community standards, 12 DB Models, Celery Task & 10 REST Endpoints).
-- [x] **Phase 7**: Repository IQ Engine & AI Intelligence (Weighted Repository IQ Score 0-100, Engineering Maturity Model, Technical Debt estimation, Industry benchmarking, AI Provider Abstraction, Prompt Engine, 10 DB Models, Celery Task & 9 REST Endpoints).
-- [x] **Phase 8**: Professional Frontend Dashboard (React 19, TypeScript, Vite, Tailwind CSS, Recharts, React Flow, TanStack Query, Linear/Vercel SaaS design system, Full page suite, Ctrl+K Search).
+- [x] **Phase 1**: Enterprise Foundation Architecture
+- [x] **Phase 2**: Repository Acquisition & Ingestion Pipeline
+- [x] **Phase 3**: Static Code Analysis Engine
+- [x] **Phase 4**: Architecture Intelligence Engine
+- [x] **Phase 5**: Security Intelligence Engine (SAST)
+- [x] **Phase 6**: Maintainability & Repository Intelligence Engine
+- [x] **Phase 7**: Repository IQ Engine & AI Intelligence
+- [x] **Phase 8**: Professional Frontend Dashboard
+- [x] **Phase 9**: Enterprise Platform & Git Platform Integration
 
 ---
 

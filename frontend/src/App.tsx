@@ -5,15 +5,26 @@ import { Navbar } from './components/Navbar';
 import { Badge } from './components/ui/Badge';
 import { SearchModal } from './components/ui/SearchModal';
 import { ArchitecturePage } from './pages/ArchitecturePage';
+import { AuditLogsPage } from './pages/AuditLogsPage';
 import { DocumentationPage } from './pages/DocumentationPage';
 import { LandingPage } from './pages/LandingPage';
+import { LoginPage } from './pages/LoginPage';
+import { MembersPage } from './pages/MembersPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { NotificationsPage } from './pages/NotificationsPage';
+import { OrganizationDashboardPage } from './pages/OrganizationDashboardPage';
+import { RegisterPage } from './pages/RegisterPage';
+import { RepoComparisonPage } from './pages/RepoComparisonPage';
 import { RepoListPage } from './pages/RepoListPage';
 import { RepoOverviewPage } from './pages/RepoOverviewPage';
 import { RepositoryIQPage } from './pages/RepositoryIQPage';
+import { RepoSyncPage } from './pages/RepoSyncPage';
+import { ScanHistoryPage } from './pages/ScanHistoryPage';
 import { SecurityPage } from './pages/SecurityPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { StaticAnalysisPage } from './pages/StaticAnalysisPage';
+import { TrendAnalysisPage } from './pages/TrendAnalysisPage';
+import { WorkspaceDashboardPage } from './pages/WorkspaceDashboardPage';
 import {
   MOCK_ARCHITECTURE_REPORT,
   MOCK_REPOSITORIES,
@@ -34,6 +45,7 @@ const queryClient = new QueryClient();
 
 export function AppContent() {
   const [activePage, setActivePage] = useState<string>('landing');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
   const [repositories, setRepositories] = useState<Repository[]>(MOCK_REPOSITORIES);
   const [selectedRepoId, setSelectedRepoId] = useState<string>('1a9e8b7c-6d5f-4e3d-2c1b-0a9f8e7d6c5b');
   const [activeTab, setActiveTab] = useState<'overview' | 'static' | 'architecture' | 'security' | 'documentation' | 'iq'>('overview');
@@ -80,6 +92,8 @@ export function AppContent() {
         onOpenAddRepo={() => setIsAddRepoOpen(true)}
         onNavigate={setActivePage}
         activePage={activePage}
+        isAuthenticated={isAuthenticated}
+        onLogout={() => setIsAuthenticated(false)}
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -87,6 +101,26 @@ export function AppContent() {
           <LandingPage
             onNavigate={setActivePage}
             onOpenAddRepo={() => setIsAddRepoOpen(true)}
+          />
+        )}
+
+        {activePage === 'login' && (
+          <LoginPage
+            onLoginSuccess={() => {
+              setIsAuthenticated(true);
+              setActivePage('workspaces');
+            }}
+            onSwitchToRegister={() => setActivePage('register')}
+          />
+        )}
+
+        {activePage === 'register' && (
+          <RegisterPage
+            onRegisterSuccess={() => {
+              setIsAuthenticated(true);
+              setActivePage('workspaces');
+            }}
+            onSwitchToLogin={() => setActivePage('login')}
           />
         )}
 
@@ -98,6 +132,15 @@ export function AppContent() {
           />
         )}
 
+        {activePage === 'workspaces' && <WorkspaceDashboardPage onNavigate={setActivePage} />}
+        {activePage === 'org' && <OrganizationDashboardPage />}
+        {activePage === 'members' && <MembersPage />}
+        {activePage === 'sync' && <RepoSyncPage />}
+        {activePage === 'scans' && <ScanHistoryPage />}
+        {activePage === 'trends' && <TrendAnalysisPage />}
+        {activePage === 'compare' && <RepoComparisonPage />}
+        {activePage === 'notifications' && <NotificationsPage />}
+        {activePage === 'audit' && <AuditLogsPage />}
         {activePage === 'settings' && <SettingsPage />}
 
         {activePage === 'repo-details' && selectedRepo && (
@@ -152,14 +195,28 @@ export function AppContent() {
           </div>
         )}
 
-        {activePage !== 'landing' && activePage !== 'repositories' && activePage !== 'settings' && activePage !== 'repo-details' && (
-          <NotFoundPage onNavigateHome={() => setActivePage('landing')} />
-        )}
+        {![
+          'landing',
+          'login',
+          'register',
+          'repositories',
+          'workspaces',
+          'org',
+          'members',
+          'sync',
+          'scans',
+          'trends',
+          'compare',
+          'notifications',
+          'audit',
+          'settings',
+          'repo-details',
+        ].includes(activePage) && <NotFoundPage onNavigateHome={() => setActivePage('landing')} />}
       </main>
 
       {/* Footer */}
       <footer className="border-t border-border/80 bg-surface/50 py-6 mt-12 text-center text-xs text-gray-500">
-        <p>ProjectIQ Platform &copy; 2026. Know your code before you clone it.</p>
+        <p>ProjectIQ Platform &copy; 2026. Enterprise Repository Intelligence. Know your code before you clone it.</p>
       </footer>
 
       {/* Modals */}

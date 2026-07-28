@@ -21,6 +21,142 @@ export interface Repository {
   iq_score?: number;
 }
 
+export interface User {
+  id: string;
+  email: string;
+  full_name?: string;
+  avatar_url?: string;
+  role: 'OWNER' | 'ADMIN' | 'MAINTAINER' | 'DEVELOPER' | 'VIEWER';
+  is_active: boolean;
+  is_verified: boolean;
+  created_at: string;
+}
+
+export interface Organization {
+  id: string;
+  name: string;
+  slug: string;
+  avatar_url?: string;
+  owner_id: string;
+  created_at: string;
+}
+
+export interface Workspace {
+  id: string;
+  name: string;
+  slug: string;
+  type: 'PERSONAL' | 'ORGANIZATION';
+  organization_id?: string;
+  owner_id: string;
+  created_at: string;
+}
+
+export interface Membership {
+  id: string;
+  user_id: string;
+  workspace_id?: string;
+  organization_id?: string;
+  role: 'OWNER' | 'ADMIN' | 'MAINTAINER' | 'DEVELOPER' | 'VIEWER';
+  status: string;
+  created_at: string;
+  user?: User;
+}
+
+export interface Invitation {
+  id: string;
+  email: string;
+  workspace_id?: string;
+  organization_id?: string;
+  role: string;
+  status: string;
+  expires_at: string;
+  created_at: string;
+}
+
+export interface RepositorySync {
+  id: string;
+  repository_id: string;
+  provider: 'GITHUB' | 'GITLAB' | 'BITBUCKET';
+  external_repo_id: string;
+  sync_status: 'IDLE' | 'SYNCING' | 'SYNCED' | 'FAILED';
+  last_synced_at?: string;
+  default_branch: string;
+  webhook_active: boolean;
+}
+
+export interface Webhook {
+  id: string;
+  repository_id: string;
+  provider: 'GITHUB' | 'GITLAB' | 'BITBUCKET';
+  url: string;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  title: string;
+  message: string;
+  type: 'INFO' | 'SUCCESS' | 'WARNING' | 'ERROR';
+  is_read: boolean;
+  created_at: string;
+}
+
+export interface AuditLog {
+  id: string;
+  user_id?: string;
+  workspace_id?: string;
+  action: string;
+  entity_type: string;
+  entity_id?: string;
+  details_json?: Record<string, any>;
+  created_at: string;
+}
+
+export interface ScanHistory {
+  id: string;
+  repository_id: string;
+  status: 'COMPLETED' | 'RUNNING' | 'FAILED' | 'CANCELLED';
+  duration_seconds: number;
+  commit_hash?: string;
+  branch: string;
+  triggered_by: string;
+  created_at: string;
+}
+
+export interface TrendMetric {
+  id: string;
+  repository_id: string;
+  recorded_at: string;
+  overall_iq: number;
+  security_score: number;
+  architecture_score: number;
+  complexity_score: number;
+  documentation_score: number;
+  debt_hours: number;
+  testing_score: number;
+}
+
+export interface RepositoryComparison {
+  id: string;
+  title: string;
+  repo_ids_json: string[];
+  comparison_data_json?: {
+    matrix: Array<{
+      repository_id: string;
+      name: string;
+      overall_iq: number;
+      security_score: number;
+      architecture_score: number;
+      maintainability_score: number;
+      debt_hours: number;
+      maturity_level: string;
+    }>;
+  };
+  created_at: string;
+}
+
 export interface SubsystemScores {
   static_analysis: number;
   architecture: number;
