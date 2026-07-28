@@ -11,7 +11,8 @@ from app.api.v1.router import api_router
 from app.core.config.settings import settings
 from app.core.logging import setup_logging
 from app.exceptions.handlers import register_exception_handlers
-from app.middleware.request_id import RequestIDMiddleware
+from app.middleware.rate_limit import RateLimitMiddleware
+from app.middleware.request_id import RequestIdMiddleware
 
 
 @asynccontextmanager
@@ -34,7 +35,8 @@ def create_app() -> FastAPI:
     )
 
     # Middleware registration
-    app.add_middleware(RequestIDMiddleware)
+    app.add_middleware(RequestIdMiddleware)
+    app.add_middleware(RateLimitMiddleware)
     if settings.CORS_ORIGINS:
         app.add_middleware(
             CORSMiddleware,
