@@ -148,3 +148,7 @@ frontend/dist/
 # OS specific
 .DS_Store
 Thumbs.db
+
+# Wiki local repository clone
+wiki-repo/
+
