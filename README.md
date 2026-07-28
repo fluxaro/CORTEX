@@ -14,7 +14,7 @@ Developers, team leads, and architects spend hours evaluating open-source softwa
 
 ## 🏗️ Architecture & Engines
 
-ProjectIQ uses an asynchronous background queue pipeline to handle repository ingestion, static code analysis, architecture intelligence, security intelligence, and maintainability intelligence without blocking HTTP request execution.
+ProjectIQ uses an asynchronous background queue pipeline to handle repository ingestion, static code analysis, architecture intelligence, security intelligence, maintainability intelligence, and repository IQ calculation without blocking HTTP request execution.
 
 ```
 +------------------+       +-------------------+       +-----------------------+
@@ -23,7 +23,7 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
                                                                    |
                                                                    v
 +--------------------+     +-------------------+       +-----------+-----------+
-| Maintainability    | <-- | Static, Arch, Sec |  <--- | Celery Git Clone Task |
+| Repository IQ Engine| <-- | Static, Arch, Sec |  <--- | Celery Git Clone Task |
 +--------------------+     +-------------------+       +-----------------------+
 ```
 
@@ -54,8 +54,15 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
 - **CI/CD Pipeline Analysis**: Detects CI providers (GitHub Actions, GitLab CI, Azure Pipelines, CircleCI, Jenkins, Travis CI) and classifies jobs for lint, test, build, deploy, release, security scans, and coverage.
 - **Git History & Commit Quality**: Uses GitPython to extract commit count, contributor count, branch count, tag count, repository age, commit frequency (commits/week), inactive periods, Conventional Commits %, generic commits %, and commit quality score (0-100).
 - **Open Source Community Standards**: Scans `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, issue templates, PR templates, and discussions.
-- **Package Manifest Quality**: Inspects `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `pom.xml` for missing metadata fields.
-- **Raw Subsystem Scores**: Generates raw 0-100 scores for Documentation, Testing, CI/CD, Release, Repository Health, and Community (overall score deferred to Phase 7).
+
+### Repository IQ Engine & AI Intelligence Features
+- **Weighted Repository IQ Score (0-100)**: Aggregates static analysis, architecture, security, documentation, testing, CI/CD, Git practices, health, and community scores using configurable weights.
+- **Engineering Maturity Model**: Classifies repositories into *Prototype*, *Personal Project*, *Learning Project*, *Production Ready*, *Enterprise Ready*, or *Open Source Mature* with explainable criteria.
+- **Technical Debt Estimation**: Estimates technical debt hours, days, and categories (Architecture, Security, Testing, Documentation, Maintainability, Dependency, Configuration) citing specific stored findings.
+- **Industry Benchmarking**: Compares repository scores against best practice baselines and computes percentile rankings.
+- **AI Provider Abstraction**: Extensible interface supporting OpenAI, Azure OpenAI, Anthropic, Gemini, Ollama, and a deterministic `MockProvider` for offline testing and fallback when credentials are unconfigured.
+- **Prompt Engine**: Versioned prompt templates for Executive Summary, Technical Summary, Architecture Summary, Security Summary, Maintainability Summary, Improvement Roadmap, Technical Debt, Recruiter Summary, and Engineering Manager Summary.
+- **Deterministic AI Generation**: The AI layer strictly consumes structured database metrics from previous phases without ever inspecting raw source code directly.
 
 ---
 
@@ -72,6 +79,9 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
 
 ### Maintainability Intelligence Engine Tables
 - `documentation_analyses`, `documentation_sections`, `readme_analyses`, `testing_analyses`, `git_history_analyses`, `commit_analyses`, `release_analyses`, `community_analyses`, `ci_analyses`, `license_analyses`, `maintainability_metrics`, `repository_healths`.
+
+### Repository IQ & AI Intelligence Tables
+- `repository_iqs`, `repository_summaries`, `engineering_insights`, `technical_debts`, `improvement_recommendations`, `executive_summaries`, `technical_summaries`, `benchmark_results`, `ai_generations`, `prompt_templates`.
 
 ---
 
@@ -135,23 +145,46 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
 | **GET** | `/api/v1/repositories/{id}/community` | Get open source community standards compliance |
 | **GET** | `/api/v1/repositories/{id}/repository-health` | Get raw repository health breakdown metrics |
 
+### Repository IQ Engine & AI Intelligence
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| **POST** | `/api/v1/repositories/{id}/iq` | Trigger Repository IQ Engine calculation |
+| **GET** | `/api/v1/repositories/{id}/iq` | Get overall Repository IQ report, score (0-100), and maturity classification |
+| **GET** | `/api/v1/repositories/{id}/executive-summary` | Get Executive Summary report for executive leadership |
+| **GET** | `/api/v1/repositories/{id}/technical-summary` | Get Technical Summary report for engineering managers |
+| **GET** | `/api/v1/repositories/{id}/strengths` | Get identified repository architectural and code quality strengths |
+| **GET** | `/api/v1/repositories/{id}/weaknesses` | Get identified repository architectural, security, and testing weaknesses |
+| **GET** | `/api/v1/repositories/{id}/technical-debt` | Get technical debt hours, days, and category breakdown |
+| **GET** | `/api/v1/repositories/{id}/recommendations` | Get paginated improvement recommendations categorized by timeframe and priority |
+| **GET** | `/api/v1/repositories/{id}/benchmark` | Get industry benchmarking percentile scores against best practice baselines |
+
 ---
 
 ## 🛠️ Developer Guide
 
-### 1. How to Add a New Maintainability Detector
-Create a new analyzer class under `app/analyzers/maintainability/analyzers/my_analyzer.py` subclassing `BaseMaintainabilityAnalyzer`:
+### 1. How to Add a New AI Provider
+Create a new provider class under `app/core/ai/providers/my_provider.py` subclassing `BaseAIProvider`:
 ```python
-from app.analyzers.maintainability.base_analyzer import BaseMaintainabilityAnalyzer
+from app.core.ai.base_provider import BaseAIProvider
 
-class CustomMaintainabilityAnalyzer(BaseMaintainabilityAnalyzer):
+class CustomAIProvider(BaseAIProvider):
     @property
-    def analyzer_name(self) -> str:
-        return "CustomMaintainabilityAnalyzer"
+    def provider_name(self) -> str:
+        return "CustomAIProvider"
 
-    def analyze(self, target_path: str, file_paths: list[str], file_contents: dict[str, str], extra_context=None) -> None:
-        # Perform custom maintainability analysis...
-        pass
+    def generate(self, prompt: str, system_prompt: str = "") -> str:
+        # Call custom provider API...
+        return "Generated text completion..."
+```
+Then register it in `AIProviderFactory` in `app/core/ai/factory.py`.
+
+### 2. How to Add a New Prompt Template
+Add a new prompt string template to `app/core/ai/prompts/templates.py`:
+```python
+MY_CUSTOM_PROMPT = """
+Evaluate repository '{repo_name}' using score: {overall_iq}/100.
+Context: {smells_count} smells found.
+"""
 ```
 
 ---
@@ -161,26 +194,24 @@ class CustomMaintainabilityAnalyzer(BaseMaintainabilityAnalyzer):
 ```
 ProjectIQ/
 ├── backend/
-│   ├── alembic/              # Database migration scripts (001, 002, 003, 004, 005_create_maintainability_tables)
+│   ├── alembic/              # Database migration scripts (001, 002, 003, 004, 005, 006_create_repository_iq_tables)
 │   ├── app/
 │   │   ├── api/              # API routes & versioning (/api/v1/)
-│   │   ├── core/             # Configuration & logging system
+│   │   ├── core/             # Configuration, logging & AI Provider Abstraction
+│   │   │   └── ai/           # BaseAIProvider, AIProviderFactory, MockProvider, Prompts Engine
 │   │   ├── database/         # SQLAlchemy engine & session management
-│   │   ├── models/           # Declarative ORM models (Repository, Analysis, Architecture, Security, Maintainability)
+│   │   ├── models/           # Declarative ORM models (Repository, Analysis, Architecture, Security, Maintainability, IQ)
 │   │   ├── schemas/          # Pydantic v2 validation models
-│   │   ├── services/         # RepositoryService, AnalysisService, ArchitectureService, SecurityService, MaintainabilityService
-│   │   ├── tasks/            # Celery tasks (clone, static_analysis, architecture_analysis, security_analysis, repository_intelligence_task)
+│   │   ├── services/         # RepositoryService, AnalysisService, ArchitectureService, SecurityService, MaintainabilityService, IQService
+│   │   ├── tasks/            # Celery tasks (clone, static_analysis, architecture_analysis, security_analysis, repository_intelligence_task, repository_iq_task)
 │   │   ├── analyzers/        # Analysis Engines
 │   │   │   ├── base/         # BaseLanguageAnalyzer, AnalyzerRegistry, StaticAnalysisEngine
 │   │   │   ├── shared/       # Models, metrics math, code smells, duplication detector
 │   │   │   ├── architecture/ # Architecture Intelligence Engine & Detectors
 │   │   │   ├── security/     # Security Intelligence Engine (SAST)
-│   │   │   └── maintainability/ # Maintainability Engine (README, Docs, Testing, CI, Git, Commits, Releases, Community)
-│   │   │       ├── base_analyzer.py # BaseMaintainabilityAnalyzer interface
-│   │   │       ├── engine.py        # MaintainabilityEngine orchestrator
-│   │   │       ├── models.py        # Data transfer objects
-│   │   │       └── analyzers/       # ReadmeAnalyzer, DocsAnalyzer, TestingAnalyzer, CiAnalyzer, GitHistoryAnalyzer, LicenseChangelogAnalyzer, CommunityAnalyzer, PackageQualityAnalyzer
-│   ├── tests/                # Pytest test suite (46 tests covering ingestion, static, architecture, security & maintainability APIs)
+│   │   │   ├── maintainability/ # Maintainability Engine (README, Docs, Testing, CI, Git, Commits, Releases, Community)
+│   │   │   └── iq/           # Repository IQ Engine (IQScorer, MaturityClassifier, TechnicalDebtCalculator, Benchmarker, Engine)
+│   ├── tests/                # Pytest test suite (52 tests covering ingestion, static, architecture, security, maintainability & IQ APIs)
 │   ├── alembic.ini           # Alembic configuration
 │   └── pyproject.toml        # Tooling config (Ruff, Black, Mypy, Pytest)
 ├── storage/
@@ -243,6 +274,7 @@ ProjectIQ/
 - [x] **Phase 4**: Architecture Intelligence Engine (Architecture Style detection, Layer Detection, 20+ Design Patterns, Framework Conventions, Module Dependency Graph, Tech Stack Metadata, 10 DB Models, Celery Task & 7 REST Endpoints).
 - [x] **Phase 5**: Security Intelligence Engine (SAST, Secret Detection, Infrastructure Config Scanner, Dependency Vulnerabilities, Static Security Rules, Auth/Authz Scanner, 10 DB Models, Celery Task & 8 REST Endpoints).
 - [x] **Phase 6**: Maintainability & Repository Intelligence Engine (Deterministic evaluation of README completeness, Documentation structure, Testing maturity, CI/CD pipelines, Git history & Conventional Commits, Release tracking, Community standards, 12 DB Models, Celery Task & 10 REST Endpoints).
+- [x] **Phase 7**: Repository IQ Engine & AI Intelligence (Weighted Repository IQ Score 0-100, Engineering Maturity Model, Technical Debt estimation, Industry benchmarking, AI Provider Abstraction, Prompt Engine, 10 DB Models, Celery Task & 9 REST Endpoints).
 
 ---
 

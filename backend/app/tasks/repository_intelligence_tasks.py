@@ -270,6 +270,11 @@ async def _async_run_repository_intelligence(  # noqa: C901
                 f"Maintainability analysis finished for repository {repo.full_name}"
             )
 
+            # Chain Repository IQ Analysis Task
+            from app.tasks.repository_iq_tasks import repository_iq_task
+
+            repository_iq_task.delay(str(repo_uuid), str(run_uuid))
+
         except Exception as exc:
             logger.exception(
                 f"Maintainability analysis failed for repository {repo.full_name}: {exc}"

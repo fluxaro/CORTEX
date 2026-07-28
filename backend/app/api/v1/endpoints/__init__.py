@@ -4,6 +4,7 @@ from app.api.v1.endpoints import (
     analysis,
     architecture,
     health,
+    iq,
     maintainability,
     repositories,
     security,
@@ -18,4 +19,5 @@ __all__ = [
     "architecture",
     "security",
     "maintainability",
+    "iq",
 ]

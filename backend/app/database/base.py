@@ -23,6 +23,18 @@ from app.models.architecture import (
     TechnologyStack,
 )
 from app.models.base import Base
+from app.models.iq import (
+    AiGeneration,
+    BenchmarkResult,
+    EngineeringInsight,
+    ExecutiveSummary,
+    ImprovementRecommendation,
+    PromptTemplate,
+    RepositoryIQ,
+    RepositorySummary,
+    TechnicalDebt,
+    TechnicalSummary,
+)
 from app.models.maintainability import (
     CiAnalysis,
     CommitAnalysis,
@@ -95,4 +107,14 @@ __all__ = [
     "LicenseAnalysis",
     "MaintainabilityMetrics",
     "RepositoryHealth",
+    "RepositoryIQ",
+    "RepositorySummary",
+    "EngineeringInsight",
+    "TechnicalDebt",
+    "ImprovementRecommendation",
+    "ExecutiveSummary",
+    "TechnicalSummary",
+    "BenchmarkResult",
+    "AiGeneration",
+    "PromptTemplate",
 ]

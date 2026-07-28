@@ -6,6 +6,7 @@ from app.api.v1.endpoints import (
     analysis,
     architecture,
     health,
+    iq,
     maintainability,
     repositories,
     security,
@@ -32,4 +33,7 @@ api_router.include_router(
     maintainability.router,
     prefix="/repositories",
     tags=["Maintainability Intelligence"],
+)
+api_router.include_router(
+    iq.router, prefix="/repositories", tags=["Repository IQ Engine & AI Intelligence"]
 )
