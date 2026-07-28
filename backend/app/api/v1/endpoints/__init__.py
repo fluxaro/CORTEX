@@ -1,5 +1,12 @@
 """API v1 endpoints package."""
 
-from app.api.v1.endpoints import analysis, architecture, health, repositories, version
+from app.api.v1.endpoints import (
+    analysis,
+    architecture,
+    health,
+    repositories,
+    security,
+    version,
+)
 
-__all__ = ["health", "version", "repositories", "analysis", "architecture"]
+__all__ = ["health", "version", "repositories", "analysis", "architecture", "security"]

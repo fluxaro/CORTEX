@@ -2,7 +2,14 @@
 
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import analysis, architecture, health, repositories, version
+from app.api.v1.endpoints import (
+    analysis,
+    architecture,
+    health,
+    repositories,
+    security,
+    version,
+)
 
 api_router = APIRouter()
 
@@ -16,4 +23,7 @@ api_router.include_router(
 )
 api_router.include_router(
     architecture.router, prefix="/repositories", tags=["Architecture Intelligence"]
+)
+api_router.include_router(
+    security.router, prefix="/repositories", tags=["Security Intelligence (SAST)"]
 )

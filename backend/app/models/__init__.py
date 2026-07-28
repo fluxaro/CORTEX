@@ -30,6 +30,18 @@ from app.models.repository import (
     RepositoryFileIndex,
     RepositoryStatus,
 )
+from app.models.security import (
+    AuthenticationFinding,
+    AuthorizationFinding,
+    ConfigurationFinding,
+    DependencyFinding,
+    SecretFinding,
+    SecurityAnalysis,
+    SecurityFinding,
+    SecurityReference,
+    SecurityRule,
+    SecuritySummary,
+)
 
 __all__ = [
     "Base",
@@ -56,4 +68,14 @@ __all__ = [
     "FrameworkDetection",
     "TechnologyStack",
     "ArchitectureRecommendationPlaceholder",
+    "SecurityAnalysis",
+    "SecurityFinding",
+    "SecretFinding",
+    "DependencyFinding",
+    "ConfigurationFinding",
+    "AuthenticationFinding",
+    "AuthorizationFinding",
+    "SecurityRule",
+    "SecurityReference",
+    "SecuritySummary",
 ]

@@ -226,6 +226,13 @@ async def _async_run_architecture_analysis(  # noqa: C901
             )
             logger.info(f"Analysis finished for repository {repo.full_name}")
 
+            from app.tasks.security_tasks import security_analysis_task
+
+            try:
+                security_analysis_task.delay(str(repo.id), str(run_uuid))
+            except Exception:
+                pass
+
         except Exception as exc:
             logger.exception(
                 f"Architecture analysis failed for repository {repo.full_name}: {exc}"

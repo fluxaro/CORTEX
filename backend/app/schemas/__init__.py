@@ -29,6 +29,21 @@ from app.schemas.repository import (
     RepositoryListResponse,
     RepositoryResponse,
 )
+from app.schemas.security import (
+    AuthenticationFindingListResponse,
+    AuthenticationFindingResponse,
+    AuthorizationFindingListResponse,
+    AuthorizationFindingResponse,
+    ConfigurationFindingListResponse,
+    ConfigurationFindingResponse,
+    DependencyFindingListResponse,
+    DependencyFindingResponse,
+    SecretFindingListResponse,
+    SecretFindingResponse,
+    SecurityAnalysisResponse,
+    SecurityFindingListResponse,
+    SecurityFindingResponse,
+)
 from app.schemas.version import VersionResponse
 
 __all__ = [
@@ -56,4 +71,17 @@ __all__ = [
     "DependencyGraphResponse",
     "FrameworkDetectionResponse",
     "TechnologyStackResponse",
+    "SecurityAnalysisResponse",
+    "SecurityFindingResponse",
+    "SecurityFindingListResponse",
+    "SecretFindingResponse",
+    "SecretFindingListResponse",
+    "DependencyFindingResponse",
+    "DependencyFindingListResponse",
+    "ConfigurationFindingResponse",
+    "ConfigurationFindingListResponse",
+    "AuthenticationFindingResponse",
+    "AuthenticationFindingListResponse",
+    "AuthorizationFindingResponse",
+    "AuthorizationFindingListResponse",
 ]
