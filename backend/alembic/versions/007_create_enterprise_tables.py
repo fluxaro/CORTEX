@@ -12,8 +12,8 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects import postgresql
 
-revision: str = "007"
-down_revision: Union[str, None] = "006"
+revision: str = "007_create_enterprise_tables"
+down_revision: Union[str, None] = "006_create_repository_iq_tables"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -153,7 +153,7 @@ def upgrade() -> None:
         sa.Column("provider", sa.String(length=50), nullable=False, server_default="GITHUB"),
         sa.Column("secret", sa.String(length=255), nullable=False),
         sa.Column("url", sa.String(length=512), nullable=False),
-        sa.Column("event_types", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
+        sa.Column("event_types", sa.JSON(), nullable=True),
         sa.Column("is_active", sa.Boolean(), nullable=False, server_default="true"),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.ForeignKeyConstraint(["repository_id"], ["repositories.id"], ondelete="CASCADE"),
@@ -169,7 +169,7 @@ def upgrade() -> None:
         sa.Column("message", sa.Text(), nullable=False),
         sa.Column("type", sa.String(length=50), nullable=False, server_default="INFO"),
         sa.Column("is_read", sa.Boolean(), nullable=False, server_default="false"),
-        sa.Column("metadata_json", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
+        sa.Column("metadata_json", sa.JSON(), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
@@ -186,7 +186,7 @@ def upgrade() -> None:
         sa.Column("entity_id", sa.String(length=36), nullable=True),
         sa.Column("ip_address", sa.String(length=50), nullable=True),
         sa.Column("user_agent", sa.String(length=255), nullable=True),
-        sa.Column("details_json", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
+        sa.Column("details_json", sa.JSON(), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -204,9 +204,7 @@ def upgrade() -> None:
         sa.Column("commit_hash", sa.String(length=100), nullable=True),
         sa.Column("branch", sa.String(length=255), nullable=False, server_default="main"),
         sa.Column("triggered_by", sa.String(length=100), nullable=False, server_default="MANUAL"),
-        sa.Column(
-            "changes_detected_json", postgresql.JSONB(astext_type=sa.Text()), nullable=True
-        ),
+        sa.Column("changes_detected_json", sa.JSON(), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.ForeignKeyConstraint(["repository_id"], ["repositories.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
@@ -241,10 +239,8 @@ def upgrade() -> None:
         sa.Column("id", sa.String(length=36), nullable=False),
         sa.Column("workspace_id", sa.String(length=36), nullable=True),
         sa.Column("title", sa.String(length=255), nullable=False),
-        sa.Column("repo_ids_json", postgresql.JSONB(astext_type=sa.Text()), nullable=False),
-        sa.Column(
-            "comparison_data_json", postgresql.JSONB(astext_type=sa.Text()), nullable=True
-        ),
+        sa.Column("repo_ids_json", sa.JSON(), nullable=False),
+        sa.Column("comparison_data_json", sa.JSON(), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
