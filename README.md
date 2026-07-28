@@ -64,6 +64,13 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
 - **Prompt Engine**: Versioned prompt templates for Executive Summary, Technical Summary, Architecture Summary, Security Summary, Maintainability Summary, Improvement Roadmap, Technical Debt, Recruiter Summary, and Engineering Manager Summary.
 - **Deterministic AI Generation**: The AI layer strictly consumes structured database metrics from previous phases without ever inspecting raw source code directly.
 
+### Professional Frontend Dashboard Features
+- **Modern SaaS UI Aesthetic**: Linear/Vercel/GitHub dark mode aesthetic with glassmorphic panels, glowing badges, tailored HSL color palettes, and micro-animations.
+- **Complete Page Suite**: Landing Page, Repository List, Repository Overview, Static Analysis, Architecture with interactive React Flow dependency graph, Security SAST Findings, Documentation, Repository IQ & AI Insights, Settings, and 404.
+- **Global Search Modal (Ctrl+K)**: Command palette keyboard shortcut search across repositories, security findings, and recommendations.
+- **Interactive Recharts**: Radar charts, score gauges, technical debt breakdown bar charts, and industry benchmark percentile scores.
+- **Responsive & Mobile Ready**: Full layout adaptation for Desktop, Tablet, and Mobile devices.
+
 ---
 
 ## 🗄️ Database Schema
@@ -162,29 +169,16 @@ ProjectIQ uses an asynchronous background queue pipeline to handle repository in
 
 ## 🛠️ Developer Guide
 
-### 1. How to Add a New AI Provider
-Create a new provider class under `app/core/ai/providers/my_provider.py` subclassing `BaseAIProvider`:
-```python
-from app.core.ai.base_provider import BaseAIProvider
-
-class CustomAIProvider(BaseAIProvider):
-    @property
-    def provider_name(self) -> str:
-        return "CustomAIProvider"
-
-    def generate(self, prompt: str, system_prompt: str = "") -> str:
-        # Call custom provider API...
-        return "Generated text completion..."
+### 1. How to Run Frontend Locally
+```bash
+cd frontend
+npm run dev
 ```
-Then register it in `AIProviderFactory` in `app/core/ai/factory.py`.
 
-### 2. How to Add a New Prompt Template
-Add a new prompt string template to `app/core/ai/prompts/templates.py`:
-```python
-MY_CUSTOM_PROMPT = """
-Evaluate repository '{repo_name}' using score: {overall_iq}/100.
-Context: {smells_count} smells found.
-"""
+### 2. How to Build Frontend Production Bundle
+```bash
+cd frontend
+npm run build
 ```
 
 ---
@@ -194,31 +188,23 @@ Context: {smells_count} smells found.
 ```
 ProjectIQ/
 ├── backend/
-│   ├── alembic/              # Database migration scripts (001, 002, 003, 004, 005, 006_create_repository_iq_tables)
-│   ├── app/
-│   │   ├── api/              # API routes & versioning (/api/v1/)
-│   │   ├── core/             # Configuration, logging & AI Provider Abstraction
-│   │   │   └── ai/           # BaseAIProvider, AIProviderFactory, MockProvider, Prompts Engine
-│   │   ├── database/         # SQLAlchemy engine & session management
-│   │   ├── models/           # Declarative ORM models (Repository, Analysis, Architecture, Security, Maintainability, IQ)
-│   │   ├── schemas/          # Pydantic v2 validation models
-│   │   ├── services/         # RepositoryService, AnalysisService, ArchitectureService, SecurityService, MaintainabilityService, IQService
-│   │   ├── tasks/            # Celery tasks (clone, static_analysis, architecture_analysis, security_analysis, repository_intelligence_task, repository_iq_task)
-│   │   ├── analyzers/        # Analysis Engines
-│   │   │   ├── base/         # BaseLanguageAnalyzer, AnalyzerRegistry, StaticAnalysisEngine
-│   │   │   ├── shared/       # Models, metrics math, code smells, duplication detector
-│   │   │   ├── architecture/ # Architecture Intelligence Engine & Detectors
-│   │   │   ├── security/     # Security Intelligence Engine (SAST)
-│   │   │   ├── maintainability/ # Maintainability Engine (README, Docs, Testing, CI, Git, Commits, Releases, Community)
-│   │   │   └── iq/           # Repository IQ Engine (IQScorer, MaturityClassifier, TechnicalDebtCalculator, Benchmarker, Engine)
-│   ├── tests/                # Pytest test suite (52 tests covering ingestion, static, architecture, security, maintainability & IQ APIs)
-│   ├── alembic.ini           # Alembic configuration
-│   └── pyproject.toml        # Tooling config (Ruff, Black, Mypy, Pytest)
-├── storage/
-│   └── repositories/         # Cloned repository code storage ({repository_id})
-├── frontend/                 # Vite React TypeScript Tailwind CSS placeholder
+│   ├── alembic/              # Database migration scripts (001 - 006)
+│   ├── app/                  # FastAPI backend application
+│   └── tests/                # Pytest test suite (52 tests)
+├── frontend/
+│   ├── src/
+│   │   ├── components/       # Navbar, AddRepoModal, UI Components (Button, Card, Badge, ProgressBar, Modal, SearchModal)
+│   │   │   └── charts/       # RadarScoreChart, TechnicalDebtChart, ScoreGauge, DependencyGraphVisualizer
+│   │   ├── pages/            # LandingPage, RepoListPage, RepoOverviewPage, StaticAnalysisPage, ArchitecturePage, SecurityPage, DocumentationPage, RepositoryIQPage, SettingsPage, NotFoundPage
+│   │   ├── services/         # apiClient, types, mockData, repositoryService
+│   │   ├── App.tsx           # Primary routing & app container
+│   │   ├── index.css         # Tailwind & glassmorphic styling
+│   │   └── main.tsx          # React 18 DOM mount
+│   ├── package.json
+│   ├── tailwind.config.js
+│   └── vite.config.ts
 ├── Dockerfile                # Production multi-stage Dockerfile
-├── docker-compose.yml        # Multi-container orchestration (Backend, Postgres, Redis, Worker)
+├── docker-compose.yml        # Multi-container orchestration
 └── README.md
 ```
 
@@ -231,37 +217,21 @@ ProjectIQ/
 - Node.js 20+
 - PostgreSQL & Redis (or Docker)
 
-### Backend Setup
+### Running the Application
 
-1. Create a virtual environment:
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
-
-2. Install dependencies:
-   ```bash
-   pip install -e ./backend
-   ```
-
-3. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   ```
-
-4. Run database migrations:
-   ```bash
-   alembic -c backend/alembic.ini upgrade head
-   ```
-
-5. Run the FastAPI development server:
+1. **Backend**:
    ```bash
    uvicorn app.main:app --reload --app-dir backend
    ```
 
-6. Access endpoints:
-   - **Health**: `http://localhost:8000/api/v1/health`
-   - **Version**: `http://localhost:8000/api/v1/version`
+2. **Frontend**:
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+
+3. **Access Application**:
+   - **Frontend App**: `http://localhost:5173`
    - **Swagger Docs**: `http://localhost:8000/docs`
 
 ---
@@ -275,6 +245,7 @@ ProjectIQ/
 - [x] **Phase 5**: Security Intelligence Engine (SAST, Secret Detection, Infrastructure Config Scanner, Dependency Vulnerabilities, Static Security Rules, Auth/Authz Scanner, 10 DB Models, Celery Task & 8 REST Endpoints).
 - [x] **Phase 6**: Maintainability & Repository Intelligence Engine (Deterministic evaluation of README completeness, Documentation structure, Testing maturity, CI/CD pipelines, Git history & Conventional Commits, Release tracking, Community standards, 12 DB Models, Celery Task & 10 REST Endpoints).
 - [x] **Phase 7**: Repository IQ Engine & AI Intelligence (Weighted Repository IQ Score 0-100, Engineering Maturity Model, Technical Debt estimation, Industry benchmarking, AI Provider Abstraction, Prompt Engine, 10 DB Models, Celery Task & 9 REST Endpoints).
+- [x] **Phase 8**: Professional Frontend Dashboard (React 19, TypeScript, Vite, Tailwind CSS, Recharts, React Flow, TanStack Query, Linear/Vercel SaaS design system, Full page suite, Ctrl+K Search).
 
 ---
 
