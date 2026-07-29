@@ -22,7 +22,7 @@
 
 <br/>
 
-[📖 Documentation](#-documentation) •
+[📖 GitHub Wiki](https://github.com/me-hv/ProjectIQ/wiki) •
 [🚀 Quick Start](#-quick-start) •
 [🎨 Features](#-key-features) •
 [🏗️ Architecture](#️-architecture) •
@@ -470,7 +470,7 @@ GET    /api/v1/notifications             # User notifications
 GET    /api/v1/audit-logs                # Immutable audit trail
 ```
 
-See the complete [API Reference](docs/wiki/API-Guide.md) or the live Swagger UI.
+See the complete [API Reference](docs/wiki/API-Reference.md) or the live Swagger UI.
 
 ---
 
@@ -615,7 +615,7 @@ ProjectIQ was built on the shoulders of giants:
 
 | Channel | Link |
 | :--- | :--- |
-| 📖 Documentation | [docs/wiki/](docs/wiki/) |
+| 📖 Documentation | [GitHub Wiki](https://github.com/me-hv/ProjectIQ/wiki) |
 | 🐛 Bug Reports | [GitHub Issues](https://github.com/me-hv/ProjectIQ/issues) |
 | 💡 Feature Requests | [GitHub Discussions](https://github.com/me-hv/ProjectIQ/discussions) |
 | 🔒 Security | [SECURITY.md](SECURITY.md) |

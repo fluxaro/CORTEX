@@ -152,3 +152,7 @@ Thumbs.db
 # Wiki local repository clone
 wiki-repo/
 
+# SQLite databases
+*.db
+
+
