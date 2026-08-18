@@ -9,8 +9,11 @@ from app.tasks.enterprise_tasks import (
     trend_generation_task,
     webhook_processing_task,
 )
+from app.tasks.repository_grading_tasks import (
+    repository_grading_task,
+    repository_iq_task,
+)
 from app.tasks.repository_intelligence_tasks import repository_intelligence_task
-from app.tasks.repository_iq_tasks import repository_iq_task
 from app.tasks.repository_tasks import clone_repository_task
 from app.tasks.security_tasks import security_analysis_task
 
@@ -20,6 +23,7 @@ __all__ = [
     "architecture_analysis_task",
     "security_analysis_task",
     "repository_intelligence_task",
+    "repository_grading_task",
     "repository_iq_task",
     "repository_sync_task",
     "scheduled_scan_task",

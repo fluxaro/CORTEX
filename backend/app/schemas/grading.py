@@ -1,4 +1,4 @@
-"""Pydantic v2 validation schemas for Repository IQ Engine."""
+"""Pydantic v2 validation schemas for CORTEX Repository Grade Reports."""
 
 import uuid
 from datetime import datetime
@@ -7,6 +7,17 @@ from typing import Any
 from pydantic import BaseModel
 
 
+class CategoryScoresSchema(BaseModel):
+    """5 Consolidated Category Scores schema (0-100)."""
+
+    security: float = 0.0
+    architecture: float = 0.0
+    code_quality: float = 0.0
+    maintainability: float = 0.0
+    community_velocity: float = 0.0
+
+
+# Backward compatibility alias schema
 class SubsystemScoresSchema(BaseModel):
     """Subsystem scores schema."""
 
@@ -24,20 +35,21 @@ class SubsystemScoresSchema(BaseModel):
 class RepositorySummarySchema(BaseModel):
     """Repository summaries schema."""
 
-    executive_summary: str
-    technical_summary: str
-    architecture_summary: str
-    security_summary: str
-    maintainability_summary: str
-    recruiter_summary: str
-    engineering_manager_summary: str
+    narrative_summary: str = ""
+    executive_summary: str = ""
+    technical_summary: str = ""
+    architecture_summary: str = ""
+    security_summary: str = ""
+    maintainability_summary: str = ""
+    recruiter_summary: str = ""
+    engineering_manager_summary: str = ""
 
 
 class EngineeringInsightSchema(BaseModel):
     """Engineering strengths and weaknesses schema."""
 
-    strengths: list[str]
-    weaknesses: list[str]
+    strengths: list[str] = []
+    weaknesses: list[str] = []
 
 
 class TechnicalDebtItemSchema(BaseModel):
@@ -54,7 +66,7 @@ class TechnicalDebtSchema(BaseModel):
     total_hours: float
     total_days: float
     category_breakdown: dict[str, float]
-    items: list[TechnicalDebtItemSchema]
+    items: list[TechnicalDebtItemSchema] = []
 
 
 class ImprovementRecommendationSchema(BaseModel):
@@ -96,18 +108,38 @@ class TechnicalSummaryResponse(BaseModel):
     report_json: dict[str, Any]
 
 
-class RepositoryIQResponse(BaseModel):
-    """Complete Repository IQ report schema."""
+class PersonaSummaryResponse(BaseModel):
+    """Persona summary response schema."""
+
+    repository_id: uuid.UUID
+    persona: str  # executive | technical | recruiter | engineering_manager | general
+    summary_text: str
+    overall_grade: str
+    overall_score: float
+    capped: bool = False
+    cap_reason: str | None = None
+
+
+class RepositoryGradeReportResponse(BaseModel):
+    """Complete CORTEX Repository Grade Report schema."""
 
     id: uuid.UUID
     repository_id: uuid.UUID
     analysis_run_id: uuid.UUID
     overall_score: float
+    overall_grade: str = "C"
+    capped: bool = False
+    cap_reason: str | None = None
     maturity_level: str
-    subsystem_scores: SubsystemScoresSchema
+    category_scores: CategoryScoresSchema
+    subsystem_scores: SubsystemScoresSchema | None = None
     summary: RepositorySummarySchema | None = None
     insights: EngineeringInsightSchema | None = None
     technical_debt: TechnicalDebtSchema | None = None
     benchmark: BenchmarkResultSchema | None = None
     created_at: datetime
     updated_at: datetime
+
+
+# Backward compatibility schema alias
+RepositoryIQResponse = RepositoryGradeReportResponse

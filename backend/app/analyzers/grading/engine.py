@@ -1,18 +1,18 @@
-"""Repository IQ Engine orchestrator."""
+"""CORTEX Repository Grading Engine orchestrator."""
 
 from typing import Any
 
-from app.analyzers.iq.models import (
-    RepositoryIQResult,
-    SubsystemScores,
+from app.analyzers.grading.models import (
+    CategoryScores,
+    RepositoryGradeReportDTO,
 )
-from app.analyzers.iq.scorers.benchmarker import Benchmarker
-from app.analyzers.iq.scorers.iq_scorer import IQScorer
-from app.analyzers.iq.scorers.maturity_classifier import MaturityClassifier
-from app.analyzers.iq.scorers.strengths_weaknesses_analyzer import (
+from app.analyzers.grading.scorers.benchmarker import Benchmarker
+from app.analyzers.grading.scorers.grade_calculator import GradeCalculator
+from app.analyzers.grading.scorers.maturity_classifier import MaturityClassifier
+from app.analyzers.grading.scorers.strengths_weaknesses_analyzer import (
     StrengthsWeaknessesAnalyzer,
 )
-from app.analyzers.iq.scorers.technical_debt_calculator import TechnicalDebtCalculator
+from app.analyzers.grading.scorers.technical_debt_calculator import TechnicalDebtCalculator
 from app.core.ai.factory import AIProviderFactory
 from app.core.ai.prompts.templates import (
     EXECUTIVE_SUMMARY_TEMPLATE,
@@ -21,8 +21,8 @@ from app.core.ai.prompts.templates import (
 )
 
 
-class RepositoryIQEngine:
-    """Main Repository IQ Engine orchestrator combining database metrics, scoring models, and AI prompts."""
+class RepositoryGradingEngine:
+    """Main CORTEX Repository Grading Engine orchestrator combining database metrics, scoring models, and AI prompts."""
 
     @classmethod
     def run(  # noqa: C901
@@ -38,9 +38,9 @@ class RepositoryIQEngine:
         git_history: Any | None = None,
         community_analysis: Any | None = None,
         provider_type: str = "mock",
-    ) -> RepositoryIQResult:
-        """Execute Repository IQ calculation and AI prompt generation."""
-        # 1. Extract Subsystem Scores
+    ) -> RepositoryGradeReportDTO:
+        """Execute Repository Grade calculation and narrative prompt generation."""
+        # 1. Extract 5 Consolidated Category Scores
         static_score = static_metrics.maintainability_index if static_metrics else 50.0
         arch_score = arch_analysis.architecture_score if arch_analysis else 50.0
 
@@ -57,27 +57,29 @@ class RepositoryIQEngine:
         test_score = maint_metrics.testing_score if maint_metrics else 50.0
         ci_score = maint_metrics.ci_score if maint_metrics else 50.0
         git_score = git_history.development_velocity_score if git_history else 50.0
-        health_score = maint_metrics.repository_health_score if maint_metrics else 50.0
         comm_score = maint_metrics.community_score if maint_metrics else 50.0
 
-        subsystems = SubsystemScores(
-            static_analysis_score=static_score,
-            architecture_score=arch_score,
+        maintainability_cat_score = round(
+            (doc_score * 0.35) + (test_score * 0.45) + (ci_score * 0.20), 1
+        )
+        community_cat_score = round((git_score * 0.50) + (comm_score * 0.50), 1)
+
+        categories = CategoryScores(
             security_score=sec_score,
-            documentation_score=doc_score,
-            testing_score=test_score,
-            ci_score=ci_score,
-            git_practices_score=git_score,
-            repository_health_score=health_score,
-            community_score=comm_score,
+            architecture_score=arch_score,
+            code_quality_score=static_score,
+            maintainability_score=maintainability_cat_score,
+            community_velocity_score=community_cat_score,
         )
 
-        # 2. Compute Overall Repository IQ Score
-        overall_score = IQScorer.calculate_score(subsystems)
+        # 2. Compute Overall Score, Letter Grade, and Security Guardrail Caps
+        overall_score, overall_grade, is_capped, cap_reason = (
+            GradeCalculator.calculate_grade(categories)
+        )
 
         # 3. Compute Maturity Classification
         has_ci = bool(ci_analysis and len(getattr(ci_analysis, "providers", [])) > 0)
-        maturity = MaturityClassifier.classify(subsystems, has_ci=has_ci)
+        maturity = MaturityClassifier.classify(categories, has_ci=has_ci)
 
         # 4. Technical Debt Estimation
         smells_count = (
@@ -105,18 +107,28 @@ class RepositoryIQEngine:
         )
 
         # 5. Benchmarking & Percentiles
-        benchmark = Benchmarker.calculate_percentiles(overall_score, subsystems)
+        benchmark = Benchmarker.calculate_percentiles(overall_score, categories)
 
         # 6. Strengths & Weaknesses
         insights = StrengthsWeaknessesAnalyzer.analyze(
-            subsystems=subsystems,
+            subsystems=categories,
             has_secrets=sec_secrets > 0,
             has_vulns=dep_vulns > 0,
             has_ci=has_ci,
         )
 
-        # 7. AI Prompt Summaries (without scanning source code directly!)
+        # 7. AI Persona Summaries & Narrative Generation
         ai_provider = AIProviderFactory.get_provider(provider_type)
+
+        top_strength = insights.strengths[0] if insights.strengths else "Clean modular structure"
+        top_risk = insights.weaknesses[0] if insights.weaknesses else "Routine maintenance debt"
+
+        narrative = (
+            f"{repo_name} is a software project demonstrating a Grade {overall_grade} ({overall_score}/100) engineering posture. "
+            f"Its primary architectural strength is {top_strength.lower()}. "
+            f"The main operational risk is {top_risk.lower()}. "
+            f"It is a strong fit for teams requiring structured standards, but requires attention prior to enterprise deployment."
+        )
 
         exec_prompt = EXECUTIVE_SUMMARY_TEMPLATE.format(
             repo_name=repo_name,
@@ -126,7 +138,7 @@ class RepositoryIQEngine:
             doc_score=doc_score,
             test_score=test_score,
             ci_score=ci_score,
-            health_score=health_score,
+            health_score=community_cat_score,
             community_score=comm_score,
             overall_iq=overall_score,
             maturity_level=maturity.level,
@@ -183,18 +195,26 @@ class RepositoryIQEngine:
         )
         tech_summary = ai_provider.generate(tech_prompt, SYSTEM_PROMPT)
 
-        return RepositoryIQResult(
+        return RepositoryGradeReportDTO(
             overall_score=overall_score,
-            subsystem_scores=subsystems,
+            overall_grade=overall_grade,
+            capped=is_capped,
+            cap_reason=cap_reason,
+            category_scores=categories,
             maturity=maturity,
             debt=debt,
             insights=insights,
             benchmark=benchmark,
+            narrative_summary=narrative,
             executive_summary=exec_summary,
             technical_summary=tech_summary,
             architecture_summary=f"Architecture Style: {getattr(arch_analysis, 'architecture_style', 'Modular')}. Modularity: {arch_score}/100.",
             security_summary=f"Security Posture: {sec_score}/100. Critical Secrets: {sec_secrets}, Vulnerabilities: {dep_vulns}.",
             maintainability_summary=f"Maintainability Index: {static_score}/100. Testing Score: {test_score}/100.",
-            recruiter_summary=f"Engineering Maturity: {maturity.level}. Repository IQ: {overall_score}/100.",
+            recruiter_summary=f"Engineering Maturity: {maturity.level}. Grade: {overall_grade} ({overall_score}/100).",
             engineering_manager_summary=f"Total Technical Debt: {debt.total_hours}h ({debt.total_days} days). Key Focus: {debt.items[0].description if debt.items else 'Routine maintenance'}.",
         )
+
+
+# Backward compatibility class alias
+RepositoryIQEngine = RepositoryGradingEngine

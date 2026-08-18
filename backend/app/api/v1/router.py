@@ -9,8 +9,8 @@ from app.api.v1.endpoints import (
     auth,
     comparison,
     git_platforms,
+    grading,
     health,
-    iq,
     maintainability,
     notifications,
     organizations,
@@ -61,5 +61,5 @@ api_router.include_router(
     tags=["Maintainability Intelligence"],
 )
 api_router.include_router(
-    iq.router, prefix="/repositories", tags=["Repository IQ Engine & AI Intelligence"]
+    grading.router, prefix="/repositories", tags=["Repository Grading Engine & AI Intelligence"]
 )

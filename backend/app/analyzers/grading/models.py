@@ -1,21 +1,21 @@
-"""Data transfer objects for Repository IQ Engine."""
+"""Data transfer objects for CORTEX Repository Grading Engine."""
 
 from dataclasses import dataclass, field
 
 
 @dataclass
-class SubsystemScores:
-    """Raw subsystem scores (0-100)."""
+class CategoryScores:
+    """5 Consolidated Category Scores (0-100)."""
 
-    static_analysis_score: float = 0.0
-    architecture_score: float = 0.0
     security_score: float = 0.0
-    documentation_score: float = 0.0
-    testing_score: float = 0.0
-    ci_score: float = 0.0
-    git_practices_score: float = 0.0
-    repository_health_score: float = 0.0
-    community_score: float = 0.0
+    architecture_score: float = 0.0
+    code_quality_score: float = 0.0
+    maintainability_score: float = 0.0
+    community_velocity_score: float = 0.0
+
+
+# Backward compatibility alias
+SubsystemScores = CategoryScores
 
 
 @dataclass
@@ -80,11 +80,15 @@ class BenchmarkResultDTO:
 
 
 @dataclass
-class RepositoryIQResult:
-    """Complete aggregated Repository IQ analysis report."""
+class RepositoryGradeReportDTO:
+    """Complete aggregated CORTEX Grade Report."""
 
     overall_score: float = 0.0
-    subsystem_scores: SubsystemScores = field(default_factory=SubsystemScores)
+    overall_grade: str = "C"
+    capped: bool = False
+    cap_reason: str | None = None
+
+    category_scores: CategoryScores = field(default_factory=CategoryScores)
     maturity: MaturityClassification = field(
         default_factory=lambda: MaturityClassification(level="Prototype")
     )
@@ -94,6 +98,7 @@ class RepositoryIQResult:
     )
     benchmark: BenchmarkResultDTO = field(default_factory=BenchmarkResultDTO)
 
+    narrative_summary: str = ""
     executive_summary: str = ""
     technical_summary: str = ""
     architecture_summary: str = ""
@@ -101,3 +106,7 @@ class RepositoryIQResult:
     maintainability_summary: str = ""
     recruiter_summary: str = ""
     engineering_manager_summary: str = ""
+
+
+# Backward compatibility alias
+RepositoryIQResult = RepositoryGradeReportDTO

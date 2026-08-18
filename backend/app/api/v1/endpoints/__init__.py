@@ -3,13 +3,16 @@
 from app.api.v1.endpoints import (
     analysis,
     architecture,
+    grading,
     health,
-    iq,
     maintainability,
     repositories,
     security,
     version,
 )
+
+# Backward compatibility alias
+iq = grading
 
 __all__ = [
     "health",
@@ -19,5 +22,6 @@ __all__ = [
     "architecture",
     "security",
     "maintainability",
+    "grading",
     "iq",
 ]

@@ -7,7 +7,7 @@ from app.services.auth_service import AuthService
 from app.services.comparison_service import ComparisonService
 from app.services.git_platform_service import GitPlatformService
 from app.services.github_client import GitHubClient
-from app.services.iq_service import IQService
+from app.services.grading_service import GradingService, IQService
 from app.services.maintainability_service import MaintainabilityService
 from app.services.notification_service import NotificationService
 from app.services.repository_service import RepositoryService
@@ -22,6 +22,7 @@ __all__ = [
     "ArchitectureService",
     "SecurityService",
     "MaintainabilityService",
+    "GradingService",
     "IQService",
     "AuthService",
     "WorkspaceService",

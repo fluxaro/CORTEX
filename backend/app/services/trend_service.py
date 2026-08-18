@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from app.models.enterprise import TrendMetric
-from app.models.iq import RepositoryIQ
+from app.models.grading import RepositoryGradeReport, RepositoryIQ
 
 
 class TrendService:
@@ -16,33 +16,34 @@ class TrendService:
         self.session = session
 
     async def record_snapshot(
-        self, repository_id: str, iq_report: RepositoryIQ
+        self, repository_id: str, grade_report: RepositoryGradeReport
     ) -> TrendMetric:
         """Record a time-series metric snapshot."""
-        scores = iq_report.subsystem_scores or {}
+        scores = grade_report.category_scores or grade_report.subsystem_scores or {}
         debt_hrs = (
-            iq_report.technical_debt.total_hours if iq_report.technical_debt else 0.0
+            grade_report.technical_debt.total_hours if grade_report.technical_debt else 0.0
         )
+
         trend = TrendMetric(
             repository_id=repository_id,
             recorded_at=datetime.utcnow(),
-            overall_iq=iq_report.overall_score,
-            security_score=float(scores.get("security", 0.0)),
-            architecture_score=float(scores.get("architecture", 0.0)),
-            complexity_score=float(scores.get("static_analysis", 0.0)),
-            documentation_score=float(scores.get("documentation", 0.0)),
-            debt_hours=float(debt_hrs),
-            testing_score=float(scores.get("testing", 0.0)),
+            overall_score=grade_report.overall_score,
+            overall_grade=getattr(grade_report, "overall_grade", "C"),
+            security_score=scores.get("security", 0.0),
+            architecture_score=scores.get("architecture", 0.0),
+            code_quality_score=scores.get("code_quality", scores.get("static_analysis", 0.0)),
+            maintainability_score=scores.get("maintainability", 0.0),
+            debt_hours=debt_hrs,
         )
         self.session.add(trend)
         await self.session.commit()
         await self.session.refresh(trend)
         return trend
 
-    async def get_repository_trends(
+    async def get_trends(
         self, repository_id: str, limit: int = 30
     ) -> list[TrendMetric]:
-        """Fetch chronological trend metrics for a repository."""
+        """Fetch historical trends for a repository."""
         stmt = (
             select(TrendMetric)
             .where(TrendMetric.repository_id == repository_id)

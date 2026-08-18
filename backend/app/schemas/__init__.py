@@ -26,15 +26,18 @@ from app.schemas.enterprise import (
     WorkspaceCreateRequest,
     WorkspaceResponse,
 )
-from app.schemas.health import HealthResponse
-from app.schemas.iq import (
+
+from app.schemas.grading import (
     BenchmarkResultSchema,
     ExecutiveSummaryResponse,
     ImprovementRecommendationSchema,
+    PersonaSummaryResponse,
+    RepositoryGradeReportResponse,
     RepositoryIQResponse,
     TechnicalDebtSchema,
     TechnicalSummaryResponse,
 )
+from app.schemas.health import HealthResponse
 from app.schemas.maintainability import MaintainabilityMetricsResponse
 from app.schemas.repository import RepositoryCreate, RepositoryResponse
 from app.schemas.security import SecurityAnalysisResponse
@@ -49,32 +52,34 @@ __all__ = [
     "ArchitectureAnalysisResponse",
     "SecurityAnalysisResponse",
     "MaintainabilityMetricsResponse",
+    "RepositoryGradeReportResponse",
     "RepositoryIQResponse",
-    "ExecutiveSummaryResponse",
-    "TechnicalSummaryResponse",
+    "PersonaSummaryResponse",
     "TechnicalDebtSchema",
     "ImprovementRecommendationSchema",
     "BenchmarkResultSchema",
-    "UserRegisterRequest",
+    "ExecutiveSummaryResponse",
+    "TechnicalSummaryResponse",
     "UserLoginRequest",
-    "TokenResponse",
+    "UserRegisterRequest",
     "RefreshTokenRequest",
     "UserResponse",
-    "UserPreferenceSchema",
-    "OrganizationCreateRequest",
-    "OrganizationResponse",
+    "TokenResponse",
     "WorkspaceCreateRequest",
     "WorkspaceResponse",
+    "OrganizationCreateRequest",
+    "OrganizationResponse",
     "MembershipResponse",
     "InvitationCreateRequest",
     "InvitationResponse",
     "GitRepoImportRequest",
     "WebhookCreateRequest",
     "WebhookResponse",
-    "NotificationResponse",
+    "UserPreferenceSchema",
     "AuditLogResponse",
-    "ScanHistoryResponse",
+    "NotificationResponse",
     "TrendMetricResponse",
     "RepositoryComparisonRequest",
     "RepositoryComparisonResponse",
+    "ScanHistoryResponse",
 ]
