@@ -147,13 +147,13 @@ export function AppContent() {
         {activePage === 'repo-details' && selectedRepo && (
           <div className="space-y-6">
             {/* Repository Sub-header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-border/80">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200/80">
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-2xl font-bold text-white tracking-tight">{selectedRepo.full_name}</h1>
+                  <h1 className="font-display text-3xl font-bold text-slate-900 tracking-tight">{selectedRepo.full_name}</h1>
                   <Badge variant="purple" size="md">{gradeReport.maturity_level}</Badge>
                 </div>
-                <p className="text-xs text-gray-400 mt-0.5">{selectedRepo.description}</p>
+                <p className="text-xs text-slate-500 font-medium mt-1">{selectedRepo.description}</p>
               </div>
 
               <div className="flex items-center gap-3">
@@ -163,8 +163,8 @@ export function AppContent() {
               </div>
             </div>
 
-            {/* Navigation Tabs */}
-            <div className="flex border-b border-border/80 space-x-2 text-xs overflow-x-auto">
+            {/* Navigation Pill Tabs */}
+            <div className="flex items-center gap-1 bg-slate-100/90 p-1.5 rounded-full border border-slate-200/80 shadow-inner overflow-x-auto w-fit">
               {[
                 { id: 'overview', label: 'Overview' },
                 { id: 'static', label: 'Static Analysis' },
@@ -176,10 +176,10 @@ export function AppContent() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`pb-3 px-3 font-medium transition-colors border-b-2 whitespace-nowrap ${
+                  className={`px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
                     activeTab === tab.id
-                      ? 'border-primary-500 text-primary-400'
-                      : 'border-transparent text-gray-400 hover:text-white'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   {tab.label}

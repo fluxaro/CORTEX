@@ -16,21 +16,21 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variants = {
-    primary: 'bg-primary-600 hover:bg-primary-500 text-white shadow-glow hover:shadow-lg',
-    secondary: 'bg-surface-card hover:bg-surface-hover text-gray-200 border border-border',
-    outline: 'border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white bg-transparent',
-    ghost: 'hover:bg-surface-hover text-gray-400 hover:text-white',
-    danger: 'bg-rose-600 hover:bg-rose-500 text-white shadow-sm',
-    glass: 'glass-card hover:border-primary-500/40 text-gray-100 shadow-glass',
+    primary: 'bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 hover:scale-[1.02]',
+    secondary: 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200/80',
+    outline: 'border border-slate-200 hover:bg-slate-50 text-slate-700 bg-white shadow-sm',
+    ghost: 'hover:bg-slate-100 text-slate-600 hover:text-slate-900',
+    danger: 'bg-rose-600 hover:bg-rose-700 text-white shadow-sm',
+    glass: 'bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 shadow-sm',
   };
 
   const sizes = {
-    sm: 'text-xs px-2.5 py-1.5 gap-1.5',
-    md: 'text-sm px-4 py-2 gap-2',
-    lg: 'text-base px-5 py-2.5 gap-2.5',
+    sm: 'text-xs px-3.5 py-1.5 gap-1.5',
+    md: 'text-xs px-5 py-2.5 gap-2',
+    lg: 'text-sm px-6 py-3 gap-2.5',
   };
 
   return (

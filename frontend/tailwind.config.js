@@ -8,12 +8,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "#090d16",
-        surface: "#111827",
-        "surface-card": "#161e2e",
-        "surface-hover": "#1f293d",
-        border: "#232d42",
-        "border-focus": "#3b82f6",
+        background: "#f8fafc",
+        surface: "#ffffff",
+        "surface-card": "#ffffff",
+        "surface-hover": "#f1f5f9",
+        border: "#e2e8f0",
+        "border-focus": "#2563eb",
         primary: {
           50: "#eff6ff",
           100: "#dbeafe",

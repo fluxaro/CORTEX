@@ -25,73 +25,75 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess, o
 
   return (
     <div className="min-h-[75vh] flex items-center justify-center p-4">
-      <Card glass className="w-full max-w-md p-6 space-y-6 shadow-2xl border-primary-500/30">
-        <div className="text-center space-y-2">
-          <div className="p-3 bg-gradient-to-tr from-primary-600 to-accent-purple rounded-2xl shadow-glow w-fit mx-auto">
-            <ShieldCheck className="h-8 w-8 text-white" />
-          </div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Create your account</h2>
-          <p className="text-xs text-gray-400">Join enterprise workspaces on Cortex</p>
+      <div className="w-full max-w-md p-8 rounded-3xl bg-white border border-slate-200/90 shadow-2xl shadow-slate-900/10 space-y-6">
+        <div className="text-center space-y-3">
+          <img src="/cortex_logo.jpg" alt="CORTEX Logo" className="w-14 h-14 rounded-2xl mx-auto border border-slate-200 shadow-sm" />
+          <h2 className="font-display text-2xl font-bold text-slate-900 tracking-tight">Create your account</h2>
+          <p className="text-xs text-slate-500 font-medium">Join enterprise workspaces on Cortex</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">Full Name</label>
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Full Name</label>
             <div className="relative">
-              <UserIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+              <UserIcon className="absolute left-4 top-3.5 h-4 w-4 text-slate-400" />
               <input
                 type="text"
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Alex Architect"
-                className="w-full pl-9 pr-4 py-2 bg-surface-card border border-border/80 rounded-xl text-xs text-gray-200 focus:outline-none focus:border-primary-500"
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all shadow-sm font-medium"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">Email Address</label>
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email Address</label>
             <div className="relative">
-              <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+              <Mail className="absolute left-4 top-3.5 h-4 w-4 text-slate-400" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="alex.architect@cortex.io"
-                className="w-full pl-9 pr-4 py-2 bg-surface-card border border-border/80 rounded-xl text-xs text-gray-200 focus:outline-none focus:border-primary-500"
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all shadow-sm font-medium"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">Password</label>
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+              <Lock className="absolute left-4 top-3.5 h-4 w-4 text-slate-400" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full pl-9 pr-4 py-2 bg-surface-card border border-border/80 rounded-xl text-xs text-gray-200 focus:outline-none focus:border-primary-500"
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all shadow-sm font-medium"
               />
             </div>
           </div>
 
-          <Button type="submit" variant="primary" className="w-full" isLoading={isLoading}>
-            <span>Create Account</span>
-          </Button>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold text-xs shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02]"
+          >
+            {isLoading ? 'Creating Account...' : 'Create Account'}
+          </button>
         </form>
 
-        <div className="text-center text-xs text-gray-400 pt-2">
+        <div className="text-center text-xs text-slate-500 font-medium pt-2">
           Already have an account?{' '}
-          <button onClick={onSwitchToLogin} className="text-primary-400 font-semibold hover:underline">
+          <button onClick={onSwitchToLogin} className="text-blue-600 font-bold hover:underline">
             Sign In
           </button>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

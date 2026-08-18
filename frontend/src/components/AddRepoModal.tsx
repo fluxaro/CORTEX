@@ -35,16 +35,16 @@ export const AddRepoModal: React.FC<AddRepoModalProps> = ({ isOpen, onClose, onS
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Ingest New Repository" maxWidth="md">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="p-3 bg-primary-500/10 border border-primary-500/20 rounded-xl flex items-start gap-3 text-xs text-primary-300">
-          <Sparkles className="h-5 w-5 text-primary-400 shrink-0 mt-0.5" />
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="p-4 bg-blue-50/80 border border-blue-200/80 rounded-2xl flex items-start gap-3 text-xs text-blue-900 leading-relaxed shadow-sm">
+          <Sparkles className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
           <p>
-            Enter any public GitHub repository URL. Cortex will ingest metadata, perform static code analysis, architecture pattern detection, SAST security scanning, and calculate Repository IQ score.
+            Enter any public GitHub repository URL. Cortex will analyze code structure, detect architectural patterns, run SAST security scanners, and calculate the Repository IQ score.
           </p>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
             GitHub Repository URL
           </label>
           <div className="relative">
@@ -56,22 +56,31 @@ export const AddRepoModal: React.FC<AddRepoModalProps> = ({ isOpen, onClose, onS
                 setUrl(e.target.value);
                 if (error) setError('');
               }}
-              className="w-full px-4 py-2.5 bg-surface-card border border-border rounded-xl text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-primary-500 transition-colors"
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm font-medium"
               required
             />
-            <GitBranch className="absolute right-3 top-3 h-4 w-4 text-gray-500" />
+            <GitBranch className="absolute right-4 top-3.5 h-4 w-4 text-slate-400" />
           </div>
-          {error && <p className="text-xs text-rose-400 mt-1">{error}</p>}
+          {error && <p className="text-xs text-rose-500 font-medium mt-1.5">{error}</p>}
         </div>
 
-        <div className="flex justify-end gap-3 pt-3 border-t border-border">
-          <Button type="button" variant="ghost" onClick={onClose} disabled={isLoading}>
+        <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={isLoading}
+            className="px-5 py-2.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+          >
             Cancel
-          </Button>
-          <Button type="submit" variant="primary" isLoading={isLoading}>
+          </button>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 py-2.5 text-xs font-semibold shadow-md shadow-blue-500/20 transition-all hover:scale-105"
+          >
             <Shield className="h-4 w-4" />
-            <span>Ingest & Analyze</span>
-          </Button>
+            <span>{isLoading ? 'Ingesting...' : 'Ingest & Analyze'}</span>
+          </button>
         </div>
       </form>
     </Modal>
