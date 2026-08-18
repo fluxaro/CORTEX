@@ -1,12 +1,12 @@
 # Installation Guide
 
-This guide covers installation of ProjectIQ for both **production** and **development** use.
+This guide covers installation of Cortex for both **production** and **development** use.
 
 ---
 
 ## Docker Installation (Recommended)
 
-Docker is the fastest and most reliable way to run ProjectIQ.
+Docker is the fastest and most reliable way to run Cortex.
 
 ### Prerequisites
 - Docker Engine 24+
@@ -16,8 +16,8 @@ Docker is the fastest and most reliable way to run ProjectIQ.
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/me-hv/ProjectIQ.git
-cd ProjectIQ
+git clone https://github.com/me-hv/Cortex.git
+cd Cortex
 
 # 2. Copy environment template
 cp .env.example .env

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to ProjectIQ will be documented in this file.
+All notable changes to Cortex will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Open Source Governance & CI/CD**: GitHub Actions CI/CD workflows, Dependabot security monitoring, CODEOWNERS, issue templates, PR template, ADRs, and GitHub Wiki documentation.
 
 ## [0.1.0] - 2026-07-27
-- Initialized ProjectIQ foundation architecture.
+- Initialized Cortex foundation architecture.
 - Modular FastAPI backend application factory.
 - Configuration loading via Pydantic settings.
 - Health endpoint (`GET /health`) and Version endpoint (`GET /version`).

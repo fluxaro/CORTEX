@@ -4,7 +4,7 @@
 Accepted
 
 ## Context
-ProjectIQ requires a rich, interactive SaaS frontend with complex data visualizations (dependency graphs, radar charts, trend lines), real-time polling for analysis status, and a responsive, accessible UI.
+Cortex requires a rich, interactive SaaS frontend with complex data visualizations (dependency graphs, radar charts, trend lines), real-time polling for analysis status, and a responsive, accessible UI.
 
 ## Decision
 Use **React 18** with **Vite**, **TypeScript**, **TanStack Query v5**, and **Tailwind CSS**.

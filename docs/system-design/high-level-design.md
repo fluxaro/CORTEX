@@ -2,7 +2,7 @@
 
 ## Overview
 
-ProjectIQ is an **AI-enhanced static analysis platform** that inspects source code repositories without executing untrusted code and produces a structured engineering intelligence report.
+Cortex is an **AI-enhanced static analysis platform** that inspects source code repositories without executing untrusted code and produces a structured engineering intelligence report.
 
 ---
 
@@ -83,7 +83,7 @@ ProjectIQ is an **AI-enhanced static analysis platform** that inspects source co
 
 ## Security Architecture
 
-- All repositories are cloned to a **sandboxed local directory** (`/tmp/projectiq/clones/`).
+- All repositories are cloned to a **sandboxed local directory** (`/tmp/cortex/clones/`).
 - **No code execution** at any phase of analysis.
 - Secrets are masked in the database before storage.
 - JWT tokens expire after 30 minutes. Refresh tokens after 7 days.

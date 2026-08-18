@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-Solutions to the most common ProjectIQ setup and runtime issues.
+Solutions to the most common Cortex setup and runtime issues.
 
 ---
 
@@ -29,7 +29,7 @@ PYTHONPATH=backend uvicorn app.main:app --reload
 docker-compose up -d postgres
 
 # Verify connection string format
-DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/projectiq_db
+DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/cortex_db
 ```
 
 ---
@@ -101,6 +101,6 @@ CORS_ORIGINS=["http://localhost:5173"]
 
 ## Getting More Help
 
-- Check [GitHub Issues](https://github.com/me-hv/ProjectIQ/issues) for known bugs.
-- Open a [GitHub Discussion](https://github.com/me-hv/ProjectIQ/discussions) for questions.
+- Check [GitHub Issues](https://github.com/me-hv/Cortex/issues) for known bugs.
+- Open a [GitHub Discussion](https://github.com/me-hv/Cortex/discussions) for questions.
 - Read the [FAQ](FAQ).

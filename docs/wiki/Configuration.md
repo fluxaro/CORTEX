@@ -1,6 +1,6 @@
 # Configuration Reference
 
-ProjectIQ is fully configured via environment variables, following the [12-factor app](https://12factor.net/config) methodology.
+Cortex is fully configured via environment variables, following the [12-factor app](https://12factor.net/config) methodology.
 
 ---
 
@@ -8,7 +8,7 @@ ProjectIQ is fully configured via environment variables, following the [12-facto
 
 | Variable | Required | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `APP_NAME` | No | `ProjectIQ` | Application display name |
+| `APP_NAME` | No | `Cortex` | Application display name |
 | `APP_VERSION` | No | `1.0.0` | Application version string |
 | `DEBUG` | No | `false` | Enable debug mode (never in production) |
 | `SECRET_KEY` | **Yes** | — | Min 64-char random secret for JWT signing |
@@ -65,7 +65,7 @@ ProjectIQ is fully configured via environment variables, following the [12-facto
 ### Development
 ```env
 DEBUG=true
-DATABASE_URL=postgresql+asyncpg://dev:dev@localhost:5432/projectiq_dev
+DATABASE_URL=postgresql+asyncpg://dev:dev@localhost:5432/cortex_dev
 REDIS_URL=redis://localhost:6379/0
 SECRET_KEY=dev-secret-key-not-for-production-use
 AI_PROVIDER=mock
@@ -82,10 +82,10 @@ AI_PROVIDER=mock
 ### Production
 ```env
 DEBUG=false
-DATABASE_URL=postgresql+asyncpg://prod_user:strongpassword@db.example.com:5432/projectiq
+DATABASE_URL=postgresql+asyncpg://prod_user:strongpassword@db.example.com:5432/cortex
 REDIS_URL=redis://redis.example.com:6379/0
 SECRET_KEY=<64-character-random-string>
-CORS_ORIGINS=["https://projectiq.io"]
+CORS_ORIGINS=["https://cortex.io"]
 AI_PROVIDER=openai
 OPENAI_API_KEY=sk-...
 ```

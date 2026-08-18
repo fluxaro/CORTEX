@@ -32,7 +32,7 @@ export const RepoOverviewPage: React.FC<RepoOverviewPageProps> = ({ iqReport }) 
           <CardContent>
             <p className="text-xs sm:text-sm text-gray-300 leading-relaxed bg-surface-card p-4 rounded-xl border border-border/60">
               {iqReport.summary?.executive_summary ||
-                'ProjectIQ repository analysis completed. High software health with strong architecture and security practices.'}
+                'Cortex repository analysis completed. High software health with strong architecture and security practices.'}
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 text-center">

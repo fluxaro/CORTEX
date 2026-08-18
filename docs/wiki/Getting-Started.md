@@ -1,6 +1,6 @@
-# Getting Started with ProjectIQ
+# Getting Started with Cortex
 
-Welcome to ProjectIQ! This guide helps you set up and run ProjectIQ locally.
+Welcome to Cortex! This guide helps you set up and run Cortex locally.
 
 ## Prerequisites
 - Python 3.13+
@@ -11,8 +11,8 @@ Welcome to ProjectIQ! This guide helps you set up and run ProjectIQ locally.
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/me-hv/ProjectIQ.git
-cd ProjectIQ
+git clone https://github.com/me-hv/Cortex.git
+cd Cortex
 ```
 
 ### 2. Backend Setup
@@ -38,4 +38,4 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173` to explore the ProjectIQ dashboard!
+Open `http://localhost:5173` to explore the Cortex dashboard!

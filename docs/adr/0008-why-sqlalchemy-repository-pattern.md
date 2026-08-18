@@ -4,7 +4,7 @@
 Accepted
 
 ## Context
-ProjectIQ has 44+ database tables across 7 schema areas. Direct SQL query strings scattered across API endpoints would make testing, refactoring, and adding new features error-prone and brittle.
+Cortex has 44+ database tables across 7 schema areas. Direct SQL query strings scattered across API endpoints would make testing, refactoring, and adding new features error-prone and brittle.
 
 ## Decision
 Use **SQLAlchemy 2.x** with the **async session pattern** and a **Service Layer** (a lightweight form of the Repository Pattern) to abstract database operations.

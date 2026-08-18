@@ -6,7 +6,7 @@ from app.core.ai.prompts.templates import EXECUTIVE_SUMMARY_TEMPLATE, SYSTEM_PRO
 def test_prompt_template_rendering() -> None:
     """Test formatting prompt template with context variables."""
     rendered = EXECUTIVE_SUMMARY_TEMPLATE.format(
-        repo_name="ProjectIQ",
+        repo_name="Cortex",
         static_score=85.0,
         arch_score=90.0,
         security_score=80.0,
@@ -25,7 +25,7 @@ def test_prompt_template_rendering() -> None:
         debt_days=1.5,
     )
 
-    assert "ProjectIQ" in rendered
+    assert "Cortex" in rendered
     assert "83.5/100" in rendered
     assert "Enterprise Ready" in rendered
     assert "Lead Technical Architect" in SYSTEM_PROMPT

@@ -10,7 +10,7 @@ services:
     environment:
       - ENVIRONMENT=development
       - DEBUG=True
-      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/projectiq
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/cortex
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
@@ -32,7 +32,7 @@ services:
     command: celery -A app.workers.celery_app.celery_app worker --loglevel=info
     environment:
       - ENVIRONMENT=development
-      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/projectiq
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/cortex
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
@@ -46,7 +46,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=projectiq
+      - POSTGRES_DB=cortex
     ports:
       - "5432:5432"
     volumes:

@@ -1,11 +1,11 @@
-# ProjectIQ API Guide
+# Cortex API Guide
 
-The ProjectIQ REST API provides comprehensive endpoints for managing repositories, running static analysis, extracting architecture graphs, auditing security findings, fetching Repository IQ summaries, and managing enterprise workspaces.
+The Cortex REST API provides comprehensive endpoints for managing repositories, running static analysis, extracting architecture graphs, auditing security findings, fetching Repository IQ summaries, and managing enterprise workspaces.
 
 Interactive Swagger documentation is available at `http://localhost:8000/docs`.
 
 ## Authentication
-ProjectIQ uses Bearer JWT Access Tokens:
+Cortex uses Bearer JWT Access Tokens:
 ```http
 Authorization: Bearer <access_token>
 ```

@@ -4,7 +4,7 @@
 Accepted
 
 ## Context
-ProjectIQ stores 44+ relational tables with complex foreign key hierarchies, JSON metadata columns, and requires efficient indexed lookups on analysis status, repository IDs, and severity fields.
+Cortex stores 44+ relational tables with complex foreign key hierarchies, JSON metadata columns, and requires efficient indexed lookups on analysis status, repository IDs, and severity fields.
 
 ## Decision
 Use **PostgreSQL 15** as the primary data store.

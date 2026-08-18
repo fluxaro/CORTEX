@@ -39,7 +39,7 @@ export const AddRepoModal: React.FC<AddRepoModalProps> = ({ isOpen, onClose, onS
         <div className="p-3 bg-primary-500/10 border border-primary-500/20 rounded-xl flex items-start gap-3 text-xs text-primary-300">
           <Sparkles className="h-5 w-5 text-primary-400 shrink-0 mt-0.5" />
           <p>
-            Enter any public GitHub repository URL. ProjectIQ will ingest metadata, perform static code analysis, architecture pattern detection, SAST security scanning, and calculate Repository IQ score.
+            Enter any public GitHub repository URL. Cortex will ingest metadata, perform static code analysis, architecture pattern detection, SAST security scanning, and calculate Repository IQ score.
           </p>
         </div>
 

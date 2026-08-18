@@ -12,10 +12,10 @@
 
 **Please do not report security vulnerabilities through public GitHub Issues.**
 
-If you discover a security vulnerability in ProjectIQ, please follow responsible disclosure by:
+If you discover a security vulnerability in Cortex, please follow responsible disclosure by:
 
 1. **Email**: Open a private security advisory via **GitHub Security Advisories** at:  
-   `https://github.com/me-hv/ProjectIQ/security/advisories/new`
+   `https://github.com/me-hv/Cortex/security/advisories/new`
 
 2. **Include in your report**:
    - A description of the vulnerability and its potential impact
@@ -32,7 +32,7 @@ If you discover a security vulnerability in ProjectIQ, please follow responsible
 
 ## Security Best Practices for Self-Hosted Deployments
 
-When running ProjectIQ in production:
+When running Cortex in production:
 
 1. **Change the default `SECRET_KEY`** — use a random 64+ character string.
 2. **Use environment variables** — never hardcode secrets in source files or Docker images.
@@ -40,7 +40,7 @@ When running ProjectIQ in production:
 4. **Restrict CORS origins** — set `CORS_ORIGINS` to only your frontend domain.
 5. **Use strong database passwords** — avoid default PostgreSQL credentials.
 6. **Keep dependencies updated** — Dependabot is configured to open PRs for security updates.
-7. **Monitor audit logs** — ProjectIQ's immutable `AuditLog` table tracks all authentication and permission events.
+7. **Monitor audit logs** — Cortex's immutable `AuditLog` table tracks all authentication and permission events.
 
 ---
 
@@ -63,7 +63,7 @@ The following are **out of scope**:
 
 ## Known Security Considerations
 
-- ProjectIQ clones repositories to a sandboxed local directory. **No repository code is executed at any point.**
+- Cortex clones repositories to a sandboxed local directory. **No repository code is executed at any point.**
 - Secrets found during analysis are **masked** before being stored in the database.
 - All passwords are hashed with **PBKDF2 HMAC-SHA256 (100,000 iterations)**.
 - JWT tokens use **HMAC-SHA256** signatures via the Python standard library.

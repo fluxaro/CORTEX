@@ -7,8 +7,8 @@ This guide covers local development setup, code standards, and development workf
 ## Development Setup
 
 ```bash
-git clone https://github.com/me-hv/ProjectIQ.git
-cd ProjectIQ
+git clone https://github.com/me-hv/Cortex.git
+cd Cortex
 
 # Backend
 python -m venv .venv
@@ -90,7 +90,7 @@ cd frontend && npm run build
 
 ## Commit Convention
 
-ProjectIQ follows [Conventional Commits](https://www.conventionalcommits.org/):
+Cortex follows [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
 feat: add repository comparison engine

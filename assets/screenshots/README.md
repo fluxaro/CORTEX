@@ -1,6 +1,6 @@
 # Screenshot Assets
 
-This directory contains UI screenshots for the ProjectIQ README and documentation.
+This directory contains UI screenshots for the Cortex README and documentation.
 
 ## Screenshot Index
 

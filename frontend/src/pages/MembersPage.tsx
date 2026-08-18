@@ -73,7 +73,7 @@ export const MembersPage: React.FC = () => {
               required
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
-              placeholder="colleague@projectiq.io"
+              placeholder="colleague@cortex.io"
               className="w-full px-3 py-2 bg-surface-card border border-border rounded-xl text-gray-200 focus:outline-none focus:border-primary-500"
             />
           </div>

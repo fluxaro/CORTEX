@@ -8,5 +8,5 @@ class VersionResponse(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
-    app: str = "ProjectIQ"
+    app: str = "Cortex"
     version: str = "0.1.0"

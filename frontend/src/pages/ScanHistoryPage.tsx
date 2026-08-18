@@ -31,7 +31,7 @@ export const ScanHistoryPage: React.FC = () => {
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <Badge variant="success">{scan.status}</Badge>
-                    <span className="font-semibold text-gray-200"> me-hv/ProjectIQ</span>
+                    <span className="font-semibold text-gray-200"> me-hv/Cortex</span>
                     <span className="text-gray-500 font-mono">({scan.branch})</span>
                   </div>
                   <div className="flex items-center gap-4 text-gray-400 text-[11px]">

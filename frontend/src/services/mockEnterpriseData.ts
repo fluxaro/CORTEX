@@ -12,7 +12,7 @@ import {
 
 export const MOCK_CURRENT_USER: User = {
   id: 'usr-1',
-  email: 'alex.architect@projectiq.io',
+  email: 'alex.architect@cortex.io',
   full_name: 'Alex Architect',
   avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
   role: 'OWNER',
@@ -71,7 +71,7 @@ export const MOCK_MEMBERSHIPS: Membership[] = [
     created_at: '2026-01-20T00:00:00Z',
     user: {
       id: 'usr-2',
-      email: 'sarah.devops@projectiq.io',
+      email: 'sarah.devops@cortex.io',
       full_name: 'Sarah DevOps',
       role: 'ADMIN',
       is_active: true,
@@ -84,7 +84,7 @@ export const MOCK_MEMBERSHIPS: Membership[] = [
 export const MOCK_INVITATIONS: Invitation[] = [
   {
     id: 'inv-1',
-    email: 'dev.lead@projectiq.io',
+    email: 'dev.lead@cortex.io',
     workspace_id: 'ws-1',
     role: 'MAINTAINER',
     status: 'PENDING',
@@ -98,7 +98,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     id: 'notif-1',
     user_id: 'usr-1',
     title: 'Security Vulnerability Alert',
-    message: 'Dependency CVE-2026-8891 detected in projectiq repository.',
+    message: 'Dependency CVE-2026-8891 detected in cortex repository.',
     type: 'WARNING',
     is_read: false,
     created_at: '2026-07-28T06:00:00Z',
@@ -107,7 +107,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     id: 'notif-2',
     user_id: 'usr-1',
     title: 'Scheduled Scan Completed',
-    message: 'Daily analysis for me-hv/ProjectIQ completed. IQ Score: 92.4',
+    message: 'Daily analysis for me-hv/Cortex completed. IQ Score: 92.4',
     type: 'SUCCESS',
     is_read: true,
     created_at: '2026-07-27T12:00:00Z',
@@ -122,7 +122,7 @@ export const MOCK_AUDIT_LOGS: AuditLog[] = [
     action: 'REPOSITORY_IMPORT',
     entity_type: 'Repository',
     entity_id: '1a9e8b7c-6d5f-4e3d-2c1b-0a9f8e7d6c5b',
-    details_json: { url: 'https://github.com/me-hv/ProjectIQ', provider: 'GITHUB' },
+    details_json: { url: 'https://github.com/me-hv/Cortex', provider: 'GITHUB' },
     created_at: '2026-07-28T07:30:00Z',
   },
   {
@@ -131,7 +131,7 @@ export const MOCK_AUDIT_LOGS: AuditLog[] = [
     workspace_id: 'ws-1',
     action: 'USER_INVITATION',
     entity_type: 'Invitation',
-    details_json: { email: 'dev.lead@projectiq.io', role: 'MAINTAINER' },
+    details_json: { email: 'dev.lead@cortex.io', role: 'MAINTAINER' },
     created_at: '2026-07-28T05:15:00Z',
   },
 ];

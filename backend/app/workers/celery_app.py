@@ -5,7 +5,7 @@ from celery import Celery
 from app.core.config.settings import settings
 
 celery_app = Celery(
-    "projectiq_workers",
+    "cortex_workers",
     broker=settings.CELERY_BROKER_URL,
     backend=settings.CELERY_RESULT_BACKEND,
 )

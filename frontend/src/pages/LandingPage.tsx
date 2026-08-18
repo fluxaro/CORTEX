@@ -37,7 +37,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenAddR
         </h1>
 
         <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-          ProjectIQ inspects GitHub repositories using multi-language static code analysis, architectural pattern detection, SAST security scanners, and deterministic AI summaries—without running untrusted code.
+          Cortex inspects GitHub repositories using multi-language static code analysis, architectural pattern detection, SAST security scanners, and deterministic AI summaries—without running untrusted code.
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-4 pt-4">

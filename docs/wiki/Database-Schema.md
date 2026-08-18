@@ -1,6 +1,6 @@
 # Database Schema Reference
 
-ProjectIQ uses **PostgreSQL 15** with **SQLAlchemy 2.x** async ORM and **Alembic** for migrations.
+Cortex uses **PostgreSQL 15** with **SQLAlchemy 2.x** async ORM and **Alembic** for migrations.
 
 The database schema spans 8 migration files (001–007) and contains **44+ tables** organized across 6 functional areas.
 

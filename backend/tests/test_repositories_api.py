@@ -104,17 +104,17 @@ async def test_create_repository_invalid_url(client: AsyncClient) -> None:
 async def test_list_repositories_pagination_and_filtering(client: AsyncClient) -> None:
     """Test GET /api/v1/repositories with pagination and filtering."""
     mock_metadata = {
-        "name": "ProjectIQ",
+        "name": "Cortex",
         "owner": "me-hv",
-        "full_name": "me-hv/ProjectIQ",
+        "full_name": "me-hv/Cortex",
         "description": "Repo Intelligence",
         "default_branch": "main",
         "stars": 500,
         "forks": 50,
         "language": "Python",
         "license": "MIT",
-        "clone_url": "https://github.com/me-hv/ProjectIQ.git",
-        "html_url": "https://github.com/me-hv/ProjectIQ",
+        "clone_url": "https://github.com/me-hv/Cortex.git",
+        "html_url": "https://github.com/me-hv/Cortex",
         "visibility": "public",
         "size": 5000,
         "created_at": "2026-01-01T00:00:00Z",
@@ -129,7 +129,7 @@ async def test_list_repositories_pagination_and_filtering(client: AsyncClient) -
         with patch("app.tasks.repository_tasks.clone_repository_task.delay"):
             await client.post(
                 "/api/v1/repositories",
-                json={"url": "https://github.com/me-hv/ProjectIQ"},
+                json={"url": "https://github.com/me-hv/Cortex"},
             )
 
     response = await client.get("/api/v1/repositories?owner=me-hv&language=Python")
@@ -138,7 +138,7 @@ async def test_list_repositories_pagination_and_filtering(client: AsyncClient) -
     assert data["total"] == 1
     assert data["page"] == 1
     assert len(data["items"]) == 1
-    assert data["items"][0]["full_name"] == "me-hv/ProjectIQ"
+    assert data["items"][0]["full_name"] == "me-hv/Cortex"
 
 
 @pytest.mark.asyncio

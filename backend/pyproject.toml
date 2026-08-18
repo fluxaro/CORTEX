@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "projectiq-backend"
+name = "cortex-backend"
 version = "0.1.0"
-description = "ProjectIQ Backend API"
+description = "Cortex Backend API"
 readme = "../README.md"
 requires-python = ">=3.13"
 dependencies = [

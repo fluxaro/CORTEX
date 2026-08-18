@@ -4,7 +4,7 @@
 Accepted
 
 ## Context
-ProjectIQ consists of 4 runtime components: FastAPI API server, Celery worker, PostgreSQL, and Redis. Coordinating these across different developer machines and cloud environments requires a consistent packaging strategy.
+Cortex consists of 4 runtime components: FastAPI API server, Celery worker, PostgreSQL, and Redis. Coordinating these across different developer machines and cloud environments requires a consistent packaging strategy.
 
 ## Decision
 Use **Docker** with a multi-stage `Dockerfile` and **Docker Compose** for local and production orchestration.

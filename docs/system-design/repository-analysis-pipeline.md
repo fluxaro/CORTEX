@@ -29,7 +29,7 @@ Dispatch clone_and_index_task to Celery
 **Worker:** `clone_and_index_task`
 
 ```
-git clone <url> /tmp/projectiq/clones/<repo_id>
+git clone <url> /tmp/cortex/clones/<repo_id>
      │
      ▼
 Walk file tree:

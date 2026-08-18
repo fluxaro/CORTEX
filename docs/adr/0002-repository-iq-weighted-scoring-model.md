@@ -4,7 +4,7 @@
 Aggregating disparate software engineering metrics (cyclomatic complexity, secret findings, test coverage, documentation completeness) into a single actionable score (0-100) requires a transparent and configurable weighting matrix.
 
 ## Decision
-ProjectIQ implements `IQScorer` using configurable subsystem weights across 8 engineering dimensions:
+Cortex implements `IQScorer` using configurable subsystem weights across 8 engineering dimensions:
 1. Static Analysis & Complexity
 2. Architecture & Modularity
 3. Security Intelligence (SAST)

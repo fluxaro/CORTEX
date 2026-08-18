@@ -1,15 +1,15 @@
-# Contributing to ProjectIQ
+# Contributing to Cortex
 
-Thank you for your interest in contributing to ProjectIQ! 🎉
+Thank you for your interest in contributing to Cortex! 🎉
 
-ProjectIQ is an open-source project and we welcome contributions from the community, whether that's bug fixes, new features, documentation improvements, or test coverage additions.
+Cortex is an open-source project and we welcome contributions from the community, whether that's bug fixes, new features, documentation improvements, or test coverage additions.
 
 ---
 
 ## 📋 Before You Start
 
 1. **Search existing issues** — your issue may already be reported or your feature already planned.
-2. **Open a discussion** — for major features, please open a [GitHub Discussion](https://github.com/me-hv/ProjectIQ/discussions) first to align before writing code.
+2. **Open a discussion** — for major features, please open a [GitHub Discussion](https://github.com/me-hv/Cortex/discussions) first to align before writing code.
 3. **Read the [Developer Guide](docs/wiki/Developer-Guide.md)** — covers local development setup.
 
 ---
@@ -18,8 +18,8 @@ ProjectIQ is an open-source project and we welcome contributions from the commun
 
 ```bash
 # Fork and clone
-git clone https://github.com/YOUR_USERNAME/ProjectIQ.git
-cd ProjectIQ
+git clone https://github.com/YOUR_USERNAME/Cortex.git
+cd Cortex
 
 # Backend
 python -m venv .venv
@@ -78,7 +78,7 @@ All checks must pass with **zero errors**.
 
 ## 📝 Commit Convention
 
-ProjectIQ follows [Conventional Commits](https://www.conventionalcommits.org/):
+Cortex follows [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
 feat: add repository comparison engine
@@ -107,7 +107,7 @@ refactor: extract secret scanner into dedicated module
 Use the [Bug Report template](.github/ISSUE_TEMPLATE/bug_report.md). Include:
 - Steps to reproduce
 - Expected vs. actual behavior
-- ProjectIQ version
+- Cortex version
 - Operating system and Python/Node version
 
 ---
@@ -124,4 +124,4 @@ By contributing, you agree that your contributions will be licensed under the [M
 
 ---
 
-*Thank you for making ProjectIQ better! ❤️*
+*Thank you for making Cortex better! ❤️*

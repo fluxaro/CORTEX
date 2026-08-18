@@ -31,7 +31,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess, o
             <ShieldCheck className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Create your account</h2>
-          <p className="text-xs text-gray-400">Join enterprise workspaces on ProjectIQ</p>
+          <p className="text-xs text-gray-400">Join enterprise workspaces on Cortex</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -59,7 +59,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess, o
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="alex.architect@projectiq.io"
+                placeholder="alex.architect@cortex.io"
                 className="w-full pl-9 pr-4 py-2 bg-surface-card border border-border/80 rounded-xl text-xs text-gray-200 focus:outline-none focus:border-primary-500"
               />
             </div>

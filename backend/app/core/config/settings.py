@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     )
 
     # Application
-    APP_NAME: str = "ProjectIQ"
+    APP_NAME: str = "Cortex"
     APP_VERSION: str = "0.1.0"
     DEBUG: bool = True
     ENVIRONMENT: str = "development"
@@ -33,9 +33,9 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
-    POSTGRES_DB: str = "projectiq"
+    POSTGRES_DB: str = "cortex"
     DATABASE_URL: str = (
-        "postgresql+asyncpg://postgres:postgres@localhost:5432/projectiq"
+        "postgresql+asyncpg://postgres:postgres@localhost:5432/cortex"
     )
 
     # Redis

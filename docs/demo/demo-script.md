@@ -1,13 +1,13 @@
-# ProjectIQ Demo Script & Recording Guide
+# Cortex Demo Script & Recording Guide
 
 ## Overview
-This document is a complete guide for recording a professional ProjectIQ demo video.
+This document is a complete guide for recording a professional Cortex demo video.
 
 ---
 
 ## Pre-Recording Checklist
 
-- [ ] ProjectIQ running locally (`docker-compose up -d`)
+- [ ] Cortex running locally (`docker-compose up -d`)
 - [ ] Browser at `http://localhost:5173` — landing page visible
 - [ ] Test repository ready: `https://github.com/tiangolo/fastapi`
 - [ ] Microphone tested, background noise eliminated
@@ -23,8 +23,8 @@ This document is a complete guide for recording a professional ProjectIQ demo vi
 
 | Time | Action | Narration |
 | :--- | :--- | :--- |
-| 0:00 – 0:15 | Show landing page | "Meet ProjectIQ — the fastest way to know if a repository is worth cloning." |
-| 0:15 – 0:30 | Paste a GitHub URL, click Analyze | "Just paste the URL. ProjectIQ does the rest — zero code execution, complete safety." |
+| 0:00 – 0:15 | Show landing page | "Meet Cortex — the fastest way to know if a repository is worth cloning." |
+| 0:15 – 0:30 | Paste a GitHub URL, click Analyze | "Just paste the URL. Cortex does the rest — zero code execution, complete safety." |
 | 0:30 – 1:00 | Analysis progress indicator | "In under a minute, six parallel analysis engines are inspecting this codebase." |
 | 1:00 – 1:30 | Show IQ Score page | "The Repository IQ Score is a 0-to-100 composite across code quality, architecture, security, documentation, testing, and Git practices." |
 | 1:30 – 2:00 | Show Security page — SAST findings | "Committed secrets, vulnerable dependencies, dangerous functions — all flagged with exact file and line number." |

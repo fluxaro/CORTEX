@@ -3,8 +3,8 @@
 from typing import Any
 
 
-class ProjectIQError(Exception):
-    """Base class for all ProjectIQ exceptions."""
+class CortexError(Exception):
+    """Base class for all Cortex exceptions."""
 
     def __init__(
         self,
@@ -18,14 +18,14 @@ class ProjectIQError(Exception):
         self.details = details
 
 
-class InvalidGitHubURLError(ProjectIQError):
+class InvalidGitHubURLError(CortexError):
     """Raised when a provided GitHub URL is invalid or malformed."""
 
     def __init__(self, message: str = "Invalid GitHub repository URL.") -> None:
         super().__init__(message=message, status_code=400)
 
 
-class RepositoryAlreadyExistsError(ProjectIQError):
+class RepositoryAlreadyExistsError(CortexError):
     """Raised when attempting to add a repository that has already been ingested."""
 
     def __init__(self, full_name: str) -> None:
@@ -35,7 +35,7 @@ class RepositoryAlreadyExistsError(ProjectIQError):
         )
 
 
-class RepositoryNotFoundError(ProjectIQError):
+class RepositoryNotFoundError(CortexError):
     """Raised when a requested repository is not found."""
 
     def __init__(self, identifier: str) -> None:
@@ -45,14 +45,14 @@ class RepositoryNotFoundError(ProjectIQError):
         )
 
 
-class GitHubAPIError(ProjectIQError):
+class GitHubAPIError(CortexError):
     """Raised when an error occurs during GitHub API communication."""
 
     def __init__(self, message: str, status_code: int = 400) -> None:
         super().__init__(message=message, status_code=status_code)
 
 
-class GitCloneError(ProjectIQError):
+class GitCloneError(CortexError):
     """Raised when a Git clone operation fails."""
 
     def __init__(self, message: str) -> None:

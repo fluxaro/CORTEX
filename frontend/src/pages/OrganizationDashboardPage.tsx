@@ -33,7 +33,7 @@ export const OrganizationDashboardPage: React.FC = () => {
             </div>
             <div className="p-3 bg-surface-card rounded-xl border border-border/40">
               <span className="text-gray-400 block">Domain Restrictions</span>
-              <span className="text-lg font-bold text-emerald-400">@projectiq.io Verified</span>
+              <span className="text-lg font-bold text-emerald-400">@cortex.io Verified</span>
             </div>
           </CardContent>
         </Card>

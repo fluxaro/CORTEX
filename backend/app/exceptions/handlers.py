@@ -6,7 +6,7 @@ from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-from app.exceptions.custom_exceptions import ProjectIQError
+from app.exceptions.custom_exceptions import CortexError
 
 logger = logging.getLogger(__name__)
 
@@ -14,9 +14,9 @@ logger = logging.getLogger(__name__)
 def register_exception_handlers(app: FastAPI) -> None:
     """Register custom exception handlers on the FastAPI app instance."""
 
-    @app.exception_handler(ProjectIQError)
-    async def projectiq_exception_handler(
-        request: Request, exc: ProjectIQError
+    @app.exception_handler(CortexError)
+    async def cortex_exception_handler(
+        request: Request, exc: CortexError
     ) -> JSONResponse:
         content: dict[str, str | int | None] = {
             "code": exc.status_code,

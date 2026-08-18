@@ -49,17 +49,17 @@ async def test_rbac_permission_hierarchy():
 async def test_auth_service_register_and_login(db_session: AsyncSession):
     service = AuthService(db_session)
     reg_req = UserRegisterRequest(
-        email="test_enterprise@projectiq.io",
+        email="test_enterprise@cortex.io",
         password="MyPassword123!",
         full_name="Enterprise Tester",
     )
     user, access, refresh = await service.register_user(reg_req)
-    assert user.email == "test_enterprise@projectiq.io"
+    assert user.email == "test_enterprise@cortex.io"
     assert access is not None
     assert refresh is not None
 
     login_req = UserLoginRequest(
-        email="test_enterprise@projectiq.io", password="MyPassword123!"
+        email="test_enterprise@cortex.io", password="MyPassword123!"
     )
     user_logged, access_logged, _ = await service.authenticate_user(login_req)
     assert user_logged.id == user.id
@@ -86,11 +86,11 @@ async def test_git_platform_import_and_webhook(db_session: AsyncSession):
     req = GitRepoImportRequest(
         provider="GITHUB",
         external_repo_id="12345",
-        repo_url="https://github.com/acme/projectiq-repo",
-        name="projectiq-repo",
+        repo_url="https://github.com/acme/cortex-repo",
+        name="cortex-repo",
     )
     repo, sync = await git_service.import_repository(req)
-    assert repo.name == "projectiq-repo"
+    assert repo.name == "cortex-repo"
     assert sync.provider == "GITHUB"
 
 
@@ -112,7 +112,7 @@ async def test_api_auth_endpoints(client: AsyncClient):
     resp = await client.post(
         "/api/v1/auth/register",
         json={
-            "email": "api_user@projectiq.io",
+            "email": "api_user@cortex.io",
             "password": "Password123!",
             "full_name": "API User",
         },

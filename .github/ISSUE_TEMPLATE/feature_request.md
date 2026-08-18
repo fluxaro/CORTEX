@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest a new feature or improvement for ProjectIQ
+about: Suggest a new feature or improvement for Cortex
 title: '[FEATURE] '
 labels: enhancement
 assignees: ''

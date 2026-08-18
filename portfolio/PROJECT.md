@@ -1,10 +1,10 @@
-# ProjectIQ — Portfolio Project
+# Cortex — Portfolio Project
 
 ## Overview
 
-**ProjectIQ** is an enterprise-grade Repository Intelligence Platform built as a flagship full-stack engineering project. It inspects any public Git repository using static analysis, AI, and industry benchmarking to produce a comprehensive engineering quality report — without executing any untrusted code.
+**Cortex** is an enterprise-grade Repository Intelligence Platform built as a flagship full-stack engineering project. It inspects any public Git repository using static analysis, AI, and industry benchmarking to produce a comprehensive engineering quality report — without executing any untrusted code.
 
-**Live at:** `https://github.com/me-hv/ProjectIQ`  
+**Live at:** `https://github.com/me-hv/Cortex`  
 **Stack:** Python 3.13 · FastAPI · SQLAlchemy 2.x · Celery · Redis · PostgreSQL · React 18 · TypeScript · Vite · Tailwind CSS  
 **Release:** v1.0.0 · MIT License · 61 Tests Passing
 
@@ -26,7 +26,7 @@ This is expensive, inconsistent, and entirely unscalable for organizations evalu
 
 ## The Solution
 
-ProjectIQ automates this evaluation across **8 engineering dimensions** and produces:
+Cortex automates this evaluation across **8 engineering dimensions** and produces:
 1. A **Repository IQ Score (0–100)** — a single, actionable quality metric
 2. **Language-specific code metrics** — cyclomatic complexity, maintainability index, duplication
 3. **Architecture intelligence** — style detection, 20+ design patterns, interactive dependency graphs
@@ -123,4 +123,4 @@ ProjectIQ automates this evaluation across **8 engineering dimensions** and prod
 - GitHub App for automated PR quality gates
 - VS Code Extension for in-editor IQ scores
 - Support for private repositories via SSH/PAT tokens
-- Hosted cloud version at projectiq.io
+- Hosted cloud version at cortex.io

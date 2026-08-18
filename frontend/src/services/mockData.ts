@@ -9,20 +9,20 @@ import {
 export const MOCK_REPOSITORIES: Repository[] = [
   {
     id: '1a9e8b7c-6d5f-4e3d-2c1b-0a9f8e7d6c5b',
-    name: 'ProjectIQ',
+    name: 'Cortex',
     owner: 'me-hv',
-    full_name: 'me-hv/ProjectIQ',
+    full_name: 'me-hv/Cortex',
     description: 'AI-Powered Repository Intelligence Platform - Know your code before you clone it.',
     default_branch: 'main',
     stars: 1240,
     forks: 185,
     language: 'Python',
     license: 'MIT',
-    clone_url: 'https://github.com/me-hv/ProjectIQ.git',
-    html_url: 'https://github.com/me-hv/ProjectIQ',
+    clone_url: 'https://github.com/me-hv/Cortex.git',
+    html_url: 'https://github.com/me-hv/Cortex',
     visibility: 'public',
     status: 'CLONED',
-    local_path: '/storage/repositories/projectiq',
+    local_path: '/storage/repositories/cortex',
     created_at: '2026-01-15T08:00:00Z',
     updated_at: '2026-07-28T07:30:00Z',
     iq_score: 92.4,
@@ -88,7 +88,7 @@ export const MOCK_REPOSITORY_IQ: RepositoryIQReport = {
   },
   summary: {
     executive_summary:
-      'ProjectIQ represents an exceptionally high-quality enterprise repository. It demonstrates a robust Clean Architecture pattern, high test coverage, 100% CI/CD automation, and zero critical security vulnerabilities.',
+      'Cortex represents an exceptionally high-quality enterprise repository. It demonstrates a robust Clean Architecture pattern, high test coverage, 100% CI/CD automation, and zero critical security vulnerabilities.',
     technical_summary:
       'Built using FastAPI 0.111+, Python 3.13+, Pydantic v2, SQLAlchemy 2.x Async ORM, Celery, and Redis. The module dependency graph is acyclic with strict separation between API, Service, Engine, and Model layers.',
     architecture_summary:

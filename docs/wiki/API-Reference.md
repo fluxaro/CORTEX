@@ -1,6 +1,6 @@
 # API Reference
 
-ProjectIQ exposes a fully documented REST API following OpenAPI 3.1 standards.
+Cortex exposes a fully documented REST API following OpenAPI 3.1 standards.
 
 **Interactive documentation:** `http://localhost:8000/docs` (Swagger UI)
 
@@ -8,7 +8,7 @@ ProjectIQ exposes a fully documented REST API following OpenAPI 3.1 standards.
 
 ## Authentication
 
-ProjectIQ uses **JWT Bearer tokens** for authentication.
+Cortex uses **JWT Bearer tokens** for authentication.
 
 ### Register
 ```http

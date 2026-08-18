@@ -2,27 +2,27 @@
 
 <br/>
 
-# ⚡ ProjectIQ
+# ⚡ Cortex
 
 ### *Know your code before you clone it.*
 
 <br/>
 
-[![Release](https://img.shields.io/github/v/release/me-hv/ProjectIQ?color=6366f1&label=Release&style=for-the-badge)](https://github.com/me-hv/ProjectIQ/releases)
-[![License](https://img.shields.io/github/license/me-hv/ProjectIQ?color=10b981&style=for-the-badge)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/me-hv/Cortex?color=6366f1&label=Release&style=for-the-badge)](https://github.com/me-hv/Cortex/releases)
+[![License](https://img.shields.io/github/license/me-hv/Cortex?color=10b981&style=for-the-badge)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.13+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
-[![Build](https://img.shields.io/github/actions/workflow/status/me-hv/ProjectIQ/ci.yml?label=Build&style=for-the-badge)](https://github.com/me-hv/ProjectIQ/actions)
-[![Stars](https://img.shields.io/github/stars/me-hv/ProjectIQ?color=f59e0b&style=for-the-badge)](https://github.com/me-hv/ProjectIQ/stargazers)
-[![Issues](https://img.shields.io/github/issues/me-hv/ProjectIQ?color=ef4444&style=for-the-badge)](https://github.com/me-hv/ProjectIQ/issues)
+[![Build](https://img.shields.io/github/actions/workflow/status/me-hv/Cortex/ci.yml?label=Build&style=for-the-badge)](https://github.com/me-hv/Cortex/actions)
+[![Stars](https://img.shields.io/github/stars/me-hv/Cortex?color=f59e0b&style=for-the-badge)](https://github.com/me-hv/Cortex/stargazers)
+[![Issues](https://img.shields.io/github/issues/me-hv/Cortex?color=ef4444&style=for-the-badge)](https://github.com/me-hv/Cortex/issues)
 
 <br/>
 
-> **ProjectIQ** is an enterprise-grade Repository Intelligence Platform that inspects any GitHub, GitLab, or Bitbucket repository and generates a comprehensive **Repository IQ Score (0–100)** covering code quality, architecture, security, documentation, testing, and technical debt — **without executing a single line of untrusted code.**
+> **Cortex** is an enterprise-grade Repository Intelligence Platform that inspects any GitHub, GitLab, or Bitbucket repository and generates a comprehensive **Repository IQ Score (0–100)** covering code quality, architecture, security, documentation, testing, and technical debt — **without executing a single line of untrusted code.**
 
 <br/>
 
-[📖 GitHub Wiki](https://github.com/me-hv/ProjectIQ/wiki) •
+[📖 GitHub Wiki](https://github.com/me-hv/Cortex/wiki) •
 [🚀 Quick Start](#-quick-start) •
 [🎨 Features](#-key-features) •
 [🏗️ Architecture](#️-architecture) •
@@ -64,9 +64,9 @@
 
 ## 🌟 Introduction
 
-Every developer has cloned a repository only to find it riddled with hardcoded secrets, zero tests, architectural chaos, or years of unaddressed technical debt. **ProjectIQ solves this** before the first `git clone`.
+Every developer has cloned a repository only to find it riddled with hardcoded secrets, zero tests, architectural chaos, or years of unaddressed technical debt. **Cortex solves this** before the first `git clone`.
 
-Paste a repository URL. In minutes, ProjectIQ delivers a structured engineering report comparable to what a senior software architect would produce after days of manual review — powered by static analysis, AI summaries, and industry benchmark comparisons.
+Paste a repository URL. In minutes, Cortex delivers a structured engineering report comparable to what a senior software architect would produce after days of manual review — powered by static analysis, AI summaries, and industry benchmark comparisons.
 
 ---
 
@@ -84,7 +84,7 @@ Paste a repository URL. In minutes, ProjectIQ delivers a structured engineering 
 
 ## 💡 Solution
 
-ProjectIQ performs **deep static analysis** across **8 engineering dimensions** and consolidates them into a single, actionable **Repository IQ Score**.
+Cortex performs **deep static analysis** across **8 engineering dimensions** and consolidates them into a single, actionable **Repository IQ Score**.
 
 ```
 Repository URL  →  Clone  →  Index  →  Analyze  →  IQ Score + AI Summary
@@ -230,7 +230,7 @@ Every analysis is:
 ## 📁 Project Structure
 
 ```
-ProjectIQ/
+Cortex/
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml                    # Lint · Test · Build pipeline
@@ -341,8 +341,8 @@ ProjectIQ/
 
 ```bash
 # Clone the repository
-git clone https://github.com/me-hv/ProjectIQ.git
-cd ProjectIQ
+git clone https://github.com/me-hv/Cortex.git
+cd Cortex
 
 # Copy environment file
 cp .env.example .env
@@ -362,8 +362,8 @@ The API Swagger docs are available at `http://localhost:8000/docs`.
 
 ```bash
 # Clone repository
-git clone https://github.com/me-hv/ProjectIQ.git
-cd ProjectIQ
+git clone https://github.com/me-hv/Cortex.git
+cd Cortex
 
 # Backend setup
 python -m venv .venv
@@ -397,13 +397,13 @@ Copy `.env.example` to `.env` and configure:
 
 ```env
 # Application
-APP_NAME=ProjectIQ
+APP_NAME=Cortex
 APP_VERSION=1.0.0
 DEBUG=false
 SECRET_KEY=your-secret-key-minimum-64-characters
 
 # Database
-DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/projectiq_db
+DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/cortex_db
 
 # Redis / Celery
 REDIS_URL=redis://localhost:6379/0
@@ -538,12 +538,12 @@ See the complete [API Reference](docs/wiki/API-Reference.md) or the live Swagger
 
 ## 🤝 Contributing
 
-ProjectIQ is open to contributions from the community! Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a pull request.
+Cortex is open to contributions from the community! Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a pull request.
 
 ```bash
 # Fork and clone
-git clone https://github.com/YOUR_USERNAME/ProjectIQ.git
-cd ProjectIQ
+git clone https://github.com/YOUR_USERNAME/Cortex.git
+cd Cortex
 
 # Create a feature branch
 git checkout -b feat/your-feature-name
@@ -568,20 +568,20 @@ If you discover a security vulnerability, **please do not open a public GitHub i
 
 ## 📜 License
 
-ProjectIQ is released under the [MIT License](LICENSE).
+Cortex is released under the [MIT License](LICENSE).
 
 ```
-MIT License — Copyright (c) 2026 ProjectIQ Contributors
+MIT License — Copyright (c) 2026 Cortex Contributors
 ```
 
 ---
 
 ## ❓ FAQ
 
-**Q: Does ProjectIQ execute repository code?**
-> No. ProjectIQ uses purely static analysis — AST parsing, pattern matching, and structural indexing. No untrusted repository code is ever executed.
+**Q: Does Cortex execute repository code?**
+> No. Cortex uses purely static analysis — AST parsing, pattern matching, and structural indexing. No untrusted repository code is ever executed.
 
-**Q: Can I use ProjectIQ without an AI API key?**
+**Q: Can I use Cortex without an AI API key?**
 > Yes. All scoring, architecture detection, security scanning, and IQ calculation are fully deterministic. AI summaries gracefully fall back to an offline `MockProvider` when no API key is configured.
 
 **Q: Which AI providers are supported?**
@@ -597,7 +597,7 @@ MIT License — Copyright (c) 2026 ProjectIQ Contributors
 
 ## 🙏 Acknowledgements
 
-ProjectIQ was built on the shoulders of giants:
+Cortex was built on the shoulders of giants:
 
 - [FastAPI](https://fastapi.tiangolo.com/) — The fastest Python web framework
 - [SQLAlchemy](https://www.sqlalchemy.org/) — The Python SQL toolkit
@@ -615,19 +615,19 @@ ProjectIQ was built on the shoulders of giants:
 
 | Channel | Link |
 | :--- | :--- |
-| 📖 Documentation | [GitHub Wiki](https://github.com/me-hv/ProjectIQ/wiki) |
-| 🐛 Bug Reports | [GitHub Issues](https://github.com/me-hv/ProjectIQ/issues) |
-| 💡 Feature Requests | [GitHub Discussions](https://github.com/me-hv/ProjectIQ/discussions) |
+| 📖 Documentation | [GitHub Wiki](https://github.com/me-hv/Cortex/wiki) |
+| 🐛 Bug Reports | [GitHub Issues](https://github.com/me-hv/Cortex/issues) |
+| 💡 Feature Requests | [GitHub Discussions](https://github.com/me-hv/Cortex/discussions) |
 | 🔒 Security | [SECURITY.md](SECURITY.md) |
 
 ---
 
 <div align="center">
 
-**If ProjectIQ helped you, please ⭐ star the repository!**
+**If Cortex helped you, please ⭐ star the repository!**
 
 <br/>
 
-Built with ❤️ by the ProjectIQ team.
+Built with ❤️ by the Cortex team.
 
 </div>

@@ -4,7 +4,7 @@
 Accepted
 
 ## Context
-ProjectIQ requires a high-performance async Python API framework supporting OpenAPI generation, Pydantic v2 data validation, and straightforward async SQLAlchemy integration.
+Cortex requires a high-performance async Python API framework supporting OpenAPI generation, Pydantic v2 data validation, and straightforward async SQLAlchemy integration.
 
 ## Decision
 Use **FastAPI** as the primary API framework.

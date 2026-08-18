@@ -9,9 +9,9 @@ from app.services.github_client import GitHubClient
 
 def test_parse_github_url_valid() -> None:
     """Test URL parsing for valid GitHub repository URLs."""
-    owner, repo = GitHubClient.parse_github_url("https://github.com/me-hv/ProjectIQ")
+    owner, repo = GitHubClient.parse_github_url("https://github.com/me-hv/Cortex")
     assert owner == "me-hv"
-    assert repo == "ProjectIQ"
+    assert repo == "Cortex"
 
     owner2, repo2 = GitHubClient.parse_github_url(
         "https://github.com/me-hv/ShortLink.git"

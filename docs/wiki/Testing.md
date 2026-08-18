@@ -1,6 +1,6 @@
 # Testing Guide
 
-ProjectIQ maintains a comprehensive test suite with **61 tests** organized across multiple test files.
+Cortex maintains a comprehensive test suite with **61 tests** organized across multiple test files.
 
 ---
 

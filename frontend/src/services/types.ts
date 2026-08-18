@@ -1,4 +1,4 @@
-/** TypeScript types for ProjectIQ frontend application. */
+/** TypeScript types for Cortex frontend application. */
 
 export interface Repository {
   id: string;

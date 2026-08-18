@@ -4,7 +4,7 @@
 Evaluating software architecture often requires dynamic code execution or runtime tracing, which poses severe security risks when analyzing arbitrary GitHub repositories.
 
 ## Decision
-ProjectIQ implements a pure **Static Application Analysis Engine** utilizing Abstract Syntax Tree (AST) parsing (Python `ast`, Babel/TypeScript AST, tree-sitter) without executing repository code.
+Cortex implements a pure **Static Application Analysis Engine** utilizing Abstract Syntax Tree (AST) parsing (Python `ast`, Babel/TypeScript AST, tree-sitter) without executing repository code.
 
 ## Consequences
 - **Security**: Complete isolation against arbitrary code execution.

@@ -1,8 +1,8 @@
-# ProjectIQ — GitHub Wiki Home
+# Cortex — GitHub Wiki Home
 
 > **Know your code before you clone it.**
 
-Welcome to the official ProjectIQ GitHub Wiki. This wiki is the comprehensive technical reference for all aspects of the ProjectIQ platform.
+Welcome to the official Cortex GitHub Wiki. This wiki is the comprehensive technical reference for all aspects of the Cortex platform.
 
 ---
 
@@ -48,4 +48,4 @@ Welcome to the official ProjectIQ GitHub Wiki. This wiki is the comprehensive te
 
 ---
 
-*ProjectIQ is licensed under the [MIT License](https://github.com/me-hv/ProjectIQ/blob/main/LICENSE).*
+*Cortex is licensed under the [MIT License](https://github.com/me-hv/Cortex/blob/main/LICENSE).*

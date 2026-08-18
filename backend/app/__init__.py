@@ -1,1 +1,1 @@
-"""ProjectIQ Application Package."""
+"""Cortex Application Package."""

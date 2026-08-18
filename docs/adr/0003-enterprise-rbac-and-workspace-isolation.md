@@ -4,7 +4,7 @@
 Collaborative engineering SaaS applications require multi-tenant isolation, organization hierarchies, and role permissions.
 
 ## Decision
-ProjectIQ implements a multi-tenant boundary model:
+Cortex implements a multi-tenant boundary model:
 - **`Organization`**: Billing and domain boundary.
 - **`Workspace`**: Repository and team member isolation boundary.
 - **`Membership`**: Assigns roles (`OWNER`, `ADMIN`, `MAINTAINER`, `DEVELOPER`, `VIEWER`) per workspace.

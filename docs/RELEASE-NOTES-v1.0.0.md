@@ -1,13 +1,13 @@
 # v1.0.0 Release Notes
 
 **Release Date:** July 28, 2026  
-**Tag:** [`v1.0.0`](https://github.com/me-hv/ProjectIQ/releases/tag/v1.0.0)
+**Tag:** [`v1.0.0`](https://github.com/me-hv/Cortex/releases/tag/v1.0.0)
 
 ---
 
 ## 🎉 Highlights
 
-ProjectIQ **v1.0.0** is the first stable, production-ready release of the Repository Intelligence Platform. This release marks the culmination of 10 development phases, delivering a complete enterprise-grade SaaS platform for automated repository quality analysis.
+Cortex **v1.0.0** is the first stable, production-ready release of the Repository Intelligence Platform. This release marks the culmination of 10 development phases, delivering a complete enterprise-grade SaaS platform for automated repository quality analysis.
 
 ---
 
@@ -94,7 +94,7 @@ This is the **initial stable release**. There are no breaking changes from a pre
 
 ## 🙏 Acknowledgements
 
-Thank you to the open-source maintainers of FastAPI, SQLAlchemy, Celery, React, Vite, TanStack Query, Recharts, React Flow, Tailwind CSS, and the entire Python and JavaScript ecosystems that made ProjectIQ possible.
+Thank you to the open-source maintainers of FastAPI, SQLAlchemy, Celery, React, Vite, TanStack Query, Recharts, React Flow, Tailwind CSS, and the entire Python and JavaScript ecosystems that made Cortex possible.
 
 ---
 

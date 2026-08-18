@@ -29,7 +29,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onSwitchTo
           <div className="p-3 bg-gradient-to-tr from-primary-600 to-accent-purple rounded-2xl shadow-glow w-fit mx-auto">
             <ShieldCheck className="h-8 w-8 text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Sign in to ProjectIQ</h2>
+          <h2 className="text-2xl font-bold text-white tracking-tight">Sign in to Cortex</h2>
           <p className="text-xs text-gray-400">Enterprise Repository Intelligence Platform</p>
         </div>
 
@@ -43,7 +43,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onSwitchTo
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="alex.architect@projectiq.io"
+                placeholder="alex.architect@cortex.io"
                 className="w-full pl-9 pr-4 py-2 bg-surface-card border border-border/80 rounded-xl text-xs text-gray-200 focus:outline-none focus:border-primary-500"
               />
             </div>

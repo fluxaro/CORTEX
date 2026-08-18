@@ -2,7 +2,7 @@
 
 ## Deploying with Docker Compose
 
-ProjectIQ provides a production-ready `docker-compose.yml` orchestrating FastAPI, Celery, Redis, and PostgreSQL.
+Cortex provides a production-ready `docker-compose.yml` orchestrating FastAPI, Celery, Redis, and PostgreSQL.
 
 ```bash
 docker-compose up -d --build

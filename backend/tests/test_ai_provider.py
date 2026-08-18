@@ -10,5 +10,5 @@ def test_ai_provider_factory() -> None:
     assert isinstance(provider, MockAIProvider)
     assert provider.provider_name == "MockAIProvider"
 
-    res = provider.generate("Generate an Executive Summary for repository ProjectIQ.")
+    res = provider.generate("Generate an Executive Summary for repository Cortex.")
     assert "Executive Summary" in res

@@ -96,7 +96,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
 
         <div className="px-4 py-2 bg-surface-card/60 border-t border-border/40 flex justify-between text-xs text-gray-500">
           <span>Tip: Press <kbd className="px-1.5 py-0.5 bg-surface-hover rounded text-gray-300 font-mono">Ctrl + K</kbd> anytime</span>
-          <span>ProjectIQ Search</span>
+          <span>Cortex Search</span>
         </div>
       </div>
     </div>

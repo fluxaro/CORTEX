@@ -216,7 +216,7 @@ export function AppContent() {
 
       {/* Footer */}
       <footer className="border-t border-border/80 bg-surface/50 py-6 mt-12 text-center text-xs text-gray-500">
-        <p>ProjectIQ Platform &copy; 2026. Enterprise Repository Intelligence. Know your code before you clone it.</p>
+        <p>Cortex Platform &copy; 2026. Enterprise Repository Intelligence. Know your code before you clone it.</p>
       </footer>
 
       {/* Modals */}

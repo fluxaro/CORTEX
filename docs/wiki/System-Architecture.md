@@ -1,6 +1,6 @@
 # System Architecture Overview
 
-ProjectIQ follows a decoupled, asynchronous micro-architecture designed for performance, modularity, and scalability.
+Cortex follows a decoupled, asynchronous micro-architecture designed for performance, modularity, and scalability.
 
 ```
 +-------------------+        +--------------------+        +---------------------+

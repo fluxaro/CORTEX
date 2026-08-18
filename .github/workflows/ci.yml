@@ -15,9 +15,9 @@ jobs:
       postgres:
         image: postgres:15-alpine
         env:
-          POSTGRES_USER: projectiq
-          POSTGRES_PASSWORD: projectiq_password
-          POSTGRES_DB: projectiq_db
+          POSTGRES_USER: cortex
+          POSTGRES_PASSWORD: cortex_password
+          POSTGRES_DB: cortex_db
         ports:
           - 5432:5432
         options: >-

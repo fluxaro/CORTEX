@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 
 export const RepoComparisonPage: React.FC = () => {
   const repos = [
-    { name: 'me-hv/ProjectIQ', language: 'Python', iq: 92.4, sec: 88.0, arch: 91.5, debt: '12h', status: 'Enterprise Ready' },
+    { name: 'me-hv/Cortex', language: 'Python', iq: 92.4, sec: 88.0, arch: 91.5, debt: '12h', status: 'Enterprise Ready' },
     { name: 'tiangolo/fastapi-ms', language: 'Python', iq: 88.0, sec: 85.0, arch: 89.0, debt: '18h', status: 'Production Ready' },
     { name: 'vercel/react-boilerplate', language: 'TypeScript', iq: 95.1, sec: 92.0, arch: 96.0, debt: '6h', status: 'Enterprise Ready' },
   ];

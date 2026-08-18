@@ -7,7 +7,7 @@ import json
 import time
 from typing import Any, cast
 
-SECRET_KEY = "projectiq-secret-key-change-in-production"
+SECRET_KEY = "cortex-secret-key-change-in-production"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 hours
 REFRESH_TOKEN_EXPIRE_DAYS = 30  # 30 days
