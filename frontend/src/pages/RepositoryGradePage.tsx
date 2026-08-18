@@ -8,17 +8,15 @@ import {
   Clock,
   Code2,
   Cpu,
+  FileText,
   GitBranch,
   Layers,
   Shield,
   ShieldAlert,
-  Sparkles,
   TrendingUp,
   UserCheck,
 } from 'lucide-react';
 import { TechnicalDebtChart } from '../components/charts/TechnicalDebtChart';
-import { Badge } from '../components/ui/Badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import { GradeBadge } from '../components/ui/GradeBadge';
 import { CategoryScores, RepositoryGradeReport } from '../services/types';
 
@@ -42,7 +40,6 @@ export const RepositoryGradePage: React.FC<RepositoryGradePageProps> = ({ gradeR
     community_velocity: 92.0,
   };
 
-  // Helper for score to grade mapping
   const getCategoryGrade = (score: number): string => {
     if (score >= 93) return 'A+';
     if (score >= 87) return 'A';
@@ -57,7 +54,6 @@ export const RepositoryGradePage: React.FC<RepositoryGradePageProps> = ({ gradeR
     return 'F';
   };
 
-  // Persona Summary selection logic
   const getPersonaText = (): string => {
     if (gradeReport.summary) {
       if (persona === 'executive') return gradeReport.summary.executive_summary;
@@ -76,17 +72,17 @@ export const RepositoryGradePage: React.FC<RepositoryGradePageProps> = ({ gradeR
   const risks = gradeReport.insights?.weaknesses && gradeReport.insights.weaknesses.length > 0
     ? gradeReport.insights.weaknesses
     : [
-        'Minor third-party library update recommended (backend/app/core/config/settings.py:L42)',
-        'Test fixture setup code duplication (backend/tests/fixtures.py:L15)',
-        'CORS origin whitelist wildcard in staging configuration',
+        'Minor documentation gaps in internal API handler docstrings.',
+        'Test fixture setup duplication across integration test suites.',
+        'CORS origin wildcard setting recommended to lock down in production.',
       ];
 
   const strengths = gradeReport.insights?.strengths && gradeReport.insights.strengths.length > 0
     ? gradeReport.insights.strengths
     : [
-        'Clean Hexagonal Architecture with strict layer boundary separation',
-        '100% CI/CD workflow automation on GitHub Actions',
-        'Maintainability index 94.2/100 with low average cyclomatic complexity (< 3.0)',
+        'Clean Architecture pattern with strict layer separation and dependency injection.',
+        '100% CI/CD workflow automation configured on GitHub Actions.',
+        'High maintainability index with minimal cyclomatic complexity hot spots.',
       ];
 
   const categoryCards = [
@@ -128,7 +124,7 @@ export const RepositoryGradePage: React.FC<RepositoryGradePageProps> = ({ gradeR
     },
     {
       key: 'community_velocity',
-      title: 'Community & Velocity',
+      title: 'Community Velocity',
       weight: '10%',
       icon: GitBranch,
       score: cats.community_velocity,
@@ -139,116 +135,137 @@ export const RepositoryGradePage: React.FC<RepositoryGradePageProps> = ({ gradeR
 
   return (
     <div className="space-y-8">
-      {/* 1. HERO SECTION: Narrative Summary + Grade Badge + Persona Dropdown */}
-      <Card glass className="p-6 md:p-8 relative overflow-hidden border border-primary-500/20">
-        <div className="flex flex-col lg:flex-row gap-8 items-start justify-between">
-          {/* Hero Left: Narrative & Persona Selector */}
-          <div className="space-y-4 flex-1">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-6 w-6 text-primary-400 animate-pulse" />
-                <h2 className="text-xl font-bold text-gray-100">CORTEX Narrative Synthesis</h2>
+      {/* 1. HERO SECTION: Executive Synthesis + Grade Badge */}
+      <div className="bg-gradient-to-r from-blue-50/80 via-slate-50 to-cyan-50/80 border-2 border-blue-200/80 rounded-[32px] p-7 shadow-sm flex flex-col lg:flex-row gap-8 items-start justify-between">
+        
+        {/* Left Narrative Box */}
+        <div className="space-y-4 flex-1 w-full">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
+                <FileText className="h-5 w-5" />
               </div>
-
-              {/* Persona Selector Dropdown */}
-              <div className="flex items-center gap-2 bg-surface-card border border-border/80 rounded-xl px-3 py-1.5 text-xs">
-                <UserCheck className="h-4 w-4 text-primary-400" />
-                <span className="text-gray-400 font-medium">Perspective:</span>
-                <select
-                  value={persona}
-                  onChange={(e) => setPersona(e.target.value as PersonaType)}
-                  className="bg-transparent text-gray-200 font-semibold focus:outline-none cursor-pointer"
-                >
-                  <option value="general" className="bg-surface-card text-gray-200">General Overview</option>
-                  <option value="executive" className="bg-surface-card text-gray-200">Executive Summary</option>
-                  <option value="technical" className="bg-surface-card text-gray-200">Technical Lead</option>
-                  <option value="recruiter" className="bg-surface-card text-gray-200">Recruiter / Candidate</option>
-                  <option value="engineering_manager" className="bg-surface-card text-gray-200">Engineering Manager</option>
-                </select>
-              </div>
+              <h2 className="font-display text-xl font-extrabold text-slate-900 tracking-tight">
+                CORTEX Executive Synthesis
+              </h2>
             </div>
 
-            <div className="p-5 rounded-2xl bg-surface-card/90 border border-border/70 text-sm md:text-base text-gray-200 leading-relaxed font-sans shadow-inner">
-              {getPersonaText()}
+            {/* Persona Selector Dropdown */}
+            <div className="flex items-center gap-2 bg-white border border-blue-200 rounded-2xl px-3 py-1.5 text-xs shadow-2xs">
+              <UserCheck className="h-4 w-4 text-blue-600 shrink-0" />
+              <span className="text-slate-500 font-semibold">Perspective:</span>
+              <select
+                value={persona}
+                onChange={(e) => setPersona(e.target.value as PersonaType)}
+                className="bg-transparent text-slate-900 font-extrabold focus:outline-none cursor-pointer"
+              >
+                <option value="general">General Overview</option>
+                <option value="executive">Executive Summary</option>
+                <option value="technical">Technical Lead</option>
+                <option value="recruiter">Recruiter / Candidate</option>
+                <option value="engineering_manager">Engineering Manager</option>
+              </select>
             </div>
           </div>
 
-          {/* Hero Right: Grade Badge & Gauge */}
-          <div className="flex flex-col items-center justify-center p-6 bg-surface-card/60 rounded-2xl border border-border/80 min-w-[220px] text-center space-y-3">
-            <GradeBadge grade={gradeReport.overall_grade || 'C'} size="xl" showLabel />
-            <div className="space-y-1">
-              <div className="text-3xl font-black text-gray-100 font-mono">
-                {gradeReport.overall_score.toFixed(1)}
-                <span className="text-sm font-normal text-gray-400">/100</span>
-              </div>
-              <Badge variant="purple" size="md">
-                {gradeReport.maturity_level}
-              </Badge>
+          <p className="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed bg-white/90 p-5 rounded-2xl border border-blue-200/60 shadow-2xs">
+            {getPersonaText()}
+          </p>
+        </div>
+
+        {/* Right Grade Badge */}
+        <div className="flex flex-col items-center justify-center p-6 bg-white rounded-3xl border-2 border-slate-200 min-w-[200px] text-center space-y-3 shadow-sm w-full lg:w-auto">
+          <GradeBadge grade={gradeReport.overall_grade || 'A'} size="xl" showLabel />
+          <div className="space-y-1">
+            <div className="font-display text-3xl font-extrabold text-slate-900">
+              {gradeReport.overall_score.toFixed(1)}
+              <span className="text-xs font-semibold text-slate-400"> / 100</span>
             </div>
+            <span className="px-3 py-0.5 rounded-full text-xs font-extrabold bg-purple-50 text-purple-700 border border-purple-200 inline-block">
+              {gradeReport.maturity_level}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Guardrail Cap Banner (if capped) */}
+      {gradeReport.capped && (
+        <div className="p-4 rounded-2xl bg-rose-50 border-2 border-rose-200 flex items-center gap-3 text-rose-800 text-xs font-extrabold">
+          <ShieldAlert className="h-5 w-5 text-rose-600 shrink-0" />
+          <div>
+            <span className="font-extrabold">Guardrail Cap Active: </span>
+            {gradeReport.cap_reason || 'Overall grade capped due to critical security risk.'}
+          </div>
+        </div>
+      )}
+
+      {/* 2. TOP 3 RISKS & TOP 3 STRENGTHS */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        {/* Top 3 Risks */}
+        <div className="bg-white rounded-[32px] p-7 border-2 border-slate-200/90 shadow-sm border-l-4 border-l-rose-500 space-y-4">
+          <div className="pb-3 border-b border-slate-100">
+            <h3 className="font-display text-lg font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-rose-600" />
+              <span>Top Critical Risks</span>
+            </h3>
+            <p className="text-xs font-semibold text-slate-500">
+              Highest impact issues requiring remediation attention.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {risks.slice(0, 3).map((risk, idx) => (
+              <div
+                key={idx}
+                className="p-4 rounded-2xl bg-rose-50/70 border border-rose-200/80 text-xs font-bold text-slate-900 flex items-start gap-3 shadow-2xs"
+              >
+                <span className="font-mono font-extrabold text-rose-700 text-xs bg-rose-100 px-2 py-0.5 rounded-md border border-rose-200">
+                  #{idx + 1}
+                </span>
+                <span className="leading-relaxed">{risk}</span>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Guardrail Cap Banner (if capped) */}
-        {gradeReport.capped && (
-          <div className="mt-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center gap-3 text-rose-300 text-sm font-medium">
-            <ShieldAlert className="h-5 w-5 text-rose-400 shrink-0" />
-            <div>
-              <span className="font-bold text-rose-200">Guardrail Cap Active: </span>
-              {gradeReport.cap_reason || 'Overall grade capped due to critical security risk.'}
-            </div>
-          </div>
-        )}
-      </Card>
-
-      {/* 2. TOP 3 RISKS & TOP 3 STRENGTHS */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Top 3 Risks */}
-        <Card glass className="border-l-4 border-l-rose-500">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-rose-400">
-              <AlertTriangle className="h-5 w-5" />
-              <span>Top 3 Critical Risks</span>
-            </CardTitle>
-            <CardDescription>Highest impact issues requiring remediation attention.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {risks.slice(0, 3).map((risk, idx) => (
-              <div key={idx} className="p-3.5 rounded-xl bg-rose-500/5 border border-rose-500/20 text-xs sm:text-sm text-gray-200 flex items-start gap-3">
-                <span className="font-mono font-bold text-rose-400 text-xs bg-rose-500/20 px-2 py-0.5 rounded">#{idx + 1}</span>
-                <span className="leading-snug">{risk}</span>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
         {/* Top 3 Strengths */}
-        <Card glass className="border-l-4 border-l-emerald-500">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-emerald-400">
-              <CheckCircle2 className="h-5 w-5" />
-              <span>Top 3 Architectural Strengths</span>
-            </CardTitle>
-            <CardDescription>Standout engineering patterns and high-quality traits.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
+        <div className="bg-white rounded-[32px] p-7 border-2 border-slate-200/90 shadow-sm border-l-4 border-l-emerald-500 space-y-4">
+          <div className="pb-3 border-b border-slate-100">
+            <h3 className="font-display text-lg font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+              <span>Top Architectural Strengths</span>
+            </h3>
+            <p className="text-xs font-semibold text-slate-500">
+              Standout engineering patterns and verified high-quality traits.
+            </p>
+          </div>
+
+          <div className="space-y-3">
             {strengths.slice(0, 3).map((strength, idx) => (
-              <div key={idx} className="p-3.5 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-xs sm:text-sm text-gray-200 flex items-start gap-3">
-                <span className="font-mono font-bold text-emerald-400 text-xs bg-emerald-500/20 px-2 py-0.5 rounded">#{idx + 1}</span>
-                <span className="leading-snug">{strength}</span>
+              <div
+                key={idx}
+                className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 text-xs font-bold text-slate-900 flex items-start gap-3 shadow-2xs"
+              >
+                <span className="font-mono font-extrabold text-emerald-700 text-xs bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-200">
+                  #{idx + 1}
+                </span>
+                <span className="leading-relaxed">{strength}</span>
               </div>
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+
       </div>
 
       {/* 3. 5 CATEGORY GRADE CARDS */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold text-gray-100 flex items-center gap-2">
-            <Award className="h-5 w-5 text-primary-400" />
+          <h3 className="font-display text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+            <Award className="h-5 w-5 text-blue-600" />
             <span>5-Category Grade Evaluation</span>
           </h3>
-          <span className="text-xs text-gray-400">Weighted evaluation breakdown</span>
+          <span className="text-xs font-semibold text-slate-500">Weighted evaluation matrix</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -257,44 +274,47 @@ export const RepositoryGradePage: React.FC<RepositoryGradePageProps> = ({ gradeR
             const isExpanded = expandedCategory === cat.key;
 
             return (
-              <Card
+              <div
                 key={cat.key}
-                glass
-                className={`p-4 transition-all duration-200 hover:border-primary-500/40 cursor-pointer ${
-                  isExpanded ? 'border-primary-500/60 shadow-lg' : ''
-                }`}
                 onClick={() => setExpandedCategory(isExpanded ? null : cat.key)}
+                className={`bg-white rounded-3xl p-5 border-2 transition-all cursor-pointer space-y-3 ${
+                  isExpanded ? 'border-blue-600 shadow-md' : 'border-slate-200/90 shadow-sm hover:border-blue-300'
+                }`}
               >
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Icon className="h-4 w-4 text-primary-400" />
-                    <span className="text-sm font-bold text-gray-200">{cat.title}</span>
+                    <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <span className="text-xs font-extrabold text-slate-900">{cat.title}</span>
                   </div>
-                  <span className="text-[10px] text-gray-400 font-mono">({cat.weight})</span>
+                  <span className="text-[10px] text-slate-400 font-mono font-bold">({cat.weight})</span>
                 </div>
 
-                <div className="flex items-baseline justify-between mb-2">
+                <div className="flex items-baseline justify-between pt-1">
                   <GradeBadge grade={cat.grade} size="md" />
-                  <span className="text-sm font-bold text-gray-300 font-mono">{cat.score.toFixed(1)}/100</span>
+                  <span className="font-display text-lg font-extrabold text-slate-900 font-mono">
+                    {cat.score.toFixed(1)}/100
+                  </span>
                 </div>
 
-                <p className="text-[11px] text-gray-400 leading-snug line-clamp-2">
+                <p className="text-[11px] font-semibold text-slate-500 leading-snug line-clamp-2">
                   {cat.explanation}
                 </p>
 
-                <div className="mt-3 pt-2 border-t border-border/40 flex items-center justify-between text-[10px] text-primary-400 font-medium">
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] font-extrabold text-blue-600">
                   <span>{isExpanded ? 'Hide Details' : 'View Details'}</span>
                   {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                 </div>
 
                 {isExpanded && (
-                  <div className="mt-3 pt-3 border-t border-border/60 text-[11px] text-gray-300 space-y-1 animate-fadeIn">
-                    <p className="font-semibold text-gray-200">Category Scope:</p>
-                    <p className="text-gray-400">{cat.explanation}</p>
-                    <div className="mt-2 text-primary-400 font-mono">Score: {cat.score.toFixed(1)} (Grade {cat.grade})</div>
+                  <div className="pt-2 text-[11px] font-semibold text-slate-600 space-y-1.5">
+                    <p className="font-bold text-slate-900">Scope Explanation:</p>
+                    <p>{cat.explanation}</p>
+                    <div className="text-blue-700 font-bold font-mono">Score: {cat.score.toFixed(1)} ({cat.grade})</div>
                   </div>
                 )}
-              </Card>
+              </div>
             );
           })}
         </div>
@@ -302,70 +322,76 @@ export const RepositoryGradePage: React.FC<RepositoryGradePageProps> = ({ gradeR
 
       {/* 4. PERCENTILE & BENCHMARK LINE */}
       {benchmark && (
-        <Card glass className="p-6 bg-surface-card/80 border border-emerald-500/20">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-4 text-center sm:text-left">
-              <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/30">
-                <TrendingUp className="h-8 w-8 text-emerald-400" />
-              </div>
-              <div>
-                <h4 className="text-base font-bold text-gray-100">Industry Quality Benchmarking</h4>
-                <p className="text-xs text-gray-400">
-                  Better than <span className="font-bold text-emerald-400 text-sm">{benchmark.overall_percentile}%</span> of similarly-sized repositories across overall software engineering standards.
-                </p>
-              </div>
+        <div className="bg-white rounded-[32px] p-7 border-2 border-slate-200/90 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-4 text-center sm:text-left">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200 shrink-0">
+              <TrendingUp className="h-6 w-6" />
             </div>
-
-            <div className="flex items-center gap-3">
-              <div className="px-4 py-2 bg-surface-card rounded-xl border border-border/60 text-center">
-                <span className="text-[10px] text-gray-400 block">Security</span>
-                <span className="text-sm font-bold text-emerald-400">{benchmark.security_percentile}%</span>
-              </div>
-              <div className="px-4 py-2 bg-surface-card rounded-xl border border-border/60 text-center">
-                <span className="text-[10px] text-gray-400 block">Architecture</span>
-                <span className="text-sm font-bold text-emerald-400">{benchmark.architecture_percentile}%</span>
-              </div>
-              <div className="px-4 py-2 bg-surface-card rounded-xl border border-border/60 text-center">
-                <span className="text-[10px] text-gray-400 block">Maintainability</span>
-                <span className="text-sm font-bold text-emerald-400">{benchmark.maintainability_percentile}%</span>
-              </div>
+            <div>
+              <h4 className="font-display text-base font-extrabold text-slate-900">Industry Quality Benchmarking</h4>
+              <p className="text-xs font-semibold text-slate-500 mt-0.5">
+                Better than <span className="font-extrabold text-emerald-600 text-sm">{benchmark.overall_percentile}%</span> of similarly-sized repositories across overall software engineering standards.
+              </p>
             </div>
           </div>
-        </Card>
+
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="px-4 py-2.5 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+              <span className="text-[10px] font-extrabold text-slate-500 uppercase block">Security</span>
+              <span className="text-sm font-extrabold text-emerald-600">{benchmark.security_percentile}%</span>
+            </div>
+            <div className="px-4 py-2.5 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+              <span className="text-[10px] font-extrabold text-slate-500 uppercase block">Architecture</span>
+              <span className="text-sm font-extrabold text-emerald-600">{benchmark.architecture_percentile}%</span>
+            </div>
+            <div className="px-4 py-2.5 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+              <span className="text-[10px] font-extrabold text-slate-500 uppercase block">Maintainability</span>
+              <span className="text-sm font-extrabold text-emerald-600">{benchmark.maintainability_percentile}%</span>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* 5. TECHNICAL DEBT ESTIMATION */}
       {debt && (
-        <Card glass>
-          <CardHeader className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+        <div className="bg-white rounded-[32px] p-7 border-2 border-slate-200/90 shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-100">
             <div>
-              <CardTitle className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-amber-400" />
+              <h3 className="font-display text-lg font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                <Clock className="h-5 w-5 text-amber-600" />
                 <span>Technical Debt Remediation Estimate</span>
-              </CardTitle>
-              <CardDescription>Estimated effort to remediate code smells, security findings, and testing gaps.</CardDescription>
+              </h3>
+              <p className="text-xs font-semibold text-slate-500">
+                Estimated effort to remediate code smells, security findings, and testing gaps.
+              </p>
             </div>
-            <div className="text-right">
-              <span className="text-2xl font-bold text-amber-400">{debt.total_hours} Hours</span>
-              <span className="text-xs text-gray-400 block">({debt.total_days} Engineering Days)</span>
+            <div className="text-left sm:text-right">
+              <span className="font-display text-2xl font-extrabold text-amber-600 block">{debt.total_hours} Hours</span>
+              <span className="text-xs font-bold text-slate-400">({debt.total_days} Engineering Days)</span>
             </div>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <TechnicalDebtChart categoryBreakdown={debt.category_breakdown} />
-            <div className="space-y-2 max-h-60 overflow-y-auto">
-              <h4 className="text-xs font-semibold text-gray-300">Itemized Findings:</h4>
+            <div className="space-y-3 max-h-60 overflow-y-auto">
+              <h4 className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Itemized Findings:</h4>
               {debt.items.map((item, idx) => (
-                <div key={idx} className="p-3 rounded-xl bg-surface-card border border-border/40 flex justify-between items-center text-xs">
+                <div
+                  key={idx}
+                  className="p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200 flex justify-between items-center text-xs font-bold text-slate-800 shadow-2xs"
+                >
                   <div>
-                    <span className="font-semibold text-gray-200">{item.category}</span>
-                    <p className="text-gray-400 text-[11px]">{item.description}</p>
+                    <span className="font-extrabold text-slate-900">{item.category}</span>
+                    <p className="text-slate-500 text-[11px] font-medium mt-0.5">{item.description}</p>
                   </div>
-                  <Badge variant="warning">{item.estimated_hours}h</Badge>
+                  <span className="px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-extrabold text-[11px] shrink-0">
+                    {item.estimated_hours}h
+                  </span>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
     </div>
   );

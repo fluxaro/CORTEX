@@ -28,14 +28,18 @@ export const RadarScoreChart: React.FC<RadarScoreChartProps> = ({ subsystems }) 
     <div className="w-full h-64 sm:h-80">
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
-          <PolarGrid stroke="#232d42" />
-          <PolarAngleAxis dataKey="subject" stroke="#9ca3af" tick={{ fill: '#9ca3af', fontSize: 11 }} />
+          <PolarGrid stroke="#e2e8f0" />
+          <PolarAngleAxis
+            dataKey="subject"
+            stroke="#cbd5e1"
+            tick={{ fill: '#475569', fontSize: 11, fontWeight: 600 }}
+          />
           <Radar
             name="Subsystem Score"
             dataKey="score"
-            stroke="#3b82f6"
+            stroke="#2563eb"
             fill="#3b82f6"
-            fillOpacity={0.35}
+            fillOpacity={0.25}
           />
         </RadarChart>
       </ResponsiveContainer>

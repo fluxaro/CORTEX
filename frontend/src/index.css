@@ -1,12 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Plus+Jakarta+Sans:wght@400..800&display=swap');
 
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+/* Global font override to guarantee Fredoka is used throughout */
+*, ::before, ::after {
+  font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif !important;
+}
+
 @layer base {
-  body {
-    @apply bg-slate-50 text-slate-900 font-sans antialiased min-h-screen selection:bg-blue-600 selection:text-white;
+  html, body {
+    font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif !important;
+    @apply bg-slate-50 text-slate-900 antialiased min-h-screen selection:bg-blue-600 selection:text-white;
   }
 }
 

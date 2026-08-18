@@ -30,9 +30,9 @@ export default {
         },
       },
       fontFamily: {
-        display: ["Fredoka", "Outfit", "Plus Jakarta Sans", "sans-serif"],
-        sans: ["Plus Jakarta Sans", "Inter", "-apple-system", "sans-serif"],
-        mono: ["Fira Code", "JetBrains Mono", "monospace"],
+        display: ["Fredoka", "sans-serif"],
+        sans: ["Fredoka", "sans-serif"],
+        mono: ["Fredoka", "monospace"],
       },
       boxShadow: {
         glow: "0 0 20px -5px rgba(59, 130, 246, 0.3)",

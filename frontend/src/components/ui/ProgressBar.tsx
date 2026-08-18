@@ -21,7 +21,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const safeValue = Math.min(Math.max(value, 0), 100);
 
   const colors = {
-    primary: 'bg-primary-500',
+    primary: 'bg-blue-600',
     emerald: 'bg-emerald-500',
     amber: 'bg-amber-500',
     rose: 'bg-rose-500',
@@ -37,12 +37,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   return (
     <div className={cn('w-full space-y-1.5', className)}>
       {(label || showValue) && (
-        <div className="flex justify-between items-center text-xs font-medium text-gray-300">
+        <div className="flex justify-between items-center text-xs font-bold text-slate-700">
           {label && <span>{label}</span>}
-          {showValue && <span>{safeValue.toFixed(1)}%</span>}
+          {showValue && <span className="font-mono">{safeValue.toFixed(1)}%</span>}
         </div>
       )}
-      <div className={cn('w-full bg-surface-card rounded-full overflow-hidden border border-border/40', sizes[size])}>
+      <div className={cn('w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200', sizes[size])}>
         <div
           className={cn('h-full transition-all duration-500 ease-out rounded-full', colors[color])}
           style={{ width: `${safeValue}%` }}

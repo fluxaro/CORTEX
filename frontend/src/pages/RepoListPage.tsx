@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Filter, GitBranch, Plus, Search, Star } from 'lucide-react';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
 import { Repository } from '../services/types';
 
 interface RepoListPageProps {

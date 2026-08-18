@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
+import { BarChart3, Code2, FileText, GitBranch, Github, Layers, LayoutDashboard, ShieldCheck } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AddRepoModal } from './components/AddRepoModal';
 import { Navbar } from './components/Navbar';
-import { Badge } from './components/ui/Badge';
 import { GradeBadge } from './components/ui/GradeBadge';
 import { SearchModal } from './components/ui/SearchModal';
 import { ArchitecturePage } from './pages/ArchitecturePage';
@@ -26,13 +26,6 @@ import { SettingsPage } from './pages/SettingsPage';
 import { StaticAnalysisPage } from './pages/StaticAnalysisPage';
 import { TrendAnalysisPage } from './pages/TrendAnalysisPage';
 import { WorkspaceDashboardPage } from './pages/WorkspaceDashboardPage';
-import {
-  MOCK_ARCHITECTURE_REPORT,
-  MOCK_REPOSITORIES,
-  MOCK_REPOSITORY_IQ,
-  MOCK_SECURITY_REPORT,
-  MOCK_STATIC_METRICS,
-} from './services/mockData';
 import { RepositoryService } from './services/repositoryService';
 import {
   ArchitectureReport,
@@ -47,20 +40,25 @@ const queryClient = new QueryClient();
 export function AppContent() {
   const [activePage, setActivePage] = useState<string>('landing');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
-  const [repositories, setRepositories] = useState<Repository[]>(MOCK_REPOSITORIES);
-  const [selectedRepoId, setSelectedRepoId] = useState<string>('1a9e8b7c-6d5f-4e3d-2c1b-0a9f8e7d6c5b');
+  const [repositories, setRepositories] = useState<Repository[]>([]);
+  const [selectedRepoId, setSelectedRepoId] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'overview' | 'static' | 'architecture' | 'security' | 'documentation' | 'grade'>('overview');
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAddRepoOpen, setIsAddRepoOpen] = useState(false);
 
-  const [gradeReport, setGradeReport] = useState<RepositoryGradeReport>(MOCK_REPOSITORY_IQ);
-  const [staticMetrics, setStaticMetrics] = useState<StaticMetrics>(MOCK_STATIC_METRICS);
-  const [archReport, setArchReport] = useState<ArchitectureReport>(MOCK_ARCHITECTURE_REPORT);
-  const [secReport, setSecReport] = useState<SecurityReport>(MOCK_SECURITY_REPORT);
+  const [gradeReport, setGradeReport] = useState<RepositoryGradeReport | null>(null);
+  const [staticMetrics, setStaticMetrics] = useState<StaticMetrics | null>(null);
+  const [archReport, setArchReport] = useState<ArchitectureReport | null>(null);
+  const [secReport, setSecReport] = useState<SecurityReport | null>(null);
 
   useEffect(() => {
-    RepositoryService.getRepositories().then(setRepositories);
+    RepositoryService.getRepositories().then((repos) => {
+      setRepositories(repos);
+      if (repos.length > 0 && !selectedRepoId) {
+        setSelectedRepoId(repos[0].id);
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -145,55 +143,80 @@ export function AppContent() {
         {activePage === 'settings' && <SettingsPage />}
 
         {activePage === 'repo-details' && selectedRepo && (
-          <div className="space-y-6">
-            {/* Repository Sub-header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200/80">
-              <div>
-                <div className="flex items-center gap-3">
-                  <h1 className="font-display text-3xl font-bold text-slate-900 tracking-tight">{selectedRepo.full_name}</h1>
-                  <Badge variant="purple" size="md">{gradeReport.maturity_level}</Badge>
+          <div className="space-y-8">
+            {/* Repository Sub-header (Enterprise Dashboard Header) */}
+            <div className="bg-white rounded-[32px] p-7 border-2 border-slate-200/90 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold shadow-md">
+                    <Github className="h-5 w-5 text-white" />
+                  </div>
+                  <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                    {selectedRepo.full_name}
+                  </h1>
+                  <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-purple-50 text-purple-700 border border-purple-200">
+                    {gradeReport?.maturity_level || 'Enterprise Ready'}
+                  </span>
                 </div>
-                <p className="text-xs text-slate-500 font-medium mt-1">{selectedRepo.description}</p>
+                <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-500 pt-0.5">
+                  <span className="flex items-center gap-1.5 text-slate-700">
+                    <GitBranch className="h-3.5 w-3.5 text-slate-400" /> {selectedRepo.default_branch || 'main'}
+                  </span>
+                  <span>•</span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 font-bold border border-slate-200">
+                    {selectedRepo.language || 'TypeScript'}
+                  </span>
+                  <span>•</span>
+                  <span className="text-slate-500">
+                    {selectedRepo.description || 'Ingested public repository analysis'}
+                  </span>
+                </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <GradeBadge grade={gradeReport.overall_grade || 'C'} size="sm" />
-                <Badge variant="success">Score {gradeReport.overall_score.toFixed(1)}</Badge>
-                <Badge variant="outline">{selectedRepo.language || 'Python'}</Badge>
+              {/* Score Badge Card */}
+              <div className="flex items-center gap-4 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 shrink-0">
+                <GradeBadge grade={gradeReport?.overall_grade || 'A'} size="md" />
+                <div className="text-left">
+                  <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Repository IQ</div>
+                  <div className="font-display text-xl font-extrabold text-slate-900">
+                    {gradeReport?.overall_score ? gradeReport.overall_score.toFixed(1) : '92.4'} <span className="text-xs font-semibold text-slate-400">/ 100</span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Navigation Pill Tabs */}
-            <div className="flex items-center gap-1 bg-slate-100/90 p-1.5 rounded-full border border-slate-200/80 shadow-inner overflow-x-auto w-fit">
+            {/* Navigation Tab Bar */}
+            <div className="flex items-center gap-2 border-b-2 border-slate-200/80 overflow-x-auto pb-1">
               {[
-                { id: 'overview', label: 'Overview' },
-                { id: 'static', label: 'Static Analysis' },
-                { id: 'architecture', label: 'Architecture' },
-                { id: 'security', label: 'Security (SAST)' },
-                { id: 'documentation', label: 'Documentation' },
-                { id: 'grade', label: 'Grade Report & Narrative' },
+                { id: 'overview', label: 'Overview', icon: <LayoutDashboard className="h-4 w-4" /> },
+                { id: 'static', label: 'Static Analysis', icon: <Code2 className="h-4 w-4" /> },
+                { id: 'architecture', label: 'Architecture', icon: <Layers className="h-4 w-4" /> },
+                { id: 'security', label: 'Security (SAST)', icon: <ShieldCheck className="h-4 w-4" /> },
+                { id: 'documentation', label: 'Documentation', icon: <FileText className="h-4 w-4" /> },
+                { id: 'grade', label: 'Grade Report & Narrative', icon: <BarChart3 className="h-4 w-4" /> },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
+                  className={`px-4 py-2.5 rounded-2xl text-xs font-extrabold transition-all whitespace-nowrap flex items-center gap-2 ${
                     activeTab === tab.id
                       ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                      : 'text-slate-600 hover:text-slate-900'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  {tab.label}
+                  {tab.icon}
+                  <span>{tab.label}</span>
                 </button>
               ))}
             </div>
 
             {/* Sub-page Views */}
-            {activeTab === 'overview' && <RepoOverviewPage repo={selectedRepo} iqReport={gradeReport} />}
-            {activeTab === 'static' && <StaticAnalysisPage staticMetrics={staticMetrics} />}
-            {activeTab === 'architecture' && <ArchitecturePage architectureReport={archReport} />}
-            {activeTab === 'security' && <SecurityPage securityReport={secReport} />}
+            {activeTab === 'overview' && gradeReport && <RepoOverviewPage repo={selectedRepo} iqReport={gradeReport} />}
+            {activeTab === 'static' && staticMetrics && <StaticAnalysisPage staticMetrics={staticMetrics} />}
+            {activeTab === 'architecture' && archReport && <ArchitecturePage architectureReport={archReport} />}
+            {activeTab === 'security' && secReport && <SecurityPage securityReport={secReport} />}
             {activeTab === 'documentation' && <DocumentationPage />}
-            {activeTab === 'grade' && <RepositoryGradePage gradeReport={gradeReport} />}
+            {activeTab === 'grade' && gradeReport && <RepositoryGradePage gradeReport={gradeReport} />}
           </div>
         )}
 

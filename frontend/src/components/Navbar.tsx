@@ -29,19 +29,17 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
-        {/* Logo & Brand */}
-        <div className="flex items-center gap-3 cursor-pointer group" onClick={() => onNavigate('landing')}>
-          <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform border border-slate-200">
+        {/* Logo & Brand Lockup */}
+        <div
+          className="flex items-center gap-3 cursor-pointer select-none group"
+          onClick={() => onNavigate('landing')}
+        >
+          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-xs border border-slate-200/80 group-hover:shadow-md transition-all">
             <img src="/cortex_logo.jpg" alt="CORTEX Logo" className="w-full h-full object-cover" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-display font-bold text-2xl text-slate-900 tracking-tight">Cortex</span>
-              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200/60">
-                v1.0
-              </span>
-            </div>
-          </div>
+          <span className="font-display font-extrabold text-2xl text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors">
+            Cortex
+          </span>
         </div>
 
         {/* Floating Center Pill Navigation */}

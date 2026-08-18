@@ -19,17 +19,17 @@ export const TechnicalDebtChart: React.FC<TechnicalDebtChartProps> = ({ category
     hours: value,
   }));
 
-  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#f43f5e', '#06b6d4'];
+  const COLORS = ['#2563eb', '#10b981', '#f59e0b', '#8b5cf6', '#f43f5e', '#06b6d4'];
 
   return (
     <div className="w-full h-60">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-          <XAxis dataKey="category" stroke="#6b7280" tick={{ fill: '#9ca3af', fontSize: 11 }} />
-          <YAxis stroke="#6b7280" tick={{ fill: '#9ca3af', fontSize: 11 }} />
+          <XAxis dataKey="category" stroke="#cbd5e1" tick={{ fill: '#475569', fontSize: 11, fontWeight: 700 }} />
+          <YAxis stroke="#cbd5e1" tick={{ fill: '#475569', fontSize: 11, fontWeight: 700 }} />
           <Tooltip
-            contentStyle={{ backgroundColor: '#111827', borderColor: '#232d42', borderRadius: '12px' }}
-            itemStyle={{ color: '#60a5fa' }}
+            contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
+            itemStyle={{ color: '#0f172a', fontWeight: 800 }}
             formatter={(val: number) => [`${val} hours`, 'Technical Debt']}
           />
           <Bar dataKey="hours" radius={[6, 6, 0, 0]}>

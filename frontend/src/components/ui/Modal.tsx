@@ -5,7 +5,8 @@ import { cn } from './cn';
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
+  title?: string;
+  subtitle?: string;
   children: React.ReactNode;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl';
 }
@@ -14,6 +15,7 @@ export const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   title,
+  subtitle,
   children,
   maxWidth = 'md',
 }) => {
@@ -41,23 +43,43 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/50 backdrop-blur-sm transition-opacity">
+      {/* Backdrop */}
+      <div className="absolute inset-0" onClick={onClose} />
+
+      {/* Modal Container */}
       <div
         className={cn(
-          'w-full rounded-3xl bg-white/95 backdrop-blur-xl border border-slate-200/90 shadow-2xl shadow-slate-900/15 overflow-hidden',
+          'relative w-full rounded-2xl bg-white border border-slate-200 shadow-xl overflow-hidden',
           maxWidths[maxWidth]
         )}
       >
-        <div className="flex justify-between items-center px-7 py-5 border-b border-slate-100 bg-slate-50/70">
-          <h3 className="font-display text-xl font-bold text-slate-900">{title}</h3>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full hover:bg-slate-200/60 text-slate-400 hover:text-slate-700 transition-colors"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-        <div className="p-7">{children}</div>
+        {/* Header */}
+        {title && (
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+            <div>
+              <h3 className="text-base font-bold text-slate-900 tracking-tight">
+                {title}
+              </h3>
+              {subtitle && (
+                <p className="text-xs text-slate-500 font-medium mt-0.5">
+                  {subtitle}
+                </p>
+              )}
+            </div>
+
+            <button
+              onClick={onClose}
+              type="button"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        )}
+
+        {/* Body Content */}
+        <div className="p-6">{children}</div>
       </div>
     </div>
   );
