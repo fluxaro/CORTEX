@@ -6,6 +6,7 @@ import {
   Search,
   User as UserIcon,
 } from 'lucide-react';
+import { Button } from './ui/Button';
 
 interface NavbarProps {
   onOpenSearch: () => void;
@@ -126,30 +127,33 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-rose-500" />
           </button>
 
-          <button
+          <Button
             onClick={onOpenAddRepo}
-            className="hidden sm:flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-md shadow-blue-500/20 transition-all hover:scale-105"
+            icon={<Plus className="h-3.5 w-3.5 text-slate-900" />}
+            badgeColor="bg-rose-300"
+            size="sm"
+            className="hidden sm:inline-flex"
           >
-            <Plus className="h-4 w-4" />
-            <span>Add Repo</span>
-          </button>
+            Add Repo
+          </Button>
 
           {isAuthenticated ? (
             <button
               onClick={onLogout}
-              className="p-2 rounded-full border border-slate-200 hover:bg-rose-50 text-rose-600 transition-colors"
+              className="p-2 rounded-full border-2 border-slate-900 bg-slate-100 hover:bg-rose-50 text-slate-900 shadow-[2px_2px_0px_0px_#0f172a] transition-all"
               title="Logout"
             >
               <LogOut className="h-4 w-4" />
             </button>
           ) : (
-            <button
+            <Button
               onClick={() => onNavigate('login')}
-              className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-5 py-2 rounded-full shadow-sm transition-all hover:scale-105"
+              icon={<UserIcon className="h-3.5 w-3.5 text-slate-900" />}
+              badgeColor="bg-amber-300"
+              size="sm"
             >
-              <UserIcon className="h-3.5 w-3.5" />
-              <span>Log In</span>
-            </button>
+              Log In
+            </Button>
           )}
         </div>
       </div>

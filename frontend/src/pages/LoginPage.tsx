@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Github, Lock, Mail, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowRight, Github, Lock, Mail, ShieldCheck, Sparkles } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 
@@ -62,13 +62,16 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onSwitchTo
             </div>
           </div>
 
-          <button
+          <Button
             type="submit"
-            disabled={isLoading}
-            className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold text-xs shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02]"
+            isLoading={isLoading}
+            icon={<ArrowRight className="h-4 w-4 text-slate-900" />}
+            badgeColor="bg-blue-300"
+            size="lg"
+            className="w-full"
           >
-            {isLoading ? 'Signing In...' : 'Sign In'}
-          </button>
+            Sign In
+          </Button>
         </form>
 
         <div className="relative my-4 text-center">
@@ -77,22 +80,26 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onSwitchTo
         </div>
 
         <div className="grid grid-cols-2 gap-3 text-xs">
-          <button
+          <Button
             type="button"
             onClick={onLoginSuccess}
-            className="flex items-center justify-center gap-2 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-full font-semibold text-slate-700 transition-all"
+            icon={<Github className="h-3.5 w-3.5 text-slate-900" />}
+            badgeColor="bg-slate-300"
+            size="md"
+            className="w-full"
           >
-            <Github className="h-4 w-4" />
-            <span>GitHub</span>
-          </button>
-          <button
+            GitHub
+          </Button>
+          <Button
             type="button"
             onClick={onLoginSuccess}
-            className="flex items-center justify-center gap-2 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-full font-semibold text-slate-700 transition-all"
+            icon={<Sparkles className="h-3.5 w-3.5 text-slate-900" />}
+            badgeColor="bg-purple-300"
+            size="md"
+            className="w-full"
           >
-            <Sparkles className="h-4 w-4 text-purple-600" />
-            <span>Google</span>
-          </button>
+            Google
+          </Button>
         </div>
 
         <div className="text-center text-xs text-slate-500 font-medium pt-2">

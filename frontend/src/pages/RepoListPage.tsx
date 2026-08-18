@@ -36,13 +36,14 @@ export const RepoListPage: React.FC<RepoListPageProps> = ({
           <h1 className="font-display text-3xl font-bold text-slate-900 tracking-tight">Repositories</h1>
           <p className="text-xs text-slate-500 font-medium mt-1">Ingested repositories evaluated by Cortex analysis engines.</p>
         </div>
-        <button
+        <Button
           onClick={onOpenAddRepo}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-5 py-2.5 rounded-full shadow-md shadow-blue-500/20 transition-all hover:scale-105"
+          icon={<Plus className="h-3.5 w-3.5 text-slate-900" />}
+          badgeColor="bg-rose-300"
+          size="md"
         >
-          <Plus className="h-4 w-4" />
-          <span>Add Repository</span>
-        </button>
+          Add Repository
+        </Button>
       </div>
 
       {/* Filters & Search */}

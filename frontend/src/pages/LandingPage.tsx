@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   Zap,
 } from 'lucide-react';
+import { Button } from '../components/ui/Button';
 
 interface LandingPageProps {
   onNavigate: (page: string) => void;
@@ -57,21 +58,23 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenAddR
 
         {/* Hero Pill CTA Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-          <button
+          <Button
             onClick={() => onNavigate('repositories')}
-            className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-3.5 font-semibold text-sm shadow-lg shadow-blue-500/25 transition-all flex items-center gap-2 hover:scale-105"
+            icon={<ArrowRight className="h-4 w-4 text-slate-900" />}
+            badgeColor="bg-rose-300"
+            size="lg"
           >
-            <span>Get In Touch</span>
-            <ArrowRight className="h-4 w-4" />
-          </button>
-          
-          <button
+            Get In Touch
+          </Button>
+
+          <Button
             onClick={onOpenAddRepo}
-            className="border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 rounded-full px-8 py-3.5 font-semibold text-sm shadow-sm transition-all flex items-center gap-2 hover:scale-105"
+            icon={<ArrowRight className="h-4 w-4 text-slate-900" />}
+            badgeColor="bg-amber-300"
+            size="lg"
           >
-            <span>Learn More</span>
-            <ArrowRight className="h-4 w-4 text-slate-400" />
-          </button>
+            Learn More
+          </Button>
         </div>
 
         {/* Hero 3D Render Asset */}
@@ -198,13 +201,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenAddR
             Ingest any public GitHub repository URL and receive instant intelligence reports on architecture, security, static metrics, and overall Repository IQ score.
           </p>
           <div className="flex justify-center">
-            <button
+            <Button
               onClick={() => onNavigate('repositories')}
-              className="bg-blue-600 hover:bg-blue-500 text-white rounded-full px-8 py-3.5 font-semibold text-sm shadow-lg shadow-blue-500/30 transition-all flex items-center gap-2 hover:scale-105"
+              icon={<ArrowRight className="h-4 w-4 text-slate-900" />}
+              badgeColor="bg-cyan-300"
+              size="lg"
             >
-              <span>Browse Repositories</span>
-              <ArrowRight className="h-4 w-4" />
-            </button>
+              Browse Repositories
+            </Button>
           </div>
         </div>
       </section>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, Mail, ShieldCheck, User as UserIcon } from 'lucide-react';
+import { ArrowRight, Lock, Mail, ShieldCheck, User as UserIcon } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 
@@ -78,13 +78,16 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess, o
             </div>
           </div>
 
-          <button
+          <Button
             type="submit"
-            disabled={isLoading}
-            className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold text-xs shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02]"
+            isLoading={isLoading}
+            icon={<ArrowRight className="h-4 w-4 text-slate-900" />}
+            badgeColor="bg-emerald-300"
+            size="lg"
+            className="w-full"
           >
-            {isLoading ? 'Creating Account...' : 'Create Account'}
-          </button>
+            Create Account
+          </Button>
         </form>
 
         <div className="text-center text-xs text-slate-500 font-medium pt-2">
