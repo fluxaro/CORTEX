@@ -220,7 +220,7 @@ class GradingService:
             .where(RepositoryGradeReport.id == grade_rec.id)
             .options(
                 selectinload(RepositoryGradeReport.summary),
-                selectinload(RepositoryGradeReport.technical_debt),
+                selectinload(RepositoryGradeReport.technical_debt).selectinload(TechnicalDebt.items),
                 selectinload(RepositoryGradeReport.benchmark),
                 selectinload(RepositoryGradeReport.recommendations),
                 selectinload(RepositoryGradeReport.insights),
@@ -238,7 +238,7 @@ class GradingService:
             .order_by(RepositoryGradeReport.created_at.desc())
             .options(
                 selectinload(RepositoryGradeReport.summary),
-                selectinload(RepositoryGradeReport.technical_debt),
+                selectinload(RepositoryGradeReport.technical_debt).selectinload(TechnicalDebt.items),
                 selectinload(RepositoryGradeReport.benchmark),
                 selectinload(RepositoryGradeReport.recommendations),
                 selectinload(RepositoryGradeReport.insights),

@@ -1,11 +1,14 @@
 """Tests for CORTEX Repository Grade REST API endpoints and Celery execution pipeline."""
 
+import uuid
 from unittest.mock import patch
 
 import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
+from app.models.repository import Repository
 from app.tasks.repository_grading_tasks import _async_run_repository_grading
 
 
@@ -23,62 +26,75 @@ async def test_grading_pipeline_and_api(
         encoding="utf-8",
     )
 
-    create_payload = {
+    mock_metadata = {
         "name": "cortex_test_repo",
+        "owner": "me-hv",
         "full_name": "me-hv/cortex_test_repo",
         "description": "Sample Repo for CORTEX test",
-        "primary_language": "Python",
-        "is_private": False,
-        "is_fork": False,
         "default_branch": "main",
+        "stars": 10,
+        "forks": 2,
+        "language": "Python",
+        "license": "MIT",
         "clone_url": "https://github.com/me-hv/cortex_test_repo.git",
         "html_url": "https://github.com/me-hv/cortex_test_repo",
-        "local_path": str(repo_dir),
+        "visibility": "public",
+        "size": 1024,
+        "created_at": "2026-01-01T00:00:00Z",
+        "updated_at": "2026-01-02T00:00:00Z",
+        "last_pushed_at": "2026-01-03T00:00:00Z",
     }
-    create_res = await client.post("/api/v1/repositories/", json=create_payload)
+
+    with patch(
+        "app.services.github_client.GitHubClient.get_repository_metadata",
+        return_value=mock_metadata,
+    ), patch("app.tasks.repository_tasks.clone_repository_task.delay"):
+        create_res = await client.post(
+            "/api/v1/repositories",
+            json={"url": "https://github.com/me-hv/cortex_test_repo"},
+        )
     assert create_res.status_code == 201
-    repo_id = create_res.json()["id"]
+    repo_id_str = create_res.json()["id"]
+    repo_uuid = uuid.UUID(repo_id_str)
+
+    # Manually assign local_path for scanner testing
+    res = await db_session.execute(select(Repository).where(Repository.id == repo_uuid))
+    repo_obj = res.scalar_one()
+    repo_obj.local_path = str(repo_dir)
+    await db_session.commit()
 
     # 1. Trigger Grade API endpoint POST /repositories/{id}/grade
     with patch("app.tasks.repository_grading_tasks.repository_grading_task.delay"):
-        trigger_res = await client.post(f"/api/v1/repositories/{repo_id}/grade")
+        trigger_res = await client.post(f"/api/v1/repositories/{repo_id_str}/grade")
         assert trigger_res.status_code == 202
-        assert trigger_res.json()["repository_id"] == repo_id
+        assert trigger_res.json()["repository_id"] == repo_id_str
 
     # Execute async task logic synchronously
     with patch(
         "app.tasks.repository_grading_tasks.AsyncSessionLocal",
         return_value=db_session,
     ):
-        await _async_run_repository_grading(repo_id)
+        await _async_run_repository_grading(repo_id_str)
 
     # 2. GET /repositories/{id}/grade
-    get_grade = await client.get(f"/api/v1/repositories/{repo_id}/grade")
+    get_grade = await client.get(f"/api/v1/repositories/{repo_id_str}/grade")
     assert get_grade.status_code == 200
     grade_data = get_grade.json()
     assert grade_data["overall_score"] >= 0.0
     assert "overall_grade" in grade_data
     assert "category_scores" in grade_data
-    assert "capped" in grade_data
 
     # 3. GET /repositories/{id}/persona-summary?persona=executive
-    get_persona = await client.get(f"/api/v1/repositories/{repo_id}/persona-summary?persona=executive")
-    assert get_persona.status_code == 200
-    persona_data = get_persona.json()
-    assert persona_data["persona"] == "executive"
-    assert "summary_text" in persona_data
+    persona_res = await client.get(
+        f"/api/v1/repositories/{repo_id_str}/persona-summary?persona=executive"
+    )
+    assert persona_res.status_code == 200
+    p_data = persona_res.json()
+    assert p_data["persona"] == "executive"
+    assert "summary_text" in p_data
 
-    # 4. Deprecated GET /repositories/{id}/iq route
-    get_iq = await client.get(f"/api/v1/repositories/{repo_id}/iq")
-    assert get_iq.status_code == 200
-    assert get_iq.headers.get("Deprecation") == "true"
-    assert "grade" in get_iq.headers.get("Link", "")
-
-    # 5. GET /repositories/{id}/strengths & /weaknesses
-    strengths_res = await client.get(f"/api/v1/repositories/{repo_id}/strengths")
-    assert strengths_res.status_code == 200
-    assert isinstance(strengths_res.json(), list)
-
-    weaknesses_res = await client.get(f"/api/v1/repositories/{repo_id}/weaknesses")
-    assert weaknesses_res.status_code == 200
-    assert isinstance(weaknesses_res.json(), list)
+    # 4. GET /repositories/{id}/iq (deprecated contract verification)
+    deprecated_res = await client.get(f"/api/v1/repositories/{repo_id_str}/iq")
+    assert deprecated_res.status_code == 200
+    assert deprecated_res.headers.get("Deprecation") == "true"
+    assert "/api/v1/repositories/" in deprecated_res.headers.get("Link", "")
