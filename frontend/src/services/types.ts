@@ -19,6 +19,7 @@ export interface Repository {
   created_at: string;
   updated_at: string;
   iq_score?: number;
+  overall_grade?: string;
 }
 
 export interface User {
@@ -130,6 +131,7 @@ export interface TrendMetric {
   repository_id: string;
   recorded_at: string;
   overall_iq: number;
+  overall_grade?: string;
   security_score: number;
   architecture_score: number;
   complexity_score: number;
@@ -147,6 +149,7 @@ export interface RepositoryComparison {
       repository_id: string;
       name: string;
       overall_iq: number;
+      overall_grade?: string;
       security_score: number;
       architecture_score: number;
       maintainability_score: number;
@@ -155,6 +158,14 @@ export interface RepositoryComparison {
     }>;
   };
   created_at: string;
+}
+
+export interface CategoryScores {
+  security: number;
+  architecture: number;
+  code_quality: number;
+  maintainability: number;
+  community_velocity: number;
 }
 
 export interface SubsystemScores {
@@ -201,14 +212,20 @@ export interface Benchmark {
   maintainability_percentile: number;
 }
 
-export interface RepositoryIQReport {
+export interface RepositoryGradeReport {
   id: string;
   repository_id: string;
   analysis_run_id: string;
   overall_score: number;
+  overall_grade: string;
+  capped: boolean;
+  cap_reason?: string | null;
   maturity_level: string;
-  subsystem_scores: SubsystemScores;
+  category_scores: CategoryScores;
+  subsystem_scores?: SubsystemScores;
+  narrative_summary?: string;
   summary?: {
+    narrative_summary?: string;
     executive_summary: string;
     technical_summary: string;
     architecture_summary: string;
@@ -226,6 +243,8 @@ export interface RepositoryIQReport {
   created_at: string;
   updated_at: string;
 }
+
+export type RepositoryIQReport = RepositoryGradeReport;
 
 export interface StaticMetrics {
   repository_id: string;

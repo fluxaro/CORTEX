@@ -1,7 +1,7 @@
 import {
   ArchitectureReport,
   Repository,
-  RepositoryIQReport,
+  RepositoryGradeReport,
   SecurityReport,
   StaticMetrics,
 } from './types';
@@ -26,6 +26,7 @@ export const MOCK_REPOSITORIES: Repository[] = [
     created_at: '2026-01-15T08:00:00Z',
     updated_at: '2026-07-28T07:30:00Z',
     iq_score: 92.4,
+    overall_grade: 'A',
   },
   {
     id: '2b8a7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d',
@@ -46,6 +47,7 @@ export const MOCK_REPOSITORIES: Repository[] = [
     created_at: '2025-11-20T10:00:00Z',
     updated_at: '2026-07-25T14:20:00Z',
     iq_score: 88.0,
+    overall_grade: 'A',
   },
   {
     id: '3c7b6a5d-4e3f-2a1b-0c9d-8e7f6a5b4c3d',
@@ -66,15 +68,26 @@ export const MOCK_REPOSITORIES: Repository[] = [
     created_at: '2025-08-10T12:00:00Z',
     updated_at: '2026-07-27T18:45:00Z',
     iq_score: 95.1,
+    overall_grade: 'A+',
   },
 ];
 
-export const MOCK_REPOSITORY_IQ: RepositoryIQReport = {
-  id: 'iq-111',
+export const MOCK_REPOSITORY_IQ: RepositoryGradeReport = {
+  id: 'grade-111',
   repository_id: '1a9e8b7c-6d5f-4e3d-2c1b-0a9f8e7d6c5b',
   analysis_run_id: 'run-999',
   overall_score: 92.4,
+  overall_grade: 'A',
+  capped: false,
+  cap_reason: null,
   maturity_level: 'Enterprise Ready',
+  category_scores: {
+    security: 88.0,
+    architecture: 91.5,
+    code_quality: 94.2,
+    maintainability: 93.0,
+    community_velocity: 92.0,
+  },
   subsystem_scores: {
     static_analysis: 94.2,
     architecture: 91.5,
@@ -86,7 +99,11 @@ export const MOCK_REPOSITORY_IQ: RepositoryIQReport = {
     repository_health: 95.0,
     community: 92.0,
   },
+  narrative_summary:
+    'Cortex is a software project demonstrating a Grade A (92.4/100) engineering posture. Its primary architectural strength is clean architecture with strict layer separation. The main operational risk is minor third-party dependency updates. It is a strong fit for teams requiring structured standards.',
   summary: {
+    narrative_summary:
+      'Cortex is a software project demonstrating a Grade A (92.4/100) engineering posture. Its primary architectural strength is clean architecture with strict layer separation. The main operational risk is minor third-party dependency updates. It is a strong fit for teams requiring structured standards.',
     executive_summary:
       'Cortex represents an exceptionally high-quality enterprise repository. It demonstrates a robust Clean Architecture pattern, high test coverage, 100% CI/CD automation, and zero critical security vulnerabilities.',
     technical_summary:
@@ -98,7 +115,7 @@ export const MOCK_REPOSITORY_IQ: RepositoryIQReport = {
     maintainability_summary:
       'Maintainability Index: 94.2/100. 19/19 standard README sections present. Conventional Commits compliance: 98.5%.',
     recruiter_summary:
-      'Engineering Maturity: Enterprise Ready. Repository IQ: 92.4/100. Codebase reflects senior architectural standards and production readiness.',
+      'Engineering Maturity: Enterprise Ready. Grade: A (92.4/100). Codebase reflects senior architectural standards and production readiness.',
     engineering_manager_summary:
       'Estimated Technical Debt: 12.0 hours (1.5 days). Main technical debt consists of routine minor library upgrades and unit test expansion.',
   },
@@ -151,47 +168,60 @@ export const MOCK_REPOSITORY_IQ: RepositoryIQReport = {
     ],
   },
   benchmark: {
-    overall_percentile: 96.5,
-    quality_percentile: 95.0,
-    security_percentile: 92.0,
-    architecture_percentile: 97.0,
-    maintainability_percentile: 98.0,
+    overall_percentile: 94.5,
+    quality_percentile: 96.2,
+    security_percentile: 91.0,
+    architecture_percentile: 93.8,
+    maintainability_percentile: 95.0,
   },
-  created_at: '2026-07-28T07:30:00Z',
-  updated_at: '2026-07-28T07:30:00Z',
+  created_at: '2026-07-28T08:00:00Z',
+  updated_at: '2026-07-28T08:00:00Z',
 };
 
 export const MOCK_STATIC_METRICS: StaticMetrics = {
   repository_id: '1a9e8b7c-6d5f-4e3d-2c1b-0a9f8e7d6c5b',
-  total_files: 142,
+  total_files: 148,
   total_loc: 18450,
   code_loc: 14200,
   comment_loc: 2850,
   blank_loc: 1400,
-  average_cyclomatic_complexity: 2.4,
+  average_cyclomatic_complexity: 2.8,
   maintainability_index: 94.2,
-  duplication_percentage: 1.2,
-  complexity_rank: 'A',
+  duplication_percentage: 1.4,
+  complexity_rank: 'A (Low Complexity)',
 };
 
 export const MOCK_ARCHITECTURE_REPORT: ArchitectureReport = {
   repository_id: '1a9e8b7c-6d5f-4e3d-2c1b-0a9f8e7d6c5b',
-  architecture_style: 'Hexagonal / Ports & Adapters',
-  confidence_score: 0.95,
+  architecture_style: 'Clean Architecture (Hexagonal)',
+  confidence_score: 0.94,
   modularity_score: 91.5,
-  coupling_score: 88.0,
-  layer_separation_score: 94.0,
+  coupling_score: 18.2,
+  layer_separation_score: 95.0,
   patterns: [
-    { pattern_name: 'Repository Pattern', category: 'Data Access', confidence: 0.98, file_path: 'backend/app/services/repository_service.py' },
-    { pattern_name: 'Factory Pattern', category: 'Creational', confidence: 0.95, file_path: 'backend/app/core/ai/factory.py' },
-    { pattern_name: 'Singleton Pattern', category: 'Creational', confidence: 0.92, file_path: 'backend/app/core/config/settings.py' },
-    { pattern_name: 'Strategy Pattern', category: 'Behavioral', confidence: 0.94, file_path: 'backend/app/analyzers/iq/scorers/iq_scorer.py' },
+    {
+      pattern_name: 'Repository Pattern',
+      category: 'Data Access',
+      confidence: 0.98,
+      file_path: 'backend/app/repositories/base.py',
+    },
+    {
+      pattern_name: 'Factory Method',
+      category: 'Creational',
+      confidence: 0.95,
+      file_path: 'backend/app/core/ai/factory.py',
+    },
+    {
+      pattern_name: 'Strategy Pattern',
+      category: 'Behavioral',
+      confidence: 0.92,
+      file_path: 'backend/app/analyzers/base/registry.py',
+    },
   ],
   frameworks: [
-    { framework_name: 'FastAPI', category: 'Web Framework', version: '0.111.0' },
-    { framework_name: 'SQLAlchemy', category: 'ORM', version: '2.0.30' },
-    { framework_name: 'Celery', category: 'Task Queue', version: '5.4.0' },
-    { framework_name: 'Pydantic', category: 'Validation', version: '2.7.0' },
+    { framework_name: 'FastAPI', category: 'Backend Web Framework', version: '0.111.0' },
+    { framework_name: 'React', category: 'Frontend UI Framework', version: '18.3.1' },
+    { framework_name: 'SQLAlchemy', category: 'ORM / Database', version: '2.0.30' },
   ],
   violations: [],
 };
@@ -200,36 +230,24 @@ export const MOCK_SECURITY_REPORT: SecurityReport = {
   repository_id: '1a9e8b7c-6d5f-4e3d-2c1b-0a9f8e7d6c5b',
   critical_count: 0,
   high_count: 0,
-  medium_count: 2,
-  low_count: 3,
-  info_count: 5,
+  medium_count: 1,
+  low_count: 2,
+  info_count: 4,
   secret_count: 0,
   dependency_vuln_count: 0,
   config_issues_count: 1,
   findings: [
     {
-      id: 'sec-1',
-      rule_id: 'SEC-008',
-      rule_name: 'CORS Wildcard Whitelist Warning',
+      id: 'sec-001',
+      rule_id: 'SEC-CONFIG-001',
+      rule_name: 'CORS Wildcard In Staging Config',
       category: 'Configuration',
       severity: 'Medium',
-      confidence: 'High',
-      file_path: 'backend/app/main.py',
-      line_number: 24,
-      description: 'Ensure CORS origins list is explicitly restricted in production environments.',
+      confidence: 'HIGH',
+      file_path: 'backend/app/core/config/settings.py',
+      line_number: 42,
+      description: 'Ensure CORS origins whitelist strictly limits production domains.',
       cvss_score: 4.3,
-    },
-    {
-      id: 'sec-2',
-      rule_id: 'SEC-012',
-      rule_name: 'Missing Explicit Rate Limiting',
-      category: 'Security',
-      severity: 'Medium',
-      confidence: 'Medium',
-      file_path: 'backend/app/api/v1/endpoints/repositories.py',
-      line_number: 45,
-      description: 'Add Redis rate limiter middleware on public ingestion POST endpoints.',
-      cvss_score: 5.0,
     },
   ],
 };

@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AddRepoModal } from './components/AddRepoModal';
 import { Navbar } from './components/Navbar';
 import { Badge } from './components/ui/Badge';
+import { GradeBadge } from './components/ui/GradeBadge';
 import { SearchModal } from './components/ui/SearchModal';
 import { ArchitecturePage } from './pages/ArchitecturePage';
 import { AuditLogsPage } from './pages/AuditLogsPage';
@@ -17,7 +18,7 @@ import { RegisterPage } from './pages/RegisterPage';
 import { RepoComparisonPage } from './pages/RepoComparisonPage';
 import { RepoListPage } from './pages/RepoListPage';
 import { RepoOverviewPage } from './pages/RepoOverviewPage';
-import { RepositoryIQPage } from './pages/RepositoryIQPage';
+import { RepositoryGradePage } from './pages/RepositoryGradePage';
 import { RepoSyncPage } from './pages/RepoSyncPage';
 import { ScanHistoryPage } from './pages/ScanHistoryPage';
 import { SecurityPage } from './pages/SecurityPage';
@@ -36,7 +37,7 @@ import { RepositoryService } from './services/repositoryService';
 import {
   ArchitectureReport,
   Repository,
-  RepositoryIQReport,
+  RepositoryGradeReport,
   SecurityReport,
   StaticMetrics,
 } from './services/types';
@@ -48,12 +49,12 @@ export function AppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
   const [repositories, setRepositories] = useState<Repository[]>(MOCK_REPOSITORIES);
   const [selectedRepoId, setSelectedRepoId] = useState<string>('1a9e8b7c-6d5f-4e3d-2c1b-0a9f8e7d6c5b');
-  const [activeTab, setActiveTab] = useState<'overview' | 'static' | 'architecture' | 'security' | 'documentation' | 'iq'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'static' | 'architecture' | 'security' | 'documentation' | 'grade'>('overview');
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAddRepoOpen, setIsAddRepoOpen] = useState(false);
 
-  const [iqReport, setIqReport] = useState<RepositoryIQReport>(MOCK_REPOSITORY_IQ);
+  const [gradeReport, setGradeReport] = useState<RepositoryGradeReport>(MOCK_REPOSITORY_IQ);
   const [staticMetrics, setStaticMetrics] = useState<StaticMetrics>(MOCK_STATIC_METRICS);
   const [archReport, setArchReport] = useState<ArchitectureReport>(MOCK_ARCHITECTURE_REPORT);
   const [secReport, setSecReport] = useState<SecurityReport>(MOCK_SECURITY_REPORT);
@@ -64,7 +65,7 @@ export function AppContent() {
 
   useEffect(() => {
     if (selectedRepoId) {
-      RepositoryService.getRepositoryIQ(selectedRepoId).then(setIqReport);
+      RepositoryService.getRepositoryIQ(selectedRepoId).then(setGradeReport);
       RepositoryService.getStaticMetrics(selectedRepoId).then(setStaticMetrics);
       RepositoryService.getArchitectureReport(selectedRepoId).then(setArchReport);
       RepositoryService.getSecurityReport(selectedRepoId).then(setSecReport);
@@ -150,13 +151,14 @@ export function AppContent() {
               <div>
                 <div className="flex items-center gap-3">
                   <h1 className="text-2xl font-bold text-white tracking-tight">{selectedRepo.full_name}</h1>
-                  <Badge variant="purple" size="md">{iqReport.maturity_level}</Badge>
+                  <Badge variant="purple" size="md">{gradeReport.maturity_level}</Badge>
                 </div>
                 <p className="text-xs text-gray-400 mt-0.5">{selectedRepo.description}</p>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Badge variant="success">IQ {iqReport.overall_score.toFixed(1)}</Badge>
+              <div className="flex items-center gap-3">
+                <GradeBadge grade={gradeReport.overall_grade || 'C'} size="sm" />
+                <Badge variant="success">Score {gradeReport.overall_score.toFixed(1)}</Badge>
                 <Badge variant="outline">{selectedRepo.language || 'Python'}</Badge>
               </div>
             </div>
@@ -169,7 +171,7 @@ export function AppContent() {
                 { id: 'architecture', label: 'Architecture' },
                 { id: 'security', label: 'Security (SAST)' },
                 { id: 'documentation', label: 'Documentation' },
-                { id: 'iq', label: 'Repository IQ & AI' },
+                { id: 'grade', label: 'Grade Report & Narrative' },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -186,12 +188,12 @@ export function AppContent() {
             </div>
 
             {/* Sub-page Views */}
-            {activeTab === 'overview' && <RepoOverviewPage repo={selectedRepo} iqReport={iqReport} />}
+            {activeTab === 'overview' && <RepoOverviewPage repo={selectedRepo} iqReport={gradeReport} />}
             {activeTab === 'static' && <StaticAnalysisPage staticMetrics={staticMetrics} />}
             {activeTab === 'architecture' && <ArchitecturePage architectureReport={archReport} />}
             {activeTab === 'security' && <SecurityPage securityReport={secReport} />}
             {activeTab === 'documentation' && <DocumentationPage />}
-            {activeTab === 'iq' && <RepositoryIQPage iqReport={iqReport} />}
+            {activeTab === 'grade' && <RepositoryGradePage gradeReport={gradeReport} />}
           </div>
         )}
 
@@ -214,12 +216,6 @@ export function AppContent() {
         ].includes(activePage) && <NotFoundPage onNavigateHome={() => setActivePage('landing')} />}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border/80 bg-surface/50 py-6 mt-12 text-center text-xs text-gray-500">
-        <p>Cortex Platform &copy; 2026. Enterprise Repository Intelligence. Know your code before you clone it.</p>
-      </footer>
-
-      {/* Modals */}
       <SearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
@@ -235,12 +231,10 @@ export function AppContent() {
   );
 }
 
-export function App() {
+export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AppContent />
     </QueryClientProvider>
   );
 }
-
-export default App;
