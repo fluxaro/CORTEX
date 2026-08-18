@@ -4,10 +4,8 @@ import {
   LogOut,
   Plus,
   Search,
-  ShieldCheck,
   User as UserIcon,
 } from 'lucide-react';
-import { Button } from './ui/Button';
 
 interface NavbarProps {
   onOpenSearch: () => void;
@@ -27,89 +25,93 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLogout,
 }) => {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/80 glass-panel">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Logo & Tagline */}
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => onNavigate('landing')}>
-          <div className="p-2 bg-gradient-to-tr from-primary-600 to-accent-purple rounded-xl shadow-glow">
-            <ShieldCheck className="h-5 w-5 text-white" />
+    <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-200/60">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        
+        {/* Logo & Brand */}
+        <div className="flex items-center gap-3 cursor-pointer group" onClick={() => onNavigate('landing')}>
+          <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform border border-slate-200">
+            <img src="/cortex_logo.jpg" alt="CORTEX Logo" className="w-full h-full object-cover" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-lg text-white tracking-tight">Cortex</span>
-              <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                Enterprise
+              <span className="font-display font-bold text-2xl text-slate-900 tracking-tight">Cortex</span>
+              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200/60">
+                v1.0
               </span>
             </div>
-            <p className="text-[11px] text-gray-400 hidden sm:block">Know your code before you clone it.</p>
           </div>
         </div>
 
-        {/* Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1">
+        {/* Floating Center Pill Navigation */}
+        <nav className="hidden md:flex items-center gap-1 bg-slate-100/90 p-1.5 rounded-full border border-slate-200/80 shadow-inner">
+          <button
+            onClick={() => onNavigate('landing')}
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              activePage === 'landing'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            Home
+          </button>
           <button
             onClick={() => onNavigate('repositories')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              activePage === 'repositories' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              activePage === 'repositories'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Repos
           </button>
           <button
             onClick={() => onNavigate('workspaces')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              activePage === 'workspaces' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              activePage === 'workspaces'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Workspaces
           </button>
           <button
             onClick={() => onNavigate('sync')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              activePage === 'sync' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              activePage === 'sync'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Git Sync
           </button>
           <button
-            onClick={() => onNavigate('scans')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              activePage === 'scans' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            Scan History
-          </button>
-          <button
             onClick={() => onNavigate('trends')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              activePage === 'trends' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              activePage === 'trends'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Trends
           </button>
           <button
             onClick={() => onNavigate('compare')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              activePage === 'compare' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              activePage === 'compare'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Compare
           </button>
-          <button
-            onClick={() => onNavigate('audit')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              activePage === 'audit' ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            Audit Logs
-          </button>
         </nav>
 
-        {/* Right Controls */}
-        <div className="flex items-center gap-2">
+        {/* Right Actions */}
+        <div className="flex items-center gap-3">
           <button
             onClick={onOpenSearch}
-            className="p-2 rounded-xl border border-border/60 hover:bg-surface-hover text-gray-400 hover:text-white transition-colors"
+            className="p-2 rounded-full border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors"
             title="Search (Ctrl+K)"
           >
             <Search className="h-4 w-4" />
@@ -117,34 +119,41 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => onNavigate('notifications')}
-            className="p-2 rounded-xl border border-border/60 hover:bg-surface-hover text-gray-400 hover:text-white transition-colors relative"
+            className="p-2 rounded-full border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors relative"
             title="Notifications"
           >
             <Bell className="h-4 w-4" />
             <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-rose-500" />
           </button>
 
-          <Button onClick={onOpenAddRepo} variant="primary" size="sm">
+          <button
+            onClick={onOpenAddRepo}
+            className="hidden sm:flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-md shadow-blue-500/20 transition-all hover:scale-105"
+          >
             <Plus className="h-4 w-4" />
             <span>Add Repo</span>
-          </Button>
+          </button>
 
           {isAuthenticated ? (
             <button
               onClick={onLogout}
-              className="p-2 rounded-xl border border-border/60 hover:bg-surface-hover text-rose-400 hover:text-rose-300 transition-colors"
+              className="p-2 rounded-full border border-slate-200 hover:bg-rose-50 text-rose-600 transition-colors"
               title="Logout"
             >
               <LogOut className="h-4 w-4" />
             </button>
           ) : (
-            <Button onClick={() => onNavigate('login')} variant="outline" size="sm">
-              <UserIcon className="h-4 w-4" />
-              <span>Login</span>
-            </Button>
+            <button
+              onClick={() => onNavigate('login')}
+              className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-5 py-2 rounded-full shadow-sm transition-all hover:scale-105"
+            >
+              <UserIcon className="h-3.5 w-3.5" />
+              <span>Log In</span>
+            </button>
           )}
         </div>
       </div>
     </header>
   );
 };
+

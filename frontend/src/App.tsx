@@ -87,7 +87,7 @@ export function AppContent() {
   const selectedRepo = repositories.find((r) => r.id === selectedRepoId) || repositories[0];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col font-sans antialiased text-gray-100">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans antialiased text-slate-900">
       <Navbar
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenAddRepo={() => setIsAddRepoOpen(true)}

@@ -30,7 +30,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+        display: ["Fredoka", "Outfit", "Plus Jakarta Sans", "sans-serif"],
+        sans: ["Plus Jakarta Sans", "Inter", "-apple-system", "sans-serif"],
         mono: ["Fira Code", "JetBrains Mono", "monospace"],
       },
       boxShadow: {
