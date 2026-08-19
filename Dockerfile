@@ -24,7 +24,7 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app/backend
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libpq-dev curl \
+    && apt-get install -y --no-install-recommends libpq-dev curl git \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /install /usr/local

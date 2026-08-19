@@ -132,7 +132,7 @@ def upgrade() -> None:
     op.create_table(
         "repository_syncs",
         sa.Column("id", sa.String(length=36), nullable=False),
-        sa.Column("repository_id", sa.String(length=36), nullable=False),
+        sa.Column("repository_id", sa.Uuid(), nullable=False),
         sa.Column("provider", sa.String(length=50), nullable=False, server_default="GITHUB"),
         sa.Column("external_repo_id", sa.String(length=255), nullable=False),
         sa.Column("sync_status", sa.String(length=50), nullable=False, server_default="IDLE"),
@@ -148,7 +148,7 @@ def upgrade() -> None:
     op.create_table(
         "webhooks",
         sa.Column("id", sa.String(length=36), nullable=False),
-        sa.Column("repository_id", sa.String(length=36), nullable=False),
+        sa.Column("repository_id", sa.Uuid(), nullable=False),
         sa.Column("workspace_id", sa.String(length=36), nullable=True),
         sa.Column("provider", sa.String(length=50), nullable=False, server_default="GITHUB"),
         sa.Column("secret", sa.String(length=255), nullable=False),
@@ -197,8 +197,8 @@ def upgrade() -> None:
     op.create_table(
         "scan_histories",
         sa.Column("id", sa.String(length=36), nullable=False),
-        sa.Column("repository_id", sa.String(length=36), nullable=False),
-        sa.Column("analysis_run_id", sa.String(length=36), nullable=True),
+        sa.Column("repository_id", sa.Uuid(), nullable=False),
+        sa.Column("analysis_run_id", sa.Uuid(), nullable=True),
         sa.Column("status", sa.String(length=50), nullable=False, server_default="COMPLETED"),
         sa.Column("duration_seconds", sa.Float(), nullable=False, server_default="0.0"),
         sa.Column("commit_hash", sa.String(length=100), nullable=True),
@@ -217,7 +217,7 @@ def upgrade() -> None:
     op.create_table(
         "trend_metrics",
         sa.Column("id", sa.String(length=36), nullable=False),
-        sa.Column("repository_id", sa.String(length=36), nullable=False),
+        sa.Column("repository_id", sa.Uuid(), nullable=False),
         sa.Column("recorded_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("overall_iq", sa.Float(), nullable=False, server_default="0.0"),
         sa.Column("security_score", sa.Float(), nullable=False, server_default="0.0"),

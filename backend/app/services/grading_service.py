@@ -1,6 +1,7 @@
 """Service layer for CORTEX Repository Grade Reports, AI summaries, technical debt, and persona views."""
 
 import uuid
+from typing import Any
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession

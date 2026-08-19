@@ -8,6 +8,15 @@ celery_app = Celery(
     "cortex_workers",
     broker=settings.CELERY_BROKER_URL,
     backend=settings.CELERY_RESULT_BACKEND,
+    include=[
+        "app.tasks.analysis_tasks",
+        "app.tasks.architecture_tasks",
+        "app.tasks.enterprise_tasks",
+        "app.tasks.repository_grading_tasks",
+        "app.tasks.repository_intelligence_tasks",
+        "app.tasks.repository_tasks",
+        "app.tasks.security_tasks",
+    ],
 )
 
 celery_app.conf.update(
